@@ -10,8 +10,8 @@ import Foundation
 
 @Observable
 final class LoginViewModel {
-    var email = "lyf19@gmail.com"
-    var password = "123456"
+    var email = "user1"
+    var password = "user1"
     var isLoading = false
     var showingAlert = false
     var alertMessage = ""
@@ -25,12 +25,6 @@ final class LoginViewModel {
             return
         }
         
-        guard email.isValidEmail else {
-            alertMessage = "Please enter a valid email"
-            showingAlert = true
-            return
-        }
-        
         isLoading = true
         
         do {
@@ -40,6 +34,7 @@ final class LoginViewModel {
         } catch {
             alertMessage = error.localizedDescription
             showingAlert = true
+            dump(error)
         }
         
         isLoading = false

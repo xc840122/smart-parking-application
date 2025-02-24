@@ -38,7 +38,7 @@ struct LoginView: View {
                             TextField("Enter your email", text: $viewModel.email)
                                 .textFieldStyle(TextFieldStyles.Notion())
                                 .keyboardType(.emailAddress)
-                                .textInputAutocapitalization(.none)
+                                .textInputAutocapitalization(.never)
                         }
                         // Password Field
                         VStack(alignment: .leading, spacing: 8) {
@@ -92,7 +92,7 @@ struct LoginView: View {
                         Text("Don't have an account?")
                             .foregroundStyle(.gray)
                         NavigationLink {
-                            Text("Register View")
+                            RegisterView()
                         } label: {
                             Text("Create account")
                                 .font(.system(size: 16, weight: .medium))
@@ -105,6 +105,7 @@ struct LoginView: View {
             .alert("Error", isPresented: $viewModel.showingAlert) {} message: {
                 Text(viewModel.alertMessage)
             }
+            .scrollBounceBehavior(.basedOnSize)
         }
     }
 }

@@ -8,6 +8,9 @@
 import Foundation
 
 struct Config {
-    // Currently using my own clerk application key, should be changed to team's 
+    // mine
     static let clerkPublishableKey = "pk_test_ZXBpYy1nb3BoZXItMzkuY2xlcmsuYWNjb3VudHMuZGV2JA"
+    
+    // Peter's
+//    static let clerkPublishableKey = "pk_test_c2V0dGxpbmctYmVkYnVnLTU3LmNsZXJrLmFjY291bnRzLmRldiQ"
 }
