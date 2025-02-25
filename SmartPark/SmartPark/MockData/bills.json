@@ -1,0 +1,22 @@
+[
+    { "id": 1, "bookingId": 1, "totalAmount": 15.0, "isPaid": false, "createdAt": "2023-10-01T12:00:00Z" },
+    { "id": 2, "bookingId": 2, "totalAmount": 20.0, "isPaid": true, "createdAt": "2023-10-02T15:30:00Z" },
+    { "id": 3, "bookingId": 3, "totalAmount": 25.0, "isPaid": true, "createdAt": "2023-10-03T10:00:00Z" },
+    { "id": 4, "bookingId": 4, "totalAmount": 10.0, "isPaid": false, "createdAt": "2023-10-04T11:00:00Z" },
+    { "id": 5, "bookingId": 5, "totalAmount": 30.0, "isPaid": true, "createdAt": "2023-10-05T12:30:00Z" },
+    { "id": 6, "bookingId": 6, "totalAmount": 18.0, "isPaid": false, "createdAt": "2023-10-06T09:45:00Z" },
+    { "id": 7, "bookingId": 7, "totalAmount": 22.0, "isPaid": true, "createdAt": "2023-10-07T14:20:00Z" },
+    { "id": 8, "bookingId": 8, "totalAmount": 16.0, "isPaid": false, "createdAt": "2023-10-08T16:30:00Z" },
+    { "id": 9, "bookingId": 9, "totalAmount": 12.0, "isPaid": true, "createdAt": "2023-10-09T17:50:00Z" },
+    { "id": 10, "bookingId": 10, "totalAmount": 25.0, "isPaid": false, "createdAt": "2023-10-10T18:10:00Z" },
+    { "id": 11, "bookingId": 11, "totalAmount": 14.0, "isPaid": true, "createdAt": "2023-10-11T09:00:00Z" },
+    { "id": 12, "bookingId": 12, "totalAmount": 19.0, "isPaid": false, "createdAt": "2023-10-12T10:30:00Z" },
+    { "id": 13, "bookingId": 13, "totalAmount": 28.0, "isPaid": true, "createdAt": "2023-10-13T13:15:00Z" },
+    { "id": 14, "bookingId": 14, "totalAmount": 26.0, "isPaid": false, "createdAt": "2023-10-14T14:45:00Z" },
+    { "id": 15, "bookingId": 15, "totalAmount": 30.0, "isPaid": true, "createdAt": "2023-10-15T15:30:00Z" },
+    { "id": 16, "bookingId": 16, "totalAmount": 21.0, "isPaid": false, "createdAt": "2023-10-16T16:50:00Z" },
+    { "id": 17, "bookingId": 17, "totalAmount": 27.0, "isPaid": true, "createdAt": "2023-10-17T17:20:00Z" },
+    { "id": 18, "bookingId": 18, "totalAmount": 23.0, "isPaid": false, "createdAt": "2023-10-18T18:10:00Z" },
+    { "id": 19, "bookingId": 19, "totalAmount": 20.0, "isPaid": true, "createdAt": "2023-10-19T19:30:00Z" },
+    { "id": 20, "bookingId": 20, "totalAmount": 18.0, "isPaid": false, "createdAt": "2023-10-20T20:00:00Z" }
+]

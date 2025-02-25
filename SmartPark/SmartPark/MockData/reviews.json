@@ -1,0 +1,22 @@
+[
+    { "id": 1, "userId": 1, "parkingLotId": 1, "rating": 4.5, "comment": "Convenient and spacious.", "createdAt": "2023-10-01T12:00:00Z" },
+    { "id": 2, "userId": 2, "parkingLotId": 1, "rating": 4.0, "comment": "A bit expensive, but overall good.", "createdAt": "2023-10-02T08:00:00Z" },
+    { "id": 3, "userId": 3, "parkingLotId": 2, "rating": 5.0, "comment": "Great location and easy to find.", "createdAt": "2023-10-03T10:30:00Z" },
+    { "id": 4, "userId": 4, "parkingLotId": 2, "rating": 3.5, "comment": "Limited parking spaces during peak hours.", "createdAt": "2023-10-05T09:15:00Z" },
+    { "id": 5, "userId": 5, "parkingLotId": 3, "rating": 4.8, "comment": "Perfect for airport parking!", "createdAt": "2023-10-06T14:45:00Z" },
+    { "id": 6, "userId": 6, "parkingLotId": 4, "rating": 3.9, "comment": "Good value for money.", "createdAt": "2023-10-07T16:00:00Z" },
+    { "id": 7, "userId": 7, "parkingLotId": 5, "rating": 4.2, "comment": "Very secure parking area.", "createdAt": "2023-10-08T17:30:00Z" },
+    { "id": 8, "userId": 8, "parkingLotId": 6, "rating": 4.7, "comment": "Lovely sea view while parking.", "createdAt": "2023-10-09T18:10:00Z" },
+    { "id": 9, "userId": 9, "parkingLotId": 7, "rating": 4.1, "comment": "Convenient for stadium events.", "createdAt": "2023-10-10T19:00:00Z" },
+    { "id": 10, "userId": 10, "parkingLotId": 8, "rating": 3.8, "comment": "Can get crowded during university hours.", "createdAt": "2023-10-11T20:30:00Z" },
+    { "id": 11, "userId": 1, "parkingLotId": 9, "rating": 4.3, "comment": "Close to the hospital entrance.", "createdAt": "2023-10-12T08:45:00Z" },
+    { "id": 12, "userId": 2, "parkingLotId": 10, "rating": 4.0, "comment": "Good for short library visits.", "createdAt": "2023-10-13T10:00:00Z" },
+    { "id": 13, "userId": 3, "parkingLotId": 11, "rating": 4.1, "comment": "Market parking is very accessible.", "createdAt": "2023-10-14T11:20:00Z" },
+    { "id": 14, "userId": 4, "parkingLotId": 12, "rating": 4.6, "comment": "Central to the business district.", "createdAt": "2023-10-15T13:30:00Z" },
+    { "id": 15, "userId": 5, "parkingLotId": 13, "rating": 3.7, "comment": "Community center parking is okay.", "createdAt": "2023-10-16T15:00:00Z" },
+    { "id": 16, "userId": 6, "parkingLotId": 14, "rating": 4.4, "comment": "Hotel guests only, but very clean.", "createdAt": "2023-10-17T16:30:00Z" },
+    { "id": 17, "userId": 7, "parkingLotId": 15, "rating": 4.2, "comment": "Perfect for theater evenings.", "createdAt": "2023-10-18T17:15:00Z" },
+    { "id": 18, "userId": 8, "parkingLotId": 16, "rating": 4.0, "comment": "Great for train station drop-offs.", "createdAt": "2023-10-19T18:00:00Z" },
+    { "id": 19, "userId": 9, "parkingLotId": 17, "rating": 4.1, "comment": "Museum visitors benefit the most.", "createdAt": "2023-10-20T19:45:00Z" },
+    { "id": 20, "userId": 10, "parkingLotId": 18, "rating": 4.5, "comment": "Ample space during conventions.", "createdAt": "2023-10-21T20:10:00Z" }
+]

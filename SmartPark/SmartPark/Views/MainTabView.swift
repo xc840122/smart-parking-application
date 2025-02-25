@@ -9,7 +9,24 @@ import SwiftUI
 
 struct MainTabView: View {
     var body: some View {
-        Text("MainTabView")
+        TabView {
+            Tab("Home", systemImage: "house.fill") {
+                HomeView()
+            }
+            
+            Tab("Bookings", systemImage: "calendar") {
+                BookingView()
+            }
+            
+            Tab("Billing", systemImage: "creditcard.fill") {
+                BillingView()
+            }
+            
+            Tab("Profile", systemImage: "person.fill") {
+                ProfileView()
+            }
+        }
+        .tint(.black)
     }
 }
 
