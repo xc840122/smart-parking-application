@@ -1,0 +1,9 @@
+# Specify filepatterns you want git to ignore.
+
+
+*.xcuserstate
+
+*.xcuserdata
+
+*.xcworkspace
+!sharedData/*
