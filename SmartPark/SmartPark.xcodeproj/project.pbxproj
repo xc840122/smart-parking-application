@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		F0AA3D1E2D6C0435003B2BB2 /* Clerk in Frameworks */ = {isa = PBXBuildFile; productRef = F0AA3D1D2D6C0435003B2BB2 /* Clerk */; };
+		F0DE2DDA2D6E8D4700C5C553 /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = F0DE2DD92D6E8D4700C5C553 /* Moya */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +28,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F0DE2DDA2D6E8D4700C5C553 /* Moya in Frameworks */,
 				F0AA3D1E2D6C0435003B2BB2 /* Clerk in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -71,6 +73,7 @@
 			name = SmartPark;
 			packageProductDependencies = (
 				F0AA3D1D2D6C0435003B2BB2 /* Clerk */,
+				F0DE2DD92D6E8D4700C5C553 /* Moya */,
 			);
 			productName = SmartPark;
 			productReference = F0AA3CD82D6BE13B003B2BB2 /* SmartPark.app */;
@@ -102,6 +105,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				F0AA3D1C2D6C0435003B2BB2 /* XCRemoteSwiftPackageReference "clerk-ios" */,
+				F0DE2DD82D6E8D4700C5C553 /* XCRemoteSwiftPackageReference "Moya" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F0AA3CD92D6BE13B003B2BB2 /* Products */;
@@ -343,6 +347,14 @@
 				minimumVersion = 0.49.0;
 			};
 		};
+		F0DE2DD82D6E8D4700C5C553 /* XCRemoteSwiftPackageReference "Moya" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Moya/Moya.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 15.0.3;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -350,6 +362,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = F0AA3D1C2D6C0435003B2BB2 /* XCRemoteSwiftPackageReference "clerk-ios" */;
 			productName = Clerk;
+		};
+		F0DE2DD92D6E8D4700C5C553 /* Moya */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F0DE2DD82D6E8D4700C5C553 /* XCRemoteSwiftPackageReference "Moya" */;
+			productName = Moya;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
