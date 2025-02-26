@@ -35,4 +35,12 @@ extension ParkingSpotAPI: TargetType {
     var headers: [String : String]? {
         nil
     }
+    
+    var sampleData: Data {
+        guard let url = Bundle.main.url(forResource: "parkingLots", withExtension: "json"), let data = try? Data(contentsOf: url) else {
+            print("⚠️ no parkingLots.json file")
+            return Data()
+        }
+        return data
+    }
 }

@@ -12,7 +12,7 @@ import Observation
 class ParkingSpotViewModel {
     var parkingLots: [ParkingSpot] = []
     // load local json data
-    private let localService = LocalParkingSpotService()
+    private let localService = ParkingSpotService()
     
     func loadParkingLots() async {
         do {
