@@ -8,18 +8,41 @@
 import SwiftUI
 
 struct HomeView: View {
-    @State private var viewModel = ParkingSpotViewModel()
+    @State private var homeViewModel = HomeViewModel()
+    @State private var parkingSpotViewModel = ParkingSpotViewModel()
     
     var body: some View {
-        VStack {
-            Text("parking spots count: \(viewModel.parkingLots.count)")
+        GeometryReader { outerGeometry in
+            ScrollView {
+                VStack {
+                    SearchBar(searchText: $homeViewModel.searchText)
+                    SortingBar(selectedFilter: $homeViewModel.selectedFilter, isMapView: $homeViewModel.isMapView)
+                    
+                    
+                    if homeViewModel.isMapView {
+                        MapView()
+                            .frame(height: outerGeometry.size.height - 120)
+                    } else {
+                        LazyVStack(spacing: 8) {
+                            ForEach(parkingSpotViewModel.parkingLots) { spot in
+                                ParkingSpotRow(parkingSpot: spot)
+                            }
+                        }
+                    }
+                }
+            }
+            .scrollBounceBehavior(.basedOnSize)
         }
         .task {
-            await viewModel.loadParkingLots()
+            await parkingSpotViewModel.loadParkingLots()
         }
+        .navigationTitle("Find Parking")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
 #Preview {
-    HomeView()
+    NavigationView {
+        HomeView()
+    }
 }

@@ -11,7 +11,9 @@ struct MainTabView: View {
     var body: some View {
         TabView {
             Tab("Home", systemImage: "house.fill") {
-                HomeView()
+                NavigationView {
+                    HomeView()
+                }
             }
             
             Tab("Bookings", systemImage: "calendar") {

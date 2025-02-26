@@ -38,6 +38,7 @@ struct LoginView: View {
                             TextField("Enter your email", text: $viewModel.email)
                                 .textFieldStyle(TextFieldStyles.Notion())
                                 .keyboardType(.emailAddress)
+                                .autocorrectionDisabled(true)
                                 .textInputAutocapitalization(.never)
                         }
                         // Password Field
