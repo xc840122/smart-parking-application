@@ -8,8 +8,15 @@
 import SwiftUI
 
 struct HomeView: View {
+    @State private var viewModel = ParkingSpotViewModel()
+    
     var body: some View {
-        Text("HomeView")
+        VStack {
+            Text("parking spots count: \(viewModel.parkingLots.count)")
+        }
+        .task {
+            await viewModel.loadParkingLots()
+        }
     }
 }
 
