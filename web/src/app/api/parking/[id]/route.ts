@@ -4,12 +4,12 @@ import { ApiResponse } from "@/types/api.type";
 import { ParkingSpaceDataModel } from "@/types/parking-space.type";
 
 // GET: Fetch a parking space by ID
-export async function GET(
+export const GET = async (
   request: Request,
-  { params }: { params: { id: string } }
-) {
+  { params }: { params: Promise<{ id: string }> }
+) => {
   try {
-    const { id } = params;
+    const { id } = await params;
 
     // Fetch parking space by ID using the service
     const response: ApiResponse<ParkingSpaceDataModel> = await getParkingByIdService(id);
