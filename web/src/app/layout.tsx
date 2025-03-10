@@ -25,11 +25,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider appearance={{
-      // baseTheme: neobrutalism,
-      // signIn: { baseTheme: shadesOfPurple },
-      // signUp: { baseTheme: shadesOfPurple },
-    }}>
+    <ClerkProvider>
       <html lang="en">
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
           <ConvexClientProvider>
