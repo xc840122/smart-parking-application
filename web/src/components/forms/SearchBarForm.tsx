@@ -1,11 +1,10 @@
 'use client'
-import searchAction from "@/actions/search-action";
+import searchAction from "@/actions/search.action";
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { X } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useActionState } from "react";
-// import { useActionState, useEffect, useState } from "react";
 
 const SearchBar = () => {
 
