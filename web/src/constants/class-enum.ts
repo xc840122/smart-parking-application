@@ -1,0 +1,32 @@
+/**
+ * Enum for classroom
+ */
+export enum ClassroomEnum {
+  None = "None",
+  Year1A = "1A",
+  Year1B = "1B",
+  Year2A = "2A",
+  Year2B = "2B",
+  Year3A = "3A",
+  Year3B = "3B",
+  Year4A = "4A",
+  Year4B = "4B",
+  Year5A = "5A",
+  Year5B = "5B",
+  Year6A = "6A",
+  Year6B = "6B",
+  Year7A = "7A",
+  Year7B = "7B",
+  Year8A = "8A",
+  Year8B = "8B",
+  Year9A = "9A",
+  Year9B = "9B",
+  Year10A = "10A",
+  Year10B = "10B",
+  Year11A = "11A",
+  Year11B = "11B",
+  Year12A = "12A",
+  Year12B = "12B",
+  Year13A = "13A",
+  Year13B = "13B",
+}
