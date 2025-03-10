@@ -10,7 +10,6 @@ export default function DashboardLayout({
 }) {
   return (
     <SidebarProvider >
-      {/* <div className="flex w-screen"> */}
       <AppSidebar />
       <SidebarInset>
         <main>
@@ -19,7 +18,6 @@ export default function DashboardLayout({
         </main>
         <Toaster />
       </SidebarInset>
-      {/* </div> */}
     </SidebarProvider>
   );
 }

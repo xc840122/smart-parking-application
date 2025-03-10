@@ -13,11 +13,13 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
-import type * as auth from "../auth.js";
-import type * as models_auth_model from "../models/auth_model.js";
-import type * as models_notice_model from "../models/notice_model.js";
-import type * as notice from "../notice.js";
+import type * as booking from "../booking.js";
+import type * as iot from "../iot.js";
+import type * as parking from "../parking.js";
+import type * as payment from "../payment.js";
+import type * as review from "../review.js";
 import type * as seed from "../seed.js";
+import type * as user from "../user.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -28,11 +30,13 @@ import type * as seed from "../seed.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
-  auth: typeof auth;
-  "models/auth_model": typeof models_auth_model;
-  "models/notice_model": typeof models_notice_model;
-  notice: typeof notice;
+  booking: typeof booking;
+  iot: typeof iot;
+  parking: typeof parking;
+  payment: typeof payment;
+  review: typeof review;
   seed: typeof seed;
+  user: typeof user;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,

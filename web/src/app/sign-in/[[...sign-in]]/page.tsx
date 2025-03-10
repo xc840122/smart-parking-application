@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { signInSchema, SignInType } from '@/validators/auth-validator';
+import { signInSchema, SignInType } from '@/validators/auth.validator';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -66,7 +66,7 @@ export default function SignInPage() {
     <div className="flex items-center justify-center h-screen">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className="text-center text-2xl">Welcome to Parking Save!</CardTitle>
+          <CardTitle className="text-center text-2xl">Welcome to Digital Campus!</CardTitle>
         </CardHeader>
         <CardContent>
           <h2 className="text-gray-500 text-center mb-4">Sign in to your account</h2>
