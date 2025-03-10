@@ -1,6 +1,7 @@
-import { NOTICE_MESSAGES } from "@/constants/messages/notice-message";
+
+import { GENERIC_MESSAGES } from "@/constants/messages/generic.message";
 import type { FormState, Feedback } from "@/types/action-type";
-import { searchInputSchema } from "@/validators/notice-validator";
+import { searchInputSchema } from "@/validators/parking-space.validator";
 import { redirect } from "next/navigation";
 
 const searchAction = (prevSate: FormState, formData: FormData) => {
@@ -14,7 +15,7 @@ const searchAction = (prevSate: FormState, formData: FormData) => {
 
   if (!result.success && value) {
     feedback.result = false;
-    feedback.message = NOTICE_MESSAGES.ERROR.INVALID_SEARTCH_INPUT;
+    feedback.message = GENERIC_MESSAGES.ERROR.SEARCH_FAILED;
   } else {
     // Set the feedback message to be search value
     // feedback.result = true;

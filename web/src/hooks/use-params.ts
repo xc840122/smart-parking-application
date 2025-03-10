@@ -23,5 +23,17 @@ export const useURLParams = () => {
   // Get load more,for little screen device
   const mode = searchParams.get('mode') ?? '';
 
-  return { pageNum, searchValue, startDate, endDate, mode };
+  // Get city and area from url
+  const city = searchParams.get('city') ?? '';
+  const area = searchParams.get('area') ?? '';
+
+  return {
+    pageNum,
+    searchValue,
+    startDate,
+    endDate,
+    mode,
+    city,
+    area,
+  };
 };

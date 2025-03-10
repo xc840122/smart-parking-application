@@ -26,9 +26,6 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider appearance={{
-      // baseTheme: neobrutalism,
-      // signIn: { baseTheme: shadesOfPurple },
-      // signUp: { baseTheme: shadesOfPurple },
     }}>
       <html lang="en">
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
