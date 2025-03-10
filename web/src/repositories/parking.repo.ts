@@ -3,14 +3,46 @@ import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
 import { ParkingSpaceDataModel } from "@/types/parking-space.type";
 
-export const getParkingByIdRepo = async (id: string): Promise<ParkingSpaceDataModel> => {
+export const getParkingByIdRepo = async (id: string): Promise<ParkingSpaceDataModel | null> => {
   try {
-    return await fetchQuery(api.parking.getParkingByIdData, { id: id as Id<"parking_spaces"> });
+    const parkingList = await fetchQuery(api.parking.getParkingByIdData, { id: id as Id<"parking_spaces"> });
+    return !parkingList ? null : parkingList;
   } catch (error) {
     console.error(`Failed to get parking space by ID: ${error}`);
     throw new Error("Get parking space by ID failed");
   }
 }
+
+/**
+ * Fetches parking data based on filters.
+ * @param {boolean} isActive - Whether the parking space is active.
+ * @param {string} [city] - The city to filter by.
+ * @param {string} [area] - The area to filter by.
+ * @param {string} [street] - The street to filter by.
+ * @param {string} [keyword] - The keyword to search for in the parking space name.
+ * @returns {Promise<ParkingSpaceDataModel[]>} A list of parking spaces matching the filters.
+ */
+export const getParkingRepo = async (
+  isActive: boolean,
+  city?: string,
+  area?: string,
+  street?: string,
+  keyword?: string
+): Promise<ParkingSpaceDataModel[]> => {
+  try {
+    const parkingData = await fetchQuery(api.parking.getParkingData, {
+      isActive,
+      city,
+      area,
+      street,
+      keyword,
+    });
+    return parkingData;
+  } catch (error) {
+    console.error("Failed to fetch parking data:", error);
+    throw new Error("Failed to fetch parking data");
+  }
+};
 
 /**
  * Creates a new parking space in the database.

@@ -40,7 +40,7 @@ export const createParkingModel = async (
 
 export const getParkingModel = async (
   ctx: QueryCtx,
-  isActive?: boolean,//By default get only active parking spaces
+  isActive: boolean,//By default get only active parking spaces
   city?: string,
   area?: string,
   street?: string,
@@ -54,20 +54,20 @@ export const getParkingModel = async (
         .withSearchIndex("search_name", q =>
           q
             .search("name", keyword)
-            .eq("isActive", true)
+            .eq("isActive", isActive)
         )
         .collect();
       return parkings.sort((a, b) => b._creationTime - a._creationTime);
-    } else if (city && area && street) {
+    } else if (city || area || street) {
       // For filter by city and area
       return await ctx.db
         .query("parking_spaces")
         .withIndex("by_city_area_street_isActive", (q) =>
           q
-            .eq("city", city)
-            .eq("area", area)
-            .eq("street", street)
-            .eq("isActive", true)
+            .eq("city", city ?? '')
+            .eq("area", area ?? '')
+            .eq("street", street ?? '')
+            .eq("isActive", isActive)
         )
         .order("desc")
         .collect();
@@ -75,7 +75,7 @@ export const getParkingModel = async (
       // For all parking spaces
       return await ctx.db
         .query("parking_spaces")
-        .withIndex("is_active", (q) => q.eq("isActive", true))
+        .withIndex("is_active", (q) => q.eq("isActive", isActive))
         .order("desc")
         .collect();
     }

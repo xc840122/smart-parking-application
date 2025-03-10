@@ -58,7 +58,7 @@ export const createParkingData = mutation({
  */
 export const getParkingData = query({
   args: {
-    isActive: v.optional(v.boolean()),
+    isActive: v.boolean(),
     city: v.optional(v.string()),
     area: v.optional(v.string()),
     street: v.optional(v.string()),

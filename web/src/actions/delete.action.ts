@@ -1,6 +1,6 @@
 import { GENERIC_MESSAGES } from "@/constants/messages/generic.message";
 import { deleteParkingService } from "@/services/parking.service";
-import type { Feedback, FormState } from "@/types/action-type";
+import type { Feedback, FormState } from "@/types/action.type";
 
 /**
  * SSR action, delete a notice
