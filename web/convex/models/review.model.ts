@@ -5,7 +5,7 @@ import { MutationCtx, QueryCtx } from "../_generated/server";
  * Creates a new review in the database.
  * @param {MutationCtx} ctx - The Convex mutation context.
  * @param {Id<"users">} userId - The ID of the user submitting the review.
- * @param {Id<"parking_spaces">} id - The ID of the parking space being reviewed.
+ * @param {Id<"parking_spaces">} parkingSpaceId - The ID of the parking space being reviewed.
  * @param {number} rating - The rating given by the user (e.g., 1 to 5 stars).
  * @param {string} [comment] - An optional comment from the user.
  * @returns {Promise<Id<"reviews">>} The ID of the newly created review.
@@ -14,13 +14,13 @@ import { MutationCtx, QueryCtx } from "../_generated/server";
 export const createReviewModel = async (
   ctx: MutationCtx,
   userId: Id<"users">,
-  id: Id<"parking_spaces">,
+  parkingSpaceId: Id<"parking_spaces">,
   rating: number,
   comment?: string
 ): Promise<Id<"reviews">> => {
   try {
     // Validate required fields
-    if (!userId || !id || !rating) {
+    if (!userId || !parkingSpaceId || !rating) {
       throw new Error("Invalid input: Missing required fields");
     }
 
@@ -32,7 +32,7 @@ export const createReviewModel = async (
     // Create the review
     return await ctx.db.insert("reviews", {
       userId,
-      id,
+      parkingSpaceId,
       rating,
       comment,
       createdAt: Date.now(),
@@ -52,16 +52,13 @@ export const createReviewModel = async (
  */
 export const getReviewsByParkingSpaceModel = async (
   ctx: QueryCtx,
-  id: Id<"parking_spaces">
+  parkingSpaceId: Id<"parking_spaces">
 ): Promise<object[]> => {
   try {
-    if (!id) {
-      throw new Error("Invalid input: Parking space ID is required");
-    }
     return await ctx.db
       .query("reviews")
-      .withIndex("by_id", (q) =>
-        q.eq("id", id)
+      .withIndex("by_parkingSpaceId", (q) =>
+        q.eq("parkingSpaceId", parkingSpaceId)
       )
       .collect();
   } catch (error) {
