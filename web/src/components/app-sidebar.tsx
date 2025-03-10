@@ -25,77 +25,22 @@ const data = {
   // },
   navMain: [
     {
-      title: "Parking Management",
+      title: "Class Management",
       url: "",
       icon: SquareTerminal,
       isActive: true,
       items: [
-        {
-          title: "Find Parking",
-          url: "/parking",
-        },
-        {
-          title: "My Booking",
-          url: "/booking",
-        },
-      ],
-    }, {
-      title: "Billing Management",
-      url: "",
-      icon: SquareTerminal,
-      isActive: true,
-      items: [
-        {
-          title: "Order History",
-          url: "/parking",
-        },
-        {
-          title: "My Account",
-          url: "/account",
-        },
-      ],
-    },
-    {
-      title: "Customer Support",
-      url: "",
-      icon: SquareTerminal,
-      isActive: true,
-      items: [
-        {
-          title: "Contact us",
-          url: "/contact",
-        },
         {
           title: "Notice",
           url: "/notice",
         },
-      ],
-    },
-    {
-      title: "Admin Management",
-      url: "",
-      icon: SquareTerminal,
-      isActive: true,
-      items: [
         {
-          title: "Parking Management",
-          url: "/parkingmanagement",
+          title: "Lesson",
+          url: "/notice",
         },
         {
-          title: "Booking Management",
-          url: "/bookingmanagement",
-        },
-        {
-          title: "Order Management",
-          url: "/ordermanagement",
-        },
-        {
-          title: "Review Management",
-          url: "/reviewmanagement",
-        },
-        {
-          title: "Notice Management",
-          url: "/noticemanagement",
+          title: "Student",
+          url: "/notice",
         },
       ],
     },

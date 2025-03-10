@@ -1,6 +1,7 @@
 import { Suspense } from "react";
-import Loading from "@/components/Loading";
 import ParkingSpaceWrapper from "./parking-wrapper";
+import Loading from "@/components/Loading";
+
 
 const ParkingSpacePage = async () => {
   return (

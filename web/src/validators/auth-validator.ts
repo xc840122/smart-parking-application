@@ -9,10 +9,6 @@ export const signUpSchema = z.object({
   username: usernameSchema,
   password: passwordSchema,
   confirmPassword: passwordSchema,
-  classroom: z.string()
-    .max(4, 'Classroom code must be at most 4 characters')
-    .regex(/^[a-zA-Z0-9]+$/, 'Classroom code must contain only letters and numbers'),
-  verificationCode: z.string().regex(/^[a-zA-Z0-9]{6}$/, 'Must be a 6-digit alphanumeric ID'),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords do not match",
   path: ["confirmPassword"],

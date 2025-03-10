@@ -20,7 +20,7 @@ export const seedParkingSpaces = mutation({
     const streets = ["Main St", "Broadway", "Elm St", "Oak St", "Maple Ave"];
 
     // Generate 100 parking spaces
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 5; i++) {
       const name = `Parking Space ${i + 1}`;
       const location = {
         lat: getRandomCoordinate(34.0, 35.0), // Latitude range for testing

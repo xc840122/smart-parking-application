@@ -1,4 +1,4 @@
-export const addressGenerator = async (
+export const addressGenerator = (
   city: string,
   area: string,
   street: string,

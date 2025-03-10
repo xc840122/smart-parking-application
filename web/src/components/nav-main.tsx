@@ -43,7 +43,7 @@ export function NavMain({
           height={20}
         />
         <SidebarGroupLabel>
-          <h1 className="font-bold text-lg text-gray-400">Parking Save</h1>
+          <h1 className="font-bold text-lg text-gray-400">Digital Campus</h1>
         </SidebarGroupLabel>
       </div>
       <SidebarMenu>

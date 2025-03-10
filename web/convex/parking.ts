@@ -1,10 +1,11 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import {
-  createParkingSpaceModel,
-  getParkingSpacesByLocationModel,
-  updateParkingSpaceModel,
-  deleteParkingSpaceModel,
+  getParkingModel,
+  getParkingByIdModel,
+  createParkingModel,
+  updateParkingModel,
+  deleteParkingModel,
 } from "./models/parking.model";
 
 /**
@@ -22,7 +23,7 @@ import {
  * @param {number} args.pricePerHour - The cost of parking per hour.
  * @returns {Promise<Id<"parking_spaces">>} The ID of the newly created parking space.
  */
-export const createParkingSpace = mutation({
+export const createParkingData = mutation({
   args: {
     name: v.string(),
     location: v.object({ lat: v.number(), lng: v.number() }),
@@ -34,7 +35,7 @@ export const createParkingSpace = mutation({
     pricePerHour: v.number(),
   },
   handler: async (ctx, args) => {
-    return await createParkingSpaceModel(
+    return await createParkingModel(
       ctx,
       args.name,
       args.location,
@@ -49,23 +50,40 @@ export const createParkingSpace = mutation({
 });
 
 /**
- * Retrieves parking spaces by location (city and area).
+ * Retrieves parking spaces.
  * @param {object} args - The arguments for retrieving parking spaces.
  * @param {string} args.city - The city to search for parking spaces.
  * @param {string} args.area - The area within the city to search.
  * @returns {Promise<ParkingSpaceDataModel[]>} A list of parking spaces in the specified location.
  */
-export const getParkingSpacesByLocation = query({
+export const getParkingData = query({
   args: {
     isActive: v.optional(v.boolean()),
     city: v.optional(v.string()),
     area: v.optional(v.string()),
+    street: v.optional(v.string()),
     keyword: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const parkings = await getParkingSpacesByLocationModel(
-      ctx, args.isActive, args.city, args.area, args.keyword);
+    const parkings = await getParkingModel(
+      ctx,
+      args.isActive,
+      args.city,
+      args.area,
+      args.street,
+      args.keyword,
+    );
     return parkings;
+  },
+});
+
+export const getParkingByIdData = query({
+  args: {
+    id: v.id("parking_spaces"),
+  },
+  handler: async (ctx, args) => {
+    const parking = await getParkingByIdModel(ctx, args.id);
+    return parking;
   },
 });
 
@@ -86,7 +104,7 @@ export const getParkingSpacesByLocation = query({
  * @param {number} [args.updates.pricePerHour] - The updated price per hour.
  * @param {boolean} [args.updates.isActive] - The updated active status.
  */
-export const updateParkingSpace = mutation({
+export const updateParkingData = mutation({
   args: {
     id: v.id("parking_spaces"),
     updates: v.object({
@@ -102,7 +120,7 @@ export const updateParkingSpace = mutation({
     }),
   },
   handler: async (ctx, args) => {
-    await updateParkingSpaceModel(ctx, args.id, args.updates);
+    await updateParkingModel(ctx, args.id, args.updates);
   },
 });
 
@@ -111,9 +129,9 @@ export const updateParkingSpace = mutation({
  * @param {object} args - The arguments for deleting a parking space.
  * @param {Id<"parking_spaces">} args.id - The ID of the parking space to delete.
  */
-export const deleteParkingSpace = mutation({
+export const deleteParkingData = mutation({
   args: { id: v.id("parking_spaces") },
   handler: async (ctx, args) => {
-    await deleteParkingSpaceModel(ctx, args.id);
+    await deleteParkingModel(ctx, args.id);
   },
 });

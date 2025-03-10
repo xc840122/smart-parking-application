@@ -4,16 +4,13 @@ import { useClerk, useSignUp, useUser } from '@clerk/nextjs';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { signUpVerificationService, updateVerificationInfoService } from '@/services/auth-service';
 import { SignUpType, signUpSchema } from '@/validators/auth-validator';
-import { AUTH_MESSAGES } from '@/constants/messages/auth-message';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormField, FormItem, FormMessage } from '@/components/ui/form';
-import { toast } from 'sonner';
 
 export default function SignUpForm() {
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -29,8 +26,6 @@ export default function SignUpForm() {
       username: '',
       password: '',
       confirmPassword: '',
-      classroom: '',
-      verificationCode: '',
     },
   });
 
@@ -49,26 +44,6 @@ export default function SignUpForm() {
       return;
     }
 
-    // Validate classroom code and verification ID before proceeding
-    const validationResponse = await signUpVerificationService(data.verificationCode, data.classroom);
-
-    // Handle validation response
-    switch (validationResponse.message) {
-      case 'ERROR.CODE_NOT_FOUND':
-        setServerError(AUTH_MESSAGES.ERROR.CODE_NOT_FOUND);
-        return;
-      case 'ERROR.INVALID_CODE':
-        setServerError(AUTH_MESSAGES.ERROR.INVALID_CODE);
-        return;
-      case 'ERROR.CLASSROOM_NOT_MATCH':
-        setServerError(AUTH_MESSAGES.ERROR.CLASSROOM_NOT_MATCH);
-        return;
-      case 'ERROR.UNKNOWN':
-        setServerError(AUTH_MESSAGES.ERROR.UNKNOWN);
-        return;
-      default:
-    }
-
     try {
       // Avoid single-session problem, sign out before sign-up
       // if (isSignedIn) await signOut();
@@ -77,22 +52,12 @@ export default function SignUpForm() {
       const signUpResponse = await signUp.create({
         username: data.username,
         password: data.password,
-        unsafeMetadata: {
-          role: validationResponse.data?.role,
-          classroom: data.classroom,
-        },
       });
 
       // Check if sign-up is complete,set error message if not
       if (signUpResponse.status !== 'complete') {
         setServerError('Signup failed');
         return;
-      }
-
-      // Update verification information
-      const result = await updateVerificationInfoService(validationResponse.data?._id as string, false);
-      if (result?.result) {
-        toast.success(result.message);
       }
 
       // Set active session
@@ -115,7 +80,7 @@ export default function SignUpForm() {
     <div className='flex items-center justify-center h-screen'>
       <Card className='w-full max-w-md'>
         <CardHeader>
-          <CardTitle className='text-center text-2xl'>Sign Up to Parking Save</CardTitle>
+          <CardTitle className='text-center text-2xl'>Sign Up to Digital Campus</CardTitle>
         </CardHeader>
         <CardContent>
           {serverError && <p className='text-red-500 text-sm text-center mb-3'>{serverError}</p>}
@@ -156,32 +121,6 @@ export default function SignUpForm() {
                   <FormItem>
                     <Label>Confirm Password</Label>
                     <Input {...field} type='password' placeholder='Confirm your password' />
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* Classroom Code Field */}
-              <FormField
-                control={form.control}
-                name='classroom'
-                render={({ field }) => (
-                  <FormItem>
-                    <Label>Classroom Code</Label>
-                    <Input {...field} placeholder='4 characters' />
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* Verification Code Field */}
-              <FormField
-                control={form.control}
-                name='verificationCode'
-                render={({ field }) => (
-                  <FormItem>
-                    <Label>VerificationCode Code</Label>
-                    <Input {...field} placeholder='6-digit alphanumeric ID' />
                     <FormMessage />
                   </FormItem>
                 )}

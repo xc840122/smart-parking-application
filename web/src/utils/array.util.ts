@@ -3,7 +3,7 @@ import { ITEM_PER_PAGE } from "@/lib/settings";
 // Convert list to paginated map
 export const arrayConverter = <T,>(list: Array<T>): Map<number, T[]> => {
   try {
-    const noticeMap = list.reduce((map, item: T, index) => {
+    const listWithPage = list.reduce((map, item: T, index) => {
       // Calculate page number
       const pageNumber = Math.floor(index / ITEM_PER_PAGE) + 1;
       // Set new pageNumber if not exist
@@ -14,7 +14,7 @@ export const arrayConverter = <T,>(list: Array<T>): Map<number, T[]> => {
       map.get(pageNumber)?.push(item);
       return map;
     }, new Map<number, T[]>());
-    return noticeMap;
+    return listWithPage;
   } catch (error) {
     console.error(`Failed to get list: ${error}`);
     throw new Error("Convert list to paginated map failed");

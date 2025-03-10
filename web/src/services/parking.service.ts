@@ -2,7 +2,7 @@ import { ApiResponse } from "@/types/api-type";
 import { parkingSpaceSchema } from "@/validators/parking-space.validator";
 import { ParkingSpaceDataModel } from "@/types/parking-space.type";
 import { PARKING_SPACE_MESSAGES } from "@/constants/messages/parking-space.message";
-import { createParkingSpaceRepo, deleteParkingSpaceRepo, getParkingSpacesByLocationRepo, updateParkingSpaceRepo } from "@/repositories/parking.repo";
+import { createParkingRepo, deleteParkingRepo, getParkingByIdRepo, updateParkingRepo } from "@/repositories/parking.repo";
 
 /**
  * Retrieves parking spaces by location (city and area).
@@ -10,31 +10,46 @@ import { createParkingSpaceRepo, deleteParkingSpaceRepo, getParkingSpacesByLocat
  * @param {string} area - The area within the city to search.
  * @returns {Promise<ApiResponse<ParkingSpaceDataModel[]>>} A response containing the list of parking spaces or an error message.
  */
-export const getParkingSpacesByLocationService = async (
-  isActive?: boolean,
-  keyword?: string,
-  city?: string,
-  area?: string
-): Promise<ApiResponse<ParkingSpaceDataModel[]>> => {
+// export const getParkingService = async (
+//   city?: string,
+//   area?: string,
+//   keyword?: string,
+//   isActive?: boolean,
+// ): Promise<ApiResponse<ParkingSpaceDataModel[]>> => {
+//   try {
+//     const parkingSpaces = await getParkingRepo(
+//       isActive,
+//       keyword,
+//       city,
+//       area
+//     );
+
+//     // Return error if no parking spaces are found
+//     if (!parkingSpaces || parkingSpaces.length === 0) {
+//       return { result: false, message: PARKING_SPACE_MESSAGES.ERROR.NOT_FOUND };
+//     }
+
+//     return { result: true, message: PARKING_SPACE_MESSAGES.SUCCESS.GET_SUCCESSFUL, data: parkingSpaces };
+//   } catch (error) {
+//     console.error(`Failed to get parking spaces by location: ${error}`);
+//     return { result: false, message: PARKING_SPACE_MESSAGES.ERROR.GET_FAILED };
+//   }
+// }
+
+export const getParkingByIdService = async (id: string): Promise<ApiResponse<ParkingSpaceDataModel>> => {
   try {
-    const parkingSpaces = await getParkingSpacesByLocationRepo(
-      isActive,
-      keyword,
-      city,
-      area
-    );
-
-    // Return error if no parking spaces are found
-    if (!parkingSpaces || parkingSpaces.length === 0) {
+    const parkingSpace = await getParkingByIdRepo(id);
+    if (!parkingSpace) {
       return { result: false, message: PARKING_SPACE_MESSAGES.ERROR.NOT_FOUND };
+    } else {
+      return { result: true, message: PARKING_SPACE_MESSAGES.SUCCESS.GET_SUCCESSFUL, data: parkingSpace };
     }
-
-    return { result: true, message: PARKING_SPACE_MESSAGES.SUCCESS.GET_SUCCESSFUL, data: parkingSpaces };
   } catch (error) {
-    console.error(`Failed to get parking spaces by location: ${error}`);
+    console.error(`Failed to get parking space by ID: ${error}`);
     return { result: false, message: PARKING_SPACE_MESSAGES.ERROR.GET_FAILED };
   }
 }
+
 
 /**
  * Creates a new parking space in the database.
@@ -50,7 +65,7 @@ export const getParkingSpacesByLocationService = async (
  * @param {number} pricePerHour - The cost of parking per hour.
  * @returns {Promise<ApiResponse<string>>} A response containing the ID of the newly created parking space or an error message.
  */
-export const createParkingSpaceService = async (
+export const createParkingService = async (
   name: string,
   location: { lat: number; lng: number },
   city: string,
@@ -78,7 +93,7 @@ export const createParkingSpaceService = async (
     }
 
     // Create the parking space
-    const parkingSpaceId = await createParkingSpaceRepo(
+    const parkingSpaceId = await createParkingRepo(
       name,
       location,
       city,
@@ -113,7 +128,7 @@ export const createParkingSpaceService = async (
  * @param {boolean} [updates.isActive] - The updated active status.
  * @returns {Promise<ApiResponse>} A response indicating success or failure.
  */
-export const updateParkingSpaceService = async (
+export const updateParkingService = async (
   id: string,
   updates: {
     name?: string;
@@ -136,7 +151,7 @@ export const updateParkingSpaceService = async (
     }
 
     // Update the parking space
-    await updateParkingSpaceRepo(id, updates);
+    await updateParkingRepo(id, updates);
 
     return { result: true, message: PARKING_SPACE_MESSAGES.SUCCESS.UPDATE_SUCCESSFUL };
   } catch (error) {
@@ -150,10 +165,10 @@ export const updateParkingSpaceService = async (
  * @param {string} id - The ID of the parking space to delete.
  * @returns {Promise<ApiResponse>} A response indicating success or failure.
  */
-export const deleteParkingSpaceService = async (id: string): Promise<ApiResponse> => {
+export const deleteParkingService = async (id: string): Promise<ApiResponse> => {
   try {
     // Delete the parking space
-    await deleteParkingSpaceRepo(id);
+    await deleteParkingRepo(id);
 
     return { result: true, message: PARKING_SPACE_MESSAGES.SUCCESS.DELETE_SUCCESSFUL };
   } catch (error) {

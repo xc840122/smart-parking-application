@@ -1,5 +1,5 @@
 import { GENERIC_MESSAGES } from "@/constants/messages/generic.message";
-import { deleteParkingSpaceService } from "@/services/parking.service";
+import { deleteParkingService } from "@/services/parking.service";
 import type { Feedback, FormState } from "@/types/action-type";
 
 /**
@@ -15,7 +15,7 @@ const deleteAction = async (prevState: FormState, formData: FormData) => {
     // Get id from from
     const id = formData.get('id') as string;
     // Call service to delete notice
-    const response = await deleteParkingSpaceService(id);
+    const response = await deleteParkingService(id);
     // Set state according to response,for toast use
     if (response.result) {
       feedback.result = true;

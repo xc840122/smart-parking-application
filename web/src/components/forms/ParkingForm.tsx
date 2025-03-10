@@ -17,8 +17,8 @@ import { AlertDialogCancel, AlertDialogTitle } from "../ui/alert-dialog"
 import { toast } from "sonner"
 import { ParkingSpaceDataModel } from "@/types/parking-space.type"
 import { parkingSpaceSchema, ParkingSpaceType } from "@/validators/parking-space.validator"
-import { createParkingSpaceService, updateParkingSpaceService } from "@/services/parking.service"
 import { Switch } from "@radix-ui/react-switch"
+import { createParkingService, updateParkingService } from "@/services/parking.service"
 
 
 const ParkingForm = ({
@@ -55,7 +55,7 @@ const ParkingForm = ({
     // Call create or update message function
     switch (operationType) {
       case 'create':
-        const response = await createParkingSpaceService(
+        const response = await createParkingService(
           values.name,
           values.location,
           values.city,
@@ -75,7 +75,7 @@ const ParkingForm = ({
         break;
       case 'edit':
         if (defaultData?._id) {
-          const response = await updateParkingSpaceService(defaultData._id, {
+          const response = await updateParkingService(defaultData._id, {
             name: values.name,
             location: values.location,
             city: values.city,

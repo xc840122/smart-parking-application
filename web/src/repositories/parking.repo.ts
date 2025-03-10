@@ -3,28 +3,12 @@ import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
 import { ParkingSpaceDataModel } from "@/types/parking-space.type";
 
-/**
- * Retrieves parking spaces by location (city and area).
- * @param {string} city - The city to search for parking spaces.
- * @param {string} area - The area within the city to search.
- * @returns {Promise<ParkingSpaceDataModel[]>} A list of parking spaces in the specified location.
- * @throws {Error} If the query fails.
- */
-export const getParkingSpacesByLocationRepo = async (
-  isActive?: boolean,
-  keyword?: string,
-  city?: string,
-  area?: string): Promise<ParkingSpaceDataModel[]> => {
+export const getParkingByIdRepo = async (id: string): Promise<ParkingSpaceDataModel> => {
   try {
-    return await fetchQuery(api.parking.getParkingSpacesByLocation, {
-      isActive,
-      keyword,
-      city,
-      area,
-    });
+    return await fetchQuery(api.parking.getParkingByIdData, { id: id as Id<"parking_spaces"> });
   } catch (error) {
-    console.error(`Failed to get parking spaces by location: ${error}`);
-    throw new Error("Get parking spaces by location failed");
+    console.error(`Failed to get parking space by ID: ${error}`);
+    throw new Error("Get parking space by ID failed");
   }
 }
 
@@ -43,7 +27,7 @@ export const getParkingSpacesByLocationRepo = async (
  * @returns {Promise<Id<"parking_spaces">>} The ID of the newly created parking space.
  * @throws {Error} If the mutation fails.
  */
-export const createParkingSpaceRepo = async (
+export const createParkingRepo = async (
   name: string,
   location: { lat: number; lng: number },
   city: string,
@@ -54,7 +38,7 @@ export const createParkingSpaceRepo = async (
   pricePerHour: number
 ): Promise<Id<"parking_spaces">> => {
   try {
-    return await fetchMutation(api.parking.createParkingSpace, {
+    return await fetchMutation(api.parking.createParkingData, {
       name,
       location,
       city,
@@ -87,7 +71,7 @@ export const createParkingSpaceRepo = async (
  * @param {boolean} [updates.isActive] - The updated active status.
  * @throws {Error} If the mutation fails.
  */
-export const updateParkingSpaceRepo = async (
+export const updateParkingRepo = async (
   id: string,
   updates: {
     name?: string;
@@ -102,7 +86,7 @@ export const updateParkingSpaceRepo = async (
   }
 ) => {
   try {
-    await fetchMutation(api.parking.updateParkingSpace, {
+    await fetchMutation(api.parking.updateParkingData, {
       id: id as Id<"parking_spaces">,
       updates,
     });
@@ -117,9 +101,9 @@ export const updateParkingSpaceRepo = async (
  * @param {string} id - The ID of the parking space to delete.
  * @throws {Error} If the mutation fails.
  */
-export const deleteParkingSpaceRepo = async (id: string) => {
+export const deleteParkingRepo = async (id: string) => {
   try {
-    await fetchMutation(api.parking.deleteParkingSpace, {
+    await fetchMutation(api.parking.deleteParkingData, {
       id: id as Id<"parking_spaces">,
     });
   } catch (error) {

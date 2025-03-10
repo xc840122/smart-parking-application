@@ -26,6 +26,7 @@ export const useURLParams = () => {
   // Get city and area from url
   const city = searchParams.get('city') ?? '';
   const area = searchParams.get('area') ?? '';
+  const street = searchParams.get('street') ?? '';
 
   return {
     pageNum,
@@ -35,5 +36,6 @@ export const useURLParams = () => {
     mode,
     city,
     area,
+    street,
   };
 };
