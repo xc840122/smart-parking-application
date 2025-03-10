@@ -4,7 +4,7 @@ import { ApiResponse } from "@/types/api.type";
 import { ParkingSpaceDataModel } from "@/types/parking-space.type";
 
 // GET: Fetch parking spaces by filters
-export async function GET(request: Request) {
+export const GET = async (request: Request) => {
   try {
     const { searchParams } = new URL(request.url);
 
