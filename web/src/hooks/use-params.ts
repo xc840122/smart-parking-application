@@ -9,7 +9,7 @@ export const useURLParams = () => {
   const searchParams = useSearchParams();
 
   // Extract page from url, defaulting to '1' if missing
-  const pageNum = parseInt(searchParams.get('page') ?? '1');
+  const page = parseInt(searchParams.get('page') ?? '1');
 
   // Get search keyword from url
   const searchValue = searchParams.has('search')
@@ -29,7 +29,7 @@ export const useURLParams = () => {
   const street = searchParams.get('street') ?? '';
 
   return {
-    pageNum,
+    page,
     searchValue,
     startDate,
     endDate,

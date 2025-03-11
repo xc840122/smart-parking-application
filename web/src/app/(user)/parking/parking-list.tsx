@@ -15,27 +15,30 @@ import { ParkingSpaceDataModel } from "@/types/convex.type";
 
 export const ParkingListContent = ({
   mode,
-  pageNum,
+  page,
   role = "user",
-  parkings = [],
+  parkings,
 }: {
   mode?: string;
-  pageNum: number;
-  role: "user" | "admin";
+  page: number;
+  role: string;
   parkings: ParkingSpaceDataModel[];
 }) => {
+  console.log("page", page);
+  console.log("parkings", parkings.length);
+
   // Total pages
   const totalPages = Math.max(1, Math.ceil(parkings.length / ITEM_PER_PAGE));
   // Slice parkings per page
-
   const parkingsPerPage: ParkingSpaceDataModel[] =
     mode !== "mobile"
-      ? (arrayConverter(parkings)).get(pageNum) ?? []
-      : parkings.slice(0, pageNum * ITEM_PER_PAGE) ?? [];
+      ? (arrayConverter(parkings)).get(page) ?? []
+      : parkings.slice(0, page * ITEM_PER_PAGE) ?? [];
 
   const renderRow = (item: ParkingSpaceDataModel) => (
     <TableRow
-      className="cursor-pointer hover:bg-gray-200 active:bg-gray-300 rounded-md transition-all duration-200 shadow-sm hover:shadow-md text-center"
+      className="cursor-pointer hover:bg-gray-200 active:bg-gray-300 rounded-md 
+      transition-all duration-200 shadow-sm hover:shadow-md text-center"
       key={item._id}
     >
       <TableCell className="font-medium w-3/12 truncate">{item.name}</TableCell>
@@ -82,8 +85,8 @@ export const ParkingListContent = ({
         )}
       </div>
       <div className="w-full bg-gray-50 p-4 rounded-lg">
-        <Table columns={columns} renderRow={renderRow} data={parkingsPerPage ?? []} />
-        <Pagination currentPage={pageNum} totalPages={totalPages} />
+        <Table columns={columns} renderRow={renderRow} data={parkingsPerPage} />
+        <Pagination currentPage={page} totalPages={totalPages} />
       </div>
     </div>
   );

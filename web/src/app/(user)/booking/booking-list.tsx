@@ -12,15 +12,16 @@ import DeleteForm from "@/components/forms/DeleteForm";
 import ParkingForm from "@/components/forms/ParkingForm";
 import { BookingDataModel } from "@/types/convex.type";
 import { ConvexTimeToDisplayFormat, ConvexTimeToParkingTime } from "@/utils/date.util";
+import BookingForm from "@/components/forms/BookingForm";
 
 export const BookingListContent = ({
   mode,
-  pageNum,
+  page,
   role = "user",
   bookings = [],
 }: {
   mode?: string;
-  pageNum: number;
+  page: number;
   role: string;
   bookings: BookingDataModel[];
 }) => {
@@ -30,8 +31,8 @@ export const BookingListContent = ({
 
   const bookingsPerPage: BookingDataModel[] =
     mode !== "mobile"
-      ? (arrayConverter(bookings)).get(pageNum) ?? []
-      : bookings.slice(0, pageNum * ITEM_PER_PAGE) ?? [];
+      ? (arrayConverter(bookings)).get(page) ?? []
+      : bookings.slice(0, page * ITEM_PER_PAGE) ?? [];
 
   const renderRow = (item: BookingDataModel) => (
     <TableRow
@@ -56,7 +57,7 @@ export const BookingListContent = ({
                 <DeleteForm id={item._id} />
               </DialogModal>
               <DialogModal triggerButtonText="Edit">
-                <ParkingForm operationType="edit" defaultData={item} />
+                <BookingForm operationType="edit" defaultData={item} />
               </DialogModal>
             </>
           )}
@@ -87,7 +88,7 @@ export const BookingListContent = ({
       </div>
       <div className="w-full bg-gray-50 p-4 rounded-lg">
         <Table columns={columns} renderRow={renderRow} data={bookingsPerPage ?? []} />
-        <Pagination currentPage={pageNum} totalPages={totalPages} />
+        <Pagination currentPage={page} totalPages={totalPages} />
       </div>
     </div>
   );

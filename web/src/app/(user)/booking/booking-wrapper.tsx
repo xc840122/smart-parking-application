@@ -18,7 +18,7 @@ const BookingWrapper = ({
 }
 ) => {
   // Get related data for booking
-  const { pageNum, mode, searchValue, startDate, endDate } = useURLParams();
+  const { page, mode, searchValue, startDate, endDate } = useURLParams();
   const [userId, setUserId] = useState<Id<"users"> | null>(null);
 
   // Get userID by Clerk user
@@ -55,7 +55,7 @@ const BookingWrapper = ({
   return (
     <BookingListContent
       mode={mode}
-      pageNum={pageNum}
+      page={page}
       bookings={bookings}
       role={role}
     />
