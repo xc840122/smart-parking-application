@@ -19,33 +19,34 @@ const BookingWrapper = ({
 ) => {
   // Get related data for booking
   const { page, mode, searchValue, startDate, endDate } = useURLParams();
-  const [userId, setUserId] = useState<Id<"users"> | null>(null);
+  const [appUserId, setAppUserId] = useState<Id<"users"> | null>(null);
 
   // Get userID by Clerk user
   useEffect(() => {
     const getUser = async () => {
       try {
-        console.log("Fetching user by Clerk ID:", clerkUserId);
-        const appUser = await getUserByClerkIdService(clerkUserId);
-        console.log("User fetched:", appUser);
-        if (appUser.result && appUser.data) {
-          setUserId(appUser.data._id);
-        } else {
-          console.error("Failed to fetch user:", appUser.message);
+        if (clerkUserId) {
+          const appUser = await getUserByClerkIdService(clerkUserId);
+          if (appUser.result && appUser.data) {
+            setAppUserId(appUser.data._id);
+          } else {
+            console.error("Failed to fetch user:", appUser.message);
+          }
         }
       } catch (error) {
         console.error("Error fetching user:", error);
       }
     };
-
     getUser();
   }, [clerkUserId]);
+
+  console.log("appUserId", appUserId);
 
   // Use useQuery but allow it to wait until userId is available
   const bookings = useQuery(
     api.booking.getBookingsByUser,
     {
-      userId: userId!,
+      userId: appUserId!,
       keyword: searchValue,
       startTime: DateToConvexTime(startDate, true),
       endTime: DateToConvexTime(endDate, false),

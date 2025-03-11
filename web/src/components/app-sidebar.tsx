@@ -14,7 +14,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
-import { SignedIn, SignedOut, SignIn, SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs"
+import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs"
 import { Button } from "./ui/button"
 
 // This is sample data.
