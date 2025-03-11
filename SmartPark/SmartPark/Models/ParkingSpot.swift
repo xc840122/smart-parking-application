@@ -7,20 +7,30 @@
 
 import Foundation
 
-struct ParkingFactors: Codable {
-    let occupancyRate: Int
-    let peakHours: Bool
-    let weatherCondition: String
+struct Location: Codable {
+    let lat: Double
+    let lng: Double
 }
 
 struct ParkingSpot: Identifiable, Codable {
-    let id: Int
+    let _id: String
+    let _creationTime: Double
     let name: String
-    let position: String
-    let spaces: Int
-    let baseRate: Double
-    let adjustedRate: Double
-    let availableTime: String
-    let rating: Double
-    let factors: ParkingFactors
+    let area: String
+    let city: String
+    let street: String
+    let unit: String
+    let availableSlots: Int
+    let totalSlots: Int
+    let pricePerHour: Int
+    let location: Location
+    let isActive: Bool
+    
+    var id: String { _id } // Conforming to Identifiable protocol
+}
+
+struct ParkingSpotResponse: Decodable {
+    let result: Bool
+    let message: String
+    let data: [ParkingSpot]
 }

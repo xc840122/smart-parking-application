@@ -20,7 +20,7 @@ extension ParkingSpotAPI: TargetType {
     var path: String {
         switch self {
         case .getParkingLots:
-            return "/parking-lots"
+            return "/parking"
         }
     }
 
@@ -29,7 +29,10 @@ extension ParkingSpotAPI: TargetType {
     }
 
     var task: Moya.Task {
-        .requestPlain
+        switch self {
+        case .getParkingLots:
+            return .requestParameters(parameters: ["isActive": "true"], encoding: URLEncoding.queryString)
+        }
     }
 
     var headers: [String : String]? {

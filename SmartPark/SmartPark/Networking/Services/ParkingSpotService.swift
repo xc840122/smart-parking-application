@@ -9,13 +9,10 @@ import Foundation
 import Moya
 
 class ParkingSpotService {
-//    private let provider = MoyaProvider<ParkingSpotAPI>(plugins: [AuthPlugin()])
-    
-    // load from local json
-    private let provider = MoyaProvider<ParkingSpotAPI>(stubClosure: MoyaProvider.delayedStub(1))
-    
-    func fetchParkingLots() async throws -> [ParkingSpot] {
+    private let provider = MoyaProvider<ParkingSpotAPI>(plugins: [AuthPlugin()])
+        
+    func fetchParkingLots() async throws -> ParkingSpotResponse {
         let response = try await provider.requestAsync(.getParkingLots)
-        return try JSONDecoder().decode([ParkingSpot].self, from: response.data)
+        return try JSONDecoder().decode(ParkingSpotResponse.self, from: response.data)
     }
 }

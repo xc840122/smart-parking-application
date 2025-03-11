@@ -10,8 +10,8 @@ import Foundation
 
 @Observable
 final class LoginViewModel {
-    var email = "user1"
-    var password = "user1"
+    var email = "peter"
+    var password = "11111111"
     var isLoading = false
     var showingAlert = false
     var alertMessage = ""

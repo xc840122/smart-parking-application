@@ -12,7 +12,7 @@ struct AuthPlugin: PluginType {
     func prepare(_ request: URLRequest, target: any TargetType) -> URLRequest {
         var request = request
         
-        request.addValue("application/json", forHTTPHeaderField: "application/json")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         
         return request
     }

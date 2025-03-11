@@ -11,12 +11,13 @@ import Observation
 @Observable
 class ParkingSpotViewModel {
     var parkingLots: [ParkingSpot] = []
-    // load local json data
+    
     private let localService = ParkingSpotService()
     
     func loadParkingLots() async {
         do {
-            parkingLots = try await localService.fetchParkingLots()
+            let response = try await localService.fetchParkingLots()
+            parkingLots = response.data
             print("load local data: \(parkingLots.count)")
         } catch {
             dump(error.localizedDescription)

@@ -24,7 +24,7 @@ enum APIConfig {
     static var baseURL: URL {
         switch currentEnvironment {
         case .development:
-            return URL(string: "https://dev.example.com/api")!
+            return URL(string: "http://localhost:3000/api")!
         case .production:
             return URL(string: "https://example.com/api")!
         }
