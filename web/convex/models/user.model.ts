@@ -2,6 +2,29 @@ import { UserDataModel } from "@/types/convex.type";
 import { Id } from "../_generated/dataModel";
 import { MutationCtx, QueryCtx } from "../_generated/server";
 
+// Query user by clerk user ID
+export const getUserByClerkIdModel = async (
+  ctx: QueryCtx,
+  clerkUserId: string
+): Promise<UserDataModel> => {
+  try {
+    if (!clerkUserId) {
+      throw new Error("Invalid input: Clerk user ID is required");
+    }
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerkUserId", (q) => q.eq("clerkUserId", clerkUserId))
+      .first();
+    if (!user) {
+      throw new Error("User not found");
+    }
+    return user;
+  } catch (error) {
+    console.error("Failed to get user by Clerk ID:", error);
+    throw new Error("Query failed");
+  }
+};
+
 /**
  * Creates a new user in the database.
  * @param {MutationCtx} ctx - The Convex mutation context.

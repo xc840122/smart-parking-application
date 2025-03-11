@@ -13,6 +13,7 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as address from "../address.js";
 import type * as booking from "../booking.js";
 import type * as iot from "../iot.js";
 import type * as parking from "../parking.js";
@@ -30,6 +31,7 @@ import type * as user from "../user.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  address: typeof address;
   booking: typeof booking;
   iot: typeof iot;
   parking: typeof parking;

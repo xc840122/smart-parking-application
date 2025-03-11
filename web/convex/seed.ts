@@ -1,59 +1,3 @@
-// import { mutation } from "./_generated/server";
-
-// // Helper function to generate random data
-// const getRandomElement = <T>(array: T[]): T => {
-//   return array[Math.floor(Math.random() * array.length)];
-// };
-
-// // Helper function to generate random coordinates within a range
-// const getRandomCoordinate = (min: number, max: number): number => {
-//   return Math.random() * (max - min) + min;
-// };
-
-// // Seed data for testing
-// export const seedParkingSpaces = mutation({
-//   args: {},
-//   handler: async (ctx) => {
-//     // Cities, areas, and streets for testing
-//     const cities = ["New York", "Los Angeles", "Chicago", "Houston", "Phoenix"];
-//     const areas = ["Downtown", "Uptown", "Midtown", "Suburb", "Industrial Zone"];
-//     const streets = ["Main St", "Broadway", "Elm St", "Oak St", "Maple Ave"];
-
-//     // Generate 100 parking spaces
-//     for (let i = 0; i < 5; i++) {
-//       const name = `Parking Space ${i + 1}`;
-//       const location = {
-//         lat: getRandomCoordinate(34.0, 35.0), // Latitude range for testing
-//         lng: getRandomCoordinate(-118.0, -117.0), // Longitude range for testing
-//       };
-//       const city = getRandomElement(cities);
-//       const area = getRandomElement(areas);
-//       const street = getRandomElement(streets);
-//       const unit = `Unit ${Math.floor(Math.random() * 100)}`;
-//       const totalSlots = Math.floor(Math.random() * 50) + 10; // Random slots between 10 and 60
-//       const availableSlots = Math.floor(Math.random() * totalSlots); // Random available slots
-//       const pricePerHour = Math.floor(Math.random() * 10) + 5; // Random price between $5 and $15
-//       const isActive = true;
-
-//       // Insert the parking space into the database
-//       await ctx.db.insert("parking_spaces", {
-//         name,
-//         location,
-//         city,
-//         area,
-//         street,
-//         unit,
-//         totalSlots,
-//         availableSlots,
-//         pricePerHour,
-//         isActive,
-//       });
-//     }
-
-//     return "Seeded 100 parking spaces successfully!";
-//   },
-// });
-
 import { faker } from '@faker-js/faker';
 import { internalMutation } from "./_generated/server";
 import { Id } from "./_generated/dataModel";
@@ -81,8 +25,8 @@ const getRandomPastTimestamp = (minHours = 1, maxHours = 168): number => {
 export const seed = internalMutation({
   handler: async (ctx) => {
     // Check if data already exists to avoid duplicate seeding
-    const existingUsers = await ctx.db.query("users").collect();
-    if (existingUsers.length > 0) {
+    const existingCities = await ctx.db.query("cities").collect();
+    if (existingCities.length > 0) {
       console.log("Database already has data. Skipping seed operation.");
       return { success: false, message: "Data already exists" };
     }
@@ -90,11 +34,52 @@ export const seed = internalMutation({
     // Initialize Faker with a random seed
     faker.seed();
 
+    // Create cities
+    console.log("Creating cities...");
+    const cityNames = ["New York", "Los Angeles", "Chicago", "Houston", "Phoenix"];
+    const cityIds: Record<string, Id<"cities">> = {};
+
+    for (const cityName of cityNames) {
+      cityIds[cityName] = await ctx.db.insert("cities", {
+        name: cityName,
+      });
+    }
+
+    // Create areas
+    console.log("Creating areas...");
+    const areaNames = ["Downtown", "Uptown", "Midtown", "Westside", "Eastside"];
+    const areaIds: Record<string, Id<"areas">> = {};
+
+    for (const cityName of cityNames) {
+      for (const areaName of areaNames) {
+        const key = `${cityName}-${areaName}`;
+        areaIds[key] = await ctx.db.insert("areas", {
+          name: areaName,
+          cityId: cityIds[cityName],
+        });
+      }
+    }
+
+    // Create streets
+    console.log("Creating streets...");
+    const streetNames = ["Main St", "Broadway", "Park Ave", "5th Ave", "Ocean Blvd"];
+    const streetIds: Record<string, Id<"streets">> = {};
+
+    for (const cityName of cityNames) {
+      for (const areaName of areaNames) {
+        for (const streetName of streetNames) {
+          const areaKey = `${cityName}-${areaName}`;
+          const streetKey = `${areaKey}-${streetName}`;
+          streetIds[streetKey] = await ctx.db.insert("streets", {
+            name: streetName,
+            areaId: areaIds[areaKey],
+          });
+        }
+      }
+    }
+
     // Create users
     const userIds: Id<"users">[] = [];
-    const cities = ["New York", "Los Angeles", "Chicago", "Houston", "Phoenix"];
-    const areas = ["Downtown", "Uptown", "Midtown", "Westside", "Eastside"];
-    const streets = ["Main St", "Broadway", "Park Ave", "5th Ave", "Ocean Blvd"];
     const vehicleTypes = ["Sedan", "SUV", "Truck", "Compact", "Van"];
 
     console.log("Creating users...");
@@ -115,14 +100,18 @@ export const seed = internalMutation({
 
     // Create parking spaces
     const parkingSpaceIds: Id<"parking_spaces">[] = [];
+    const parkingSpaces: Record<string, { id: Id<"parking_spaces">, name: string }> = {};
+
     console.log("Creating parking spaces...");
     for (let i = 0; i < 15; i++) {
-      const city = getRandomItem(cities);
-      const area = getRandomItem(areas);
-      const street = getRandomItem(streets);
+      const city = getRandomItem(cityNames);
+      const area = getRandomItem(areaNames);
+      const street = getRandomItem(streetNames);
       const totalSlots = faker.number.int({ min: 5, max: 50 });
+      const parkingName = `${area} ${street} Parking`;
+
       const parkingSpaceId = await ctx.db.insert("parking_spaces", {
-        name: `${area} ${street} Parking`,
+        name: parkingName,
         location: {
           lat: faker.location.latitude(),
           lng: faker.location.longitude(),
@@ -136,7 +125,12 @@ export const seed = internalMutation({
         pricePerHour: faker.number.float({ min: 2, max: 15, fractionDigits: 1 }),
         isActive: faker.datatype.boolean(0.9), // 90% chance of being active
       });
+
       parkingSpaceIds.push(parkingSpaceId);
+      parkingSpaces[parkingSpaceId.toString()] = {
+        id: parkingSpaceId,
+        name: parkingName
+      };
     }
 
     // Create bookings
@@ -151,6 +145,7 @@ export const seed = internalMutation({
       // Get the price per hour for this parking space
       const parkingSpace = await ctx.db.get(parkingSpaceId);
       const pricePerHour = parkingSpace?.pricePerHour || 5;
+      const parkingName = parkingSpace?.name || "Unknown Parking";
 
       // Calculate duration in hours
       const durationHours = (endTime - startTime) / (60 * 60 * 1000);
@@ -159,6 +154,7 @@ export const seed = internalMutation({
       const bookingId = await ctx.db.insert("bookings", {
         userId: getRandomItem(userIds),
         parkingSpaceId,
+        parkingName, // Add the parking name from the parking space
         startTime,
         endTime,
         totalCost,
@@ -214,6 +210,9 @@ export const seed = internalMutation({
     return {
       success: true,
       counts: {
+        cities: Object.keys(cityIds).length,
+        areas: Object.keys(areaIds).length,
+        streets: Object.keys(streetIds).length,
         users: userIds.length,
         parkingSpaces: parkingSpaceIds.length,
         bookings: bookingIds.length

@@ -18,8 +18,9 @@ import { toast } from "sonner"
 
 import { parkingSpaceSchema, ParkingSpaceType } from "@/validators/parking-space.validator"
 import { createParkingService, updateParkingService } from "@/services/parking.service"
-import { ParkingSpaceDataModel } from "@/types/convex.type"
+import { BookingDataModel } from "@/types/convex.type"
 import { Switch } from "../ui/switch"
+import { BookingCreationData } from "@/validators/booking.validator"
 
 
 const ParkingForm = ({
@@ -28,24 +29,20 @@ const ParkingForm = ({
   onClose,
 }: {
   operationType: 'create' | 'edit'
-  defaultData?: ParkingSpaceDataModel
+  defaultData?: BookingDataModel
   onClose?: () => void
 }) => {
 
   // Define form.
-  const form = useForm<ParkingSpaceType>({
+  const form = useForm<BookingCreationData>({
     resolver: zodResolver(parkingSpaceSchema),
     defaultValues: {
-      name: defaultData?.name ?? '',
-      city: defaultData?.city ?? '',
-      area: defaultData?.area ?? '',
-      street: defaultData?.street ?? '',
-      unit: defaultData?.unit ?? '',
-      totalSlots: defaultData?.totalSlots ?? 0,
-      availableSlots: defaultData?.availableSlots ?? 0,
-      pricePerHour: defaultData?.pricePerHour ?? 0,
-      isActive: defaultData?.isActive ?? true,
-      location: defaultData?.location ?? { lat: 0, lng: 0 },
+      parkingId: defaultData?.parkingId ?? '',
+      userId: defaultData?.userId ?? '',
+      startTime: defaultData?.startTime ?? '',
+      endTime: defaultData?.endTime ?? '',
+      totalCost: defaultData?.totalCost ?? 0,
+      status: defaultData?.status ?? '',
     }, //Load default values for edit action
   })
 

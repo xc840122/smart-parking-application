@@ -8,47 +8,47 @@ import { ITEM_PER_PAGE } from "@/lib/settings";
 import { Rows3 } from "lucide-react";
 import Link from "next/link";
 import { arrayConverter } from "@/utils/array.util";
-import { addressGenerator } from "@/helper/parking.helper";
 import DeleteForm from "@/components/forms/DeleteForm";
 import ParkingForm from "@/components/forms/ParkingForm";
-import { ParkingSpaceDataModel } from "@/types/convex.type";
+import { BookingDataModel } from "@/types/convex.type";
+import { ConvexTimeToDisplayFormat, ConvexTimeToParkingTime } from "@/utils/date.util";
+import BookingForm from "@/components/forms/BookingForm";
 
-export const ParkingListContent = ({
+export const BookingListContent = ({
   mode,
   page,
   role = "user",
-  parkings,
+  bookings = [],
 }: {
   mode?: string;
   page: number;
   role: string;
-  parkings: ParkingSpaceDataModel[];
+  bookings: BookingDataModel[];
 }) => {
-  console.log("page", page);
-  console.log("parkings", parkings.length);
-
   // Total pages
-  const totalPages = Math.max(1, Math.ceil(parkings.length / ITEM_PER_PAGE));
+  const totalPages = Math.max(1, Math.ceil(bookings.length / ITEM_PER_PAGE));
   // Slice parkings per page
-  const parkingsPerPage: ParkingSpaceDataModel[] =
-    mode !== "mobile"
-      ? (arrayConverter(parkings)).get(page) ?? []
-      : parkings.slice(0, page * ITEM_PER_PAGE) ?? [];
 
-  const renderRow = (item: ParkingSpaceDataModel) => (
+  const bookingsPerPage: BookingDataModel[] =
+    mode !== "mobile"
+      ? (arrayConverter(bookings)).get(page) ?? []
+      : bookings.slice(0, page * ITEM_PER_PAGE) ?? [];
+
+  const renderRow = (item: BookingDataModel) => (
     <TableRow
-      className="cursor-pointer hover:bg-gray-200 active:bg-gray-300 rounded-md 
-      transition-all duration-200 shadow-sm hover:shadow-md text-center"
+      className="cursor-pointer hover:bg-gray-200 active:bg-gray-300 rounded-md transition-all duration-200 shadow-sm hover:shadow-md text-center"
       key={item._id}
     >
-      <TableCell className="font-medium w-3/12 truncate">{item.name}</TableCell>
-      <TableCell className="w-6/12 truncate">
-        {addressGenerator(item.city, item.area, item.street, item.unit)}
+      <TableCell className="font-medium w-3/12 truncate">{item.parkingName}</TableCell>
+      <TableCell className="w-3/12 truncate">
+        {ConvexTimeToParkingTime(item.startTime)} - {ConvexTimeToParkingTime(item.endTime)}
       </TableCell>
-      <TableCell className="w-2/12">{item.availableSlots}</TableCell>
-      <TableCell className="w-1/12">
+      <TableCell className="w-2/12">{ConvexTimeToDisplayFormat(item.startTime)}</TableCell>
+      <TableCell className="w-1/12">{item.totalCost.toFixed(2)}</TableCell>
+      <TableCell className="w-1/12">{item.status}</TableCell>
+      <TableCell className="w-2/12">
         <div className="flex justify-center gap-2">
-          <Link href={`/parking/${item._id}`}>
+          <Link href={`/booking/${item._id}`}>
             <Rows3 color="#7b39ed" />
           </Link>
           {role === "admin" && (
@@ -57,7 +57,7 @@ export const ParkingListContent = ({
                 <DeleteForm id={item._id} />
               </DialogModal>
               <DialogModal triggerButtonText="Edit">
-                <ParkingForm operationType="edit" defaultData={item} />
+                <BookingForm operationType="edit" defaultData={item} />
               </DialogModal>
             </>
           )}
@@ -67,9 +67,11 @@ export const ParkingListContent = ({
   );
 
   const columns = [
-    { header: "Name", accessor: "name" },
-    { header: "Address", accessor: "address" },
-    { header: "Slot", accessor: "slot" },
+    { header: "Parking Name", accessor: "parking" },
+    { header: "Duration", accessor: "duration" },
+    { header: "Date", accessor: "date" },
+    { header: "Estimated Cost", accessor: "payment" },
+    { header: "Status", accessor: "status" },
     { header: "Actions", accessor: "action" },
   ];
 
@@ -85,11 +87,11 @@ export const ParkingListContent = ({
         )}
       </div>
       <div className="w-full bg-gray-50 p-4 rounded-lg">
-        <Table columns={columns} renderRow={renderRow} data={parkingsPerPage} />
+        <Table columns={columns} renderRow={renderRow} data={bookingsPerPage ?? []} />
         <Pagination currentPage={page} totalPages={totalPages} />
       </div>
     </div>
   );
 };
 
-export default ParkingListContent;
+export default BookingListContent;
