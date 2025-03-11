@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getParkingByIdService } from "@/services/parking.service";
 import { ApiResponse } from "@/types/api.type";
-import { ParkingSpaceDataModel } from "@/types/parking-space.type";
+import { ParkingSpaceDataModel } from "@/types/convex.type";
 
 // GET: Fetch a parking space by ID
 export const GET = async (

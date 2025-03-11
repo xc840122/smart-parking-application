@@ -1,6 +1,13 @@
-import { bookingSchema } from "@/validators/booking.validator";
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
+
+export const bookingStateDataSchema = v.union(
+  v.literal('pending'),
+  v.literal('confirmed'),
+  v.literal('completed'),
+  v.literal('cancelled'),
+  v.literal('expired')
+);
 
 export default defineSchema({
   users: defineTable({
@@ -45,11 +52,13 @@ export default defineSchema({
     startTime: v.number(),
     endTime: v.number(),
     totalCost: v.number(),
-    status: bookingSchema, // Use string literals for enum-like behavior
+    status: bookingStateDataSchema, // Use string literals for enum-like behavior
     updatedAt: v.number(),
   })
     .index("by_userId_status", ["userId", "status"]) // Index for user bookings by status
-    .index("by_parkingSpaceId_status", ["parkingSpaceId", "status"]), // Index for parking space bookings by status
+    // .index("by_parkingSpaceId_status", ["parkingSpaceId", "status"]) // Index for parking space bookings by status
+    .index("by_userId_startTime", ["userId", "startTime"])
+    .index("by_userId_endTime", ["userId", "endTime"]),// Index for user bookings by time range
 
   iot_data: defineTable({
     parkingSpaceId: v.id("parking_spaces"),

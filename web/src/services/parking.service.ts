@@ -1,6 +1,6 @@
 import { ApiResponse } from "@/types/api.type";
 import { parkingSpaceSchema } from "@/validators/parking-space.validator";
-import { ParkingSpaceDataModel } from "@/types/parking-space.type";
+import { ParkingSpaceDataModel } from "@/types/parking.type";
 import { PARKING_SPACE_MESSAGES } from "@/constants/messages/parking-space.message";
 import { createParkingRepo, deleteParkingRepo, getParkingByIdRepo, getParkingRepo, updateParkingRepo } from "@/repositories/parking.repo";
 

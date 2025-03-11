@@ -15,7 +15,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { AlertDialogCancel, AlertDialogTitle } from "../ui/alert-dialog"
 import { toast } from "sonner"
-import { ParkingSpaceDataModel } from "@/types/parking-space.type"
+import { ParkingSpaceDataModel } from "@/types/parking.type"
 import { parkingSpaceSchema, ParkingSpaceType } from "@/validators/parking-space.validator"
 import { Switch } from "@radix-ui/react-switch"
 import { createParkingService, updateParkingService } from "@/services/parking.service"

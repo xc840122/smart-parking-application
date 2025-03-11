@@ -1,42 +1,35 @@
-import { BookingDataModel, BookingType } from "@/types/booking.type";
+import { BookingDataModel, BookingType } from "@/types/convex.type";
 import { Id } from "../_generated/dataModel";
 import { MutationCtx, QueryCtx } from "../_generated/server";
 
-/**
- * Creates a new booking in the database.
- * @param {MutationCtx} ctx - The Convex mutation context.
- * @param {Id<"users">} userId - The ID of the user making the booking.
- * @param {Id<"parking_spaces">} parkingSpaceId - The ID of the parking space being booked.
- * @param {number} startTime - The start time of the booking (timestamp).
- * @param {number} endTime - The end time of the booking (timestamp).
- * @param {number} totalCost - The total cost of the booking.
- * @param {BookingType} status - The status of the booking (e.g., "pending", "confirmed").
- * @returns {Promise<Id<"bookings">>} The ID of the newly created booking.
- * @throws {Error} If required fields are missing, status is invalid, or booking creation fails.
- */
+// models/booking.model.ts
 export const createBookingModel = async (
   ctx: MutationCtx,
-  userId: Id<"users">,
-  parkingSpaceId: Id<"parking_spaces">,
-  startTime: number,
-  endTime: number,
-  totalCost: number,
-  status: BookingType
+  bookingData: {
+    userId: Id<"users">,
+    parkingSpaceId: Id<"parking_spaces">,
+    startTime: number,
+    endTime: number,
+    totalCost: number,
+    status: BookingType
+  }
 ): Promise<Id<"bookings">> => {
   try {
-    // Validate required fields
-    if (!userId || !parkingSpaceId || !startTime || !endTime || !totalCost || !status) {
+    // Basic validation (required fields)
+    if (
+      !bookingData.userId ||
+      !bookingData.parkingSpaceId ||
+      !bookingData.startTime ||
+      !bookingData.endTime ||
+      !bookingData.totalCost ||
+      !bookingData.status
+    ) {
       throw new Error("Invalid input: Missing required fields");
     }
 
-    // Create the booking
+    // Insert the booking into the database
     return await ctx.db.insert("bookings", {
-      userId,
-      parkingSpaceId,
-      startTime,
-      endTime,
-      totalCost,
-      status,
+      ...bookingData,
       updatedAt: Date.now(),
     });
   } catch (error) {
@@ -64,6 +57,76 @@ export const getBookingsByUserModel = async (
       .query("bookings")
       .withIndex("by_userId_status", (q) => q.eq("userId", userId))
       .collect();
+  } catch (error) {
+    console.error("Failed to get bookings by user:", error);
+    throw new Error("Query failed");
+  }
+};
+
+export const checkBookingConflictModel = async (
+  ctx: QueryCtx,
+  userId: Id<"users">,
+  startTime: number,
+  endTime: number,
+): Promise<BookingDataModel[]> => {
+  try {
+    if (!userId || !startTime || !endTime) {
+      throw new Error("Invalid input: User ID, start time, end time, and status are required");
+    }
+    // Find bookings that start during the proposed time
+    const conflictsStartDuring = await ctx.db
+      .query("bookings")
+      .withIndex("by_userId_startTime", (q) =>
+        q.eq("userId", userId)
+          .gte("startTime", startTime)
+          .lt("startTime", endTime)
+      )
+      .filter((q) =>
+        q.or(
+          q.eq(q.field("status"), "pending"),
+          q.eq(q.field("status"), "confirmed")
+        )
+      )
+      .collect();
+
+    // Find bookings that end during the proposed time
+    const conflictsEndDuring = await ctx.db
+      .query("bookings")
+      .withIndex("by_userId_endTime", (q) =>
+        q.eq("userId", userId)
+          .gt("endTime", startTime)
+          .lte("endTime", endTime)
+      )
+      .filter((q) =>
+        q.or(
+          q.eq(q.field("status"), "pending"),
+          q.eq(q.field("status"), "confirmed")
+        )
+      )
+      .collect();
+
+    // Find bookings that completely encompass the proposed time
+    const conflictsEncompass = await ctx.db
+      .query("bookings")
+      .withIndex("by_userId_status", (q) =>
+        q.eq("userId", userId)
+      )
+      .filter((q) =>
+        q.and(
+          q.gte(q.field("endTime"), endTime),
+          q.lte(q.field("startTime"), startTime),
+          q.or(
+            q.eq(q.field("status"), "pending"),
+            q.eq(q.field("status"), "confirmed"),
+          )
+        )
+      )
+      .collect();
+
+    // Combine all conflicts, removing any duplicates
+    const allConflicts = [...conflictsStartDuring, ...conflictsEndDuring, ...conflictsEncompass];
+    return allConflicts;
+
   } catch (error) {
     console.error("Failed to get bookings by user:", error);
     throw new Error("Query failed");

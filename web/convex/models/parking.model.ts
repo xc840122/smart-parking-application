@@ -1,4 +1,4 @@
-import { ParkingSpaceDataModel } from "@/types/parking-space.type";
+import { ParkingSpaceDataModel } from "@/types/parking.type";
 import { Id } from "../_generated/dataModel";
 import { MutationCtx, QueryCtx } from "../_generated/server";
 
