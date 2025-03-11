@@ -45,7 +45,7 @@ export const ParkingListContent = ({
       <TableCell className="w-2/12">{item.availableSlots}</TableCell>
       <TableCell className="w-1/12">
         <div className="flex justify-center gap-2">
-          <Link href={`/admin/parking/${item._id}`}>
+          <Link href={`/parking/${item._id}`}>
             <Rows3 color="#7b39ed" />
           </Link>
           {role === "admin" && (
