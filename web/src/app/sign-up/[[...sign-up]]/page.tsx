@@ -80,7 +80,7 @@ export default function SignUpForm() {
     <div className='flex items-center justify-center h-screen'>
       <Card className='w-full max-w-md'>
         <CardHeader>
-          <CardTitle className='text-center text-2xl'>Sign Up to Digital Campus</CardTitle>
+          <CardTitle className='text-center text-2xl'>Sign Up to Parking Save</CardTitle>
         </CardHeader>
         <CardContent>
           {serverError && <p className='text-red-500 text-sm text-center mb-3'>{serverError}</p>}

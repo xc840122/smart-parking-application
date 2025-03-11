@@ -35,7 +35,7 @@ export function NavUser({
 }: {
   user: {
     name: string
-    class: string
+    level: string
     avatar: string
   }
 }) {
@@ -58,7 +58,7 @@ export function NavUser({
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">{user.name}</span>
-                <span className="truncate text-xs text-gray-500">classroom: {user.class}</span>
+                <span className="truncate text-xs text-gray-500">Level: {user.level}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -77,7 +77,7 @@ export function NavUser({
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">{user.name}</span>
-                  <span className="truncate text-xs text-gray-500">classroom: {user.class}</span>
+                  <span className="truncate text-xs text-gray-500">Level: {user.level}</span>
                 </div>
               </div>
             </DropdownMenuLabel>

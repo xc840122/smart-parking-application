@@ -25,22 +25,50 @@ const data = {
   // },
   navMain: [
     {
-      title: "Class Management",
+      title: "Start Parking",
       url: "",
       icon: SquareTerminal,
       isActive: true,
       items: [
         {
-          title: "Notice",
-          url: "/notice",
+          title: "Parking Lots",
+          url: "/parking",
         },
         {
-          title: "Lesson",
-          url: "/notice",
+          title: "Booking Record",
+          url: "/booking",
         },
         {
-          title: "Student",
-          url: "/notice",
+          title: "My Review",
+          url: "/review",
+        },
+      ],
+    },
+    {
+      title: "Billing Information",
+      url: "",
+      icon: SquareTerminal,
+      isActive: true,
+      items: [
+        {
+          title: "Payment History",
+          url: "/payment",
+        },
+        {
+          title: "Wallet",
+          url: "/wallet",
+        },
+      ],
+    },
+    {
+      title: "Customer Support",
+      url: "",
+      icon: SquareTerminal,
+      isActive: true,
+      items: [
+        {
+          title: "Contact Us",
+          url: "/payment",
         },
       ],
     },
@@ -64,7 +92,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavUser
           user={{
             name: user.username ?? 'username',
-            class: user.unsafeMetadata.classroom as string,
+            level: user.unsafeMetadata.level as string,
             avatar: user.imageUrl ?? 'avatar',
           }} />
       </SidebarFooter>

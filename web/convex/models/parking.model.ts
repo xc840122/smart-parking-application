@@ -1,4 +1,5 @@
-import { ParkingSpaceDataModel } from "@/types/parking-space.type";
+
+import { ParkingSpaceDataModel } from "@/types/convex.type";
 import { Id } from "../_generated/dataModel";
 import { MutationCtx, QueryCtx } from "../_generated/server";
 
@@ -58,15 +59,38 @@ export const getParkingModel = async (
         )
         .collect();
       return parkings.sort((a, b) => b._creationTime - a._creationTime);
-    } else if (city || area || street) {
+    } else if (city && !area && !street) {
+      // For filter by city
+      return await ctx.db
+        .query("parking_spaces")
+        .withIndex("by_city_isActive", (q) =>
+          q
+            .eq("city", city)
+            .eq("isActive", isActive)
+        )
+        .order("desc")
+        .collect();
+    } else if (city && area && !street) {
       // For filter by city and area
+      return await ctx.db
+        .query("parking_spaces")
+        .withIndex("by_city_area_isActive", (q) =>
+          q
+            .eq("city", city)
+            .eq("area", area)
+            .eq("isActive", isActive)
+        )
+        .order("desc")
+        .collect();
+    } else if (city && area && street) {
+      // For filter by city and area and steet
       return await ctx.db
         .query("parking_spaces")
         .withIndex("by_city_area_street_isActive", (q) =>
           q
-            .eq("city", city ?? '')
-            .eq("area", area ?? '')
-            .eq("street", street ?? '')
+            .eq("city", city)
+            .eq("area", area)
+            .eq("street", street)
             .eq("isActive", isActive)
         )
         .order("desc")

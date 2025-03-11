@@ -1,7 +1,7 @@
 import { fetchMutation, fetchQuery } from "convex/nextjs";
 import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
-import { UserDataModel } from "@/types/auth.type";
+import { UserDataModel } from "@/types/convex.type";
 
 /**
  * Retrieves a user by their ID.

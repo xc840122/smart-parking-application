@@ -7,11 +7,11 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { ITEM_PER_PAGE } from "@/lib/settings";
 import { Rows3 } from "lucide-react";
 import Link from "next/link";
-import { ParkingSpaceDataModel } from "@/types/parking-space.type";
 import { arrayConverter } from "@/utils/array.util";
 import { addressGenerator } from "@/helper/parking.helper";
 import DeleteForm from "@/components/forms/DeleteForm";
 import ParkingForm from "@/components/forms/ParkingForm";
+import { ParkingSpaceDataModel } from "@/types/convex.type";
 
 export const ParkingListContent = ({
   mode,
@@ -45,7 +45,7 @@ export const ParkingListContent = ({
       <TableCell className="w-2/12">{item.availableSlots}</TableCell>
       <TableCell className="w-1/12">
         <div className="flex justify-center gap-2">
-          <Link href={`/admin/parking/${item._id}`}>
+          <Link href={`/parking/${item._id}`}>
             <Rows3 color="#7b39ed" />
           </Link>
           {role === "admin" && (
