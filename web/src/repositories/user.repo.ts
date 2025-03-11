@@ -3,6 +3,18 @@ import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
 import { UserDataModel } from "@/types/convex.type";
 
+// Get user by Clerk user ID
+export const getUserByClerkIdRepo = async (clerkUserId: string): Promise<UserDataModel> => {
+  try {
+    return await fetchQuery(api.user.getUserByClerkIdData, {
+      clerkUserId,
+    });
+  } catch (error) {
+    console.error(`Failed to get user by Clerk ID: ${error}`);
+    throw new Error("Get user by Clerk ID failed");
+  }
+}
+
 /**
  * Retrieves a user by their ID.
  * @param {string} userId - The ID of the user to retrieve.

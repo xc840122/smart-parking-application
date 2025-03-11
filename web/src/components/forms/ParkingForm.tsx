@@ -18,7 +18,7 @@ import { toast } from "sonner"
 
 import { parkingSpaceSchema, ParkingSpaceType } from "@/validators/parking-space.validator"
 import { createParkingService, updateParkingService } from "@/services/parking.service"
-import { ParkingSpaceDataModel } from "@/types/convex.type"
+import { BookingDataModel } from "@/types/convex.type"
 import { Switch } from "../ui/switch"
 
 
@@ -28,7 +28,7 @@ const ParkingForm = ({
   onClose,
 }: {
   operationType: 'create' | 'edit'
-  defaultData?: ParkingSpaceDataModel
+  defaultData?: BookingDataModel
   onClose?: () => void
 }) => {
 

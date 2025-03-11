@@ -6,7 +6,16 @@ import {
   getUsersModel,
   updateUserModel,
   deleteUserModel,
+  getUserByClerkIdModel,
 } from "./models/user.model";
+
+// Get user by clerk user id
+export const getUserByClerkIdData = query({
+  args: { clerkUserId: v.string() },
+  handler: async (ctx, args) => {
+    return await getUserByClerkIdModel(ctx, args.clerkUserId);
+  },
+});
 
 /**
  * Creates a new user.

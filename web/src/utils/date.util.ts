@@ -13,6 +13,14 @@ export const ConvexTimeToDisplayFormat = (creationTime: number) => {
   });
 }
 
+export const ConvexTimeToParkingTime = (creationTime: number) => {
+  const date = new Date(creationTime);
+  return date.toLocaleTimeString('en-NZ', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}
+
 /**
  * Convert Search Params date string to convex Time
  * @param date date string(yyyy-mm-dd)

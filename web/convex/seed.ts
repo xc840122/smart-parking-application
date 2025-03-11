@@ -100,14 +100,18 @@ export const seed = internalMutation({
 
     // Create parking spaces
     const parkingSpaceIds: Id<"parking_spaces">[] = [];
+    const parkingSpaces: Record<string, { id: Id<"parking_spaces">, name: string }> = {};
+
     console.log("Creating parking spaces...");
     for (let i = 0; i < 15; i++) {
       const city = getRandomItem(cityNames);
       const area = getRandomItem(areaNames);
       const street = getRandomItem(streetNames);
       const totalSlots = faker.number.int({ min: 5, max: 50 });
+      const parkingName = `${area} ${street} Parking`;
+
       const parkingSpaceId = await ctx.db.insert("parking_spaces", {
-        name: `${area} ${street} Parking`,
+        name: parkingName,
         location: {
           lat: faker.location.latitude(),
           lng: faker.location.longitude(),
@@ -121,7 +125,12 @@ export const seed = internalMutation({
         pricePerHour: faker.number.float({ min: 2, max: 15, fractionDigits: 1 }),
         isActive: faker.datatype.boolean(0.9), // 90% chance of being active
       });
+
       parkingSpaceIds.push(parkingSpaceId);
+      parkingSpaces[parkingSpaceId.toString()] = {
+        id: parkingSpaceId,
+        name: parkingName
+      };
     }
 
     // Create bookings
@@ -136,6 +145,7 @@ export const seed = internalMutation({
       // Get the price per hour for this parking space
       const parkingSpace = await ctx.db.get(parkingSpaceId);
       const pricePerHour = parkingSpace?.pricePerHour || 5;
+      const parkingName = parkingSpace?.name || "Unknown Parking";
 
       // Calculate duration in hours
       const durationHours = (endTime - startTime) / (60 * 60 * 1000);
@@ -144,6 +154,7 @@ export const seed = internalMutation({
       const bookingId = await ctx.db.insert("bookings", {
         userId: getRandomItem(userIds),
         parkingSpaceId,
+        parkingName, // Add the parking name from the parking space
         startTime,
         endTime,
         totalCost,
