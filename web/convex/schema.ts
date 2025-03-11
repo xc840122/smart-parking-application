@@ -29,11 +29,11 @@ export default defineSchema({
     pricePerHour: v.number(),
     isActive: v.boolean(),
   })
-    .index("by_location", ["location.lat", "location.lng"])
     .index("by_location_isActive", ["location.lat", "location.lng", "isActive"])
-    .index("by_city_area_street", ["city", "area", "street"])
+    .index("by_city_isActive", ["city", "isActive"])
+    .index("by_city_area_isActive", ["city", "area", "isActive"])
     .index("by_city_area_street_isActive", ["city", "area", "street", "isActive"])
-    .index("is_active", ["isActive"]) // Index for active parking spaces
+    .index("is_active", ["isActive"])
     .searchIndex("search_name", {
       searchField: "name",
       filterFields: ["isActive"],
