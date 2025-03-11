@@ -1,4 +1,4 @@
-import { UserDataModel } from "@/types/auth.type";
+import { UserDataModel } from "@/types/convex.type";
 import { Id } from "../_generated/dataModel";
 import { MutationCtx, QueryCtx } from "../_generated/server";
 

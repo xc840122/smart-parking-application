@@ -7,11 +7,11 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { ITEM_PER_PAGE } from "@/lib/settings";
 import { Rows3 } from "lucide-react";
 import Link from "next/link";
-import { ParkingSpaceDataModel } from "@/types/parking-space.type";
 import { arrayConverter } from "@/utils/array.util";
 import { addressGenerator } from "@/helper/parking.helper";
 import DeleteForm from "@/components/forms/DeleteForm";
 import ParkingForm from "@/components/forms/ParkingForm";
+import { ParkingSpaceDataModel } from "@/types/convex.type";
 
 export const ParkingListContent = ({
   mode,

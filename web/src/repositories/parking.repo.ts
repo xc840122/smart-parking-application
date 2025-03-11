@@ -1,7 +1,7 @@
 import { fetchMutation, fetchQuery } from "convex/nextjs";
 import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
-import { ParkingSpaceDataModel } from "@/types/parking-space.type";
+import { ParkingSpaceDataModel } from "@/types/convex.type";
 
 export const getParkingByIdRepo = async (id: string): Promise<ParkingSpaceDataModel | null> => {
   try {
