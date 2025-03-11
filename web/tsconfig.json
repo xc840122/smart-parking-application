@@ -27,7 +27,7 @@
 		"**/*.ts",
 		"**/*.tsx",
 		".next/types/**/*.ts",
-		"src/app/(dashboard)/notice"
+		"src/app/(user)/notice"
 	],
 	"exclude": ["node_modules"]
 }

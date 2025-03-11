@@ -3,7 +3,7 @@ import DashboardHeader from "@/components/DashboardHeader";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/sonner";
 
-export default function DashboardLayout({
+export default function UserLayout({
   children,
 }: {
   children: React.ReactNode;

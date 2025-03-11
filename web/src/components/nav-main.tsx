@@ -1,6 +1,6 @@
 "use client"
 
-import { ChevronRight, type LucideIcon } from "lucide-react"
+import { ChevronRight, CircleParking, type LucideIcon } from "lucide-react"
 
 import {
   Collapsible,
@@ -17,7 +17,6 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
-import Image from "next/image"
 
 export function NavMain({
   items,
@@ -36,14 +35,9 @@ export function NavMain({
   return (
     <SidebarGroup>
       <div className="flex justify-start items-center px-1 mb-4">
-        <Image
-          src="/logo.png"
-          alt="Logo"
-          width={20}
-          height={20}
-        />
+        <CircleParking size={20} color="#1436e1" />
         <SidebarGroupLabel>
-          <h1 className="font-bold text-lg text-gray-400">Digital Campus</h1>
+          <h1 className="font-bold text-lg text-gray-400">Parking Save</h1>
         </SidebarGroupLabel>
       </div>
       <SidebarMenu>
