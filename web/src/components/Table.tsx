@@ -23,7 +23,7 @@ const TableView = <T,>({
 
   return (
     <Table className="table-fixed">
-      <TableCaption>A list of your recent messages.</TableCaption>
+      <TableCaption>Welcome to parking save!</TableCaption>
       <TableHeader>
         <TableRow>
           {columns.map((column) => (
