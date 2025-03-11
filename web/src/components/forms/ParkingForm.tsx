@@ -17,9 +17,9 @@ import { AlertDialogCancel, AlertDialogTitle } from "../ui/alert-dialog"
 import { toast } from "sonner"
 
 import { parkingSpaceSchema, ParkingSpaceType } from "@/validators/parking-space.validator"
-import { Switch } from "@radix-ui/react-switch"
 import { createParkingService, updateParkingService } from "@/services/parking.service"
 import { ParkingSpaceDataModel } from "@/types/convex.type"
+import { Switch } from "../ui/switch"
 
 
 const ParkingForm = ({
@@ -44,7 +44,7 @@ const ParkingForm = ({
       totalSlots: defaultData?.totalSlots ?? 0,
       availableSlots: defaultData?.availableSlots ?? 0,
       pricePerHour: defaultData?.pricePerHour ?? 0,
-      isActive: defaultData?.isActive ?? false,
+      isActive: defaultData?.isActive ?? true,
       location: defaultData?.location ?? { lat: 0, lng: 0 },
     }, //Load default values for edit action
   })
@@ -64,7 +64,8 @@ const ParkingForm = ({
           values.street,
           values.unit,
           values.totalSlots,
-          values.pricePerHour
+          values.pricePerHour,
+          values.isActive
         );
         // Show toast message
         if (response.result) {
@@ -106,7 +107,9 @@ const ParkingForm = ({
       <AlertDialogTitle>
         {operationType === 'create' ? 'Create Parking Lots' : 'Edit Parking Lots'}
       </AlertDialogTitle>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-8">
         {/* Name Field */}
         <FormField
           control={form.control}
@@ -294,8 +297,13 @@ const ParkingForm = ({
           control={form.control}
           name="isActive"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Is Active</FormLabel>
+            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+              <div className="space-y-0.5">
+                <FormLabel>Is Active</FormLabel>
+                <FormDescription>
+                  Set parking space active or inactive.
+                </FormDescription>
+              </div>
               <FormControl>
                 <Switch
                   checked={field.value}

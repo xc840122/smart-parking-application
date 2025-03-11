@@ -67,7 +67,8 @@ export const createParkingRepo = async (
   street: string,
   unit: string,
   totalSlots: number,
-  pricePerHour: number
+  pricePerHour: number,
+  isActive: boolean
 ): Promise<Id<"parking_spaces">> => {
   try {
     return await fetchMutation(api.parking.createParkingData, {
@@ -79,6 +80,7 @@ export const createParkingRepo = async (
       unit,
       totalSlots,
       pricePerHour,
+      isActive,
     });
   } catch (error) {
     console.error(`Failed to create parking space: ${error}`);

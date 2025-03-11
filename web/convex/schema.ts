@@ -86,4 +86,20 @@ export default defineSchema({
     createdAt: v.number(),
   })
     .index("by_bookingId", ["bookingId"]), // Index for payments by booking
+
+  // Define tables for cities, areas, and streets
+  cities: defineTable({
+    name: v.string(),
+  }).index("by_name", ["name"]),
+
+  areas: defineTable({
+    name: v.string(),
+    cityId: v.id("cities"),
+  }).index("by_city", ["cityId"])
+    .index("by_name", ["name"]),
+
+  streets: defineTable({
+    name: v.string(),
+    areaId: v.id("areas"),
+  }).index("by_area", ["areaId"]),
 });

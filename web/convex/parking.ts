@@ -33,6 +33,7 @@ export const createParkingData = mutation({
     unit: v.string(),
     totalSlots: v.number(),
     pricePerHour: v.number(),
+    isActive: v.boolean(),
   },
   handler: async (ctx, args) => {
     return await createParkingModel(
@@ -44,7 +45,8 @@ export const createParkingData = mutation({
       args.street,
       args.unit,
       args.totalSlots,
-      args.pricePerHour
+      args.pricePerHour,
+      args.isActive
     );
   },
 });
