@@ -19,7 +19,7 @@ struct HomeView: View {
                     SortingBar(selectedFilter: $homeViewModel.selectedFilter, isMapView: $homeViewModel.isMapView)
                     
                     if homeViewModel.isMapView {
-                        MapView()
+                        MapView(parkingSpots: parkingSpotViewModel.parkingLots)
                             .frame(height: outerGeometry.size.height - 120)
                     } else {
                         LazyVStack(spacing: 8) {
