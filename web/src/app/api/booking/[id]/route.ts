@@ -10,13 +10,13 @@ import { deleteBookingService } from "@/services/booking.service";
  */
 export async function DELETE(
   request: Request,
-  { params }: { params: { bookingId: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const bookingId = params.bookingId;
+    const { id } = await params;
 
     // Call the deleteBookingService
-    const response = await deleteBookingService(bookingId);
+    const response = await deleteBookingService(id);
 
     // Return the response
     if (response.result) {
