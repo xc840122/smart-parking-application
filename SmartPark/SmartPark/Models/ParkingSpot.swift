@@ -7,14 +7,14 @@
 
 import Foundation
 
-struct Location: Codable {
+struct PLocation: Codable {
     let lat: Double
     let lng: Double
 }
 
 struct ParkingSpot: Identifiable, Codable {
-    let _id: String
-    let _creationTime: Double
+    let id: String
+    let creationTime: Double
     let name: String
     let area: String
     let city: String
@@ -23,10 +23,14 @@ struct ParkingSpot: Identifiable, Codable {
     let availableSlots: Int
     let totalSlots: Int
     let pricePerHour: Int
-    let location: Location
+    let location: PLocation
     let isActive: Bool
     
-    var id: String { _id } // Conforming to Identifiable protocol
+    private enum CodingKeys: String, CodingKey {
+        case id = "_id"
+        case creationTime = "_creationTime"
+        case name, area, city, street, unit, availableSlots, totalSlots, pricePerHour, location, isActive
+    }
 }
 
 struct ParkingSpotResponse: Decodable {

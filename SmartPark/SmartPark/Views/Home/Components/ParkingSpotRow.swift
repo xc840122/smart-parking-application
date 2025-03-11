@@ -63,8 +63,8 @@ struct ParkingSpotRow: View {
 
 #Preview {
     ParkingSpotRow(parkingSpot: ParkingSpot(
-        _id: "preview",
-        _creationTime: Date().timeIntervalSince1970,
+        id: "preview",
+        creationTime: Date().timeIntervalSince1970,
         name: "Downtown Parking",
         area: "Downtown",
         city: "Los Angeles",
@@ -73,7 +73,7 @@ struct ParkingSpotRow: View {
         availableSlots: 10,
         totalSlots: 20,
         pricePerHour: 8,
-        location: Location(lat: 34.0522, lng: -118.2437),
+        location: PLocation(lat: 34.0522, lng: -118.2437),
         isActive: true
     ))
     .padding()
