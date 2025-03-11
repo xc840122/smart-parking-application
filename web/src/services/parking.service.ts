@@ -74,7 +74,8 @@ export const createParkingService = async (
   street: string,
   unit: string,
   totalSlots: number,
-  pricePerHour: number
+  pricePerHour: number,
+  isActive: boolean = true, // Default to active
 ): Promise<ApiResponse<string>> => {
   try {
     // Validate form input
@@ -87,6 +88,7 @@ export const createParkingService = async (
       unit,
       totalSlots,
       pricePerHour,
+      isActive
     });
 
     if (!result.success) {
@@ -102,7 +104,8 @@ export const createParkingService = async (
       street,
       unit,
       totalSlots,
-      pricePerHour
+      pricePerHour,
+      isActive
     );
 
     return { result: true, message: PARKING_SPACE_MESSAGES.SUCCESS.CREATE_SUCCESSFUL, data: parkingSpaceId };

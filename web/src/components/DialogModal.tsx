@@ -36,7 +36,8 @@ const DialogModal = ({
             </Button>)}
       </AlertDialogTrigger>}
       {/* Modal content */}
-      <AlertDialogContent>
+      <AlertDialogContent
+        className="bg-white p-8 rounded-lg shadow-lg  overflow-scroll max-h-screen">
         {children && React.isValidElement(children)
           ? React.cloneElement(children, { onClose: () => setIsOpen(false) })
           : children}

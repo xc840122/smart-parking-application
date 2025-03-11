@@ -7,7 +7,8 @@ export const createBookingModel = async (
   ctx: MutationCtx,
   bookingData: {
     userId: Id<"users">,
-    parkingSpaceId: Id<"parking_spaces">,
+    parkingSpaceId?: Id<"parking_spaces">,
+    parkingName: string,
     startTime: number,
     endTime: number,
     totalCost: number,
@@ -18,7 +19,7 @@ export const createBookingModel = async (
     // Basic validation (required fields)
     if (
       !bookingData.userId ||
-      !bookingData.parkingSpaceId ||
+      !bookingData.parkingName ||
       !bookingData.startTime ||
       !bookingData.endTime ||
       !bookingData.totalCost ||
@@ -47,16 +48,44 @@ export const createBookingModel = async (
  */
 export const getBookingsByUserModel = async (
   ctx: QueryCtx,
-  userId: Id<"users">
+  userId: Id<"users">,
+  keyword?: string,
+  startTime?: number,
+  endTime?: number,
 ): Promise<BookingDataModel[]> => {
   try {
     if (!userId) {
       throw new Error("Invalid input: User ID is required");
     }
-    return await ctx.db
-      .query("bookings")
-      .withIndex("by_userId_status", (q) => q.eq("userId", userId))
-      .collect();
+    if (keyword) {
+      // If keyword is provided, search by keyword for the user
+      return await ctx.db
+        .query("bookings")
+        .withSearchIndex("search_parking", (q) =>
+          q
+            .search("parkingSpaceId", keyword)
+            .eq("userId", userId)
+        )
+        .collect();
+    }
+    else if (startTime && endTime) {
+      // If start and end time are provided, filter by time range
+      return await ctx.db
+        .query("bookings")
+        .withIndex("by_userId", (q) =>
+          q
+            .eq("userId", userId)
+            .gte("_creationTime", startTime)
+            .lte("_creationTime", endTime)
+        )
+        .collect();
+    }
+    else {
+      return await ctx.db
+        .query("bookings")
+        .withIndex("by_userId", (q) => q.eq("userId", userId))
+        .collect();
+    }
   } catch (error) {
     console.error("Failed to get bookings by user:", error);
     throw new Error("Query failed");

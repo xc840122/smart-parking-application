@@ -1,16 +1,12 @@
 import { useUser } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
 
-/**
- * customer hook to get role and class name of the user
- * @returns status, role, classroom
- */
 export const useMetadata = () => {
 
   const { isSignedIn, user, isLoaded } = useUser()
   const [status, setStatus] = useState<'loading' | 'unAuthenticated' | 'authenticated'>('loading');
   const [role, setRole] = useState<'user' | 'admin'>('user');
-
+  console.log("usermeta", user?.id);
   useEffect(() => {
     if (!isLoaded) {
       setStatus('loading');
@@ -28,5 +24,5 @@ export const useMetadata = () => {
     }
 
   }, [isSignedIn, isLoaded, user]);
-  return { status, role };
+  return { status, role, user };
 }

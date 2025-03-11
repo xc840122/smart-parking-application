@@ -24,7 +24,8 @@ export const createBooking = mutation({
   args: {
     bookingData: v.object({
       userId: v.id("users"),
-      parkingSpaceId: v.id("parking_spaces"),
+      parkingSpaceId: v.optional(v.id("parking_spaces")),
+      parkingName: v.string(),
       startTime: v.number(),
       endTime: v.number(),
       totalCost: v.number(),
@@ -40,9 +41,19 @@ export const createBooking = mutation({
 });
 
 export const getBookingsByUser = query({
-  args: { userId: v.id("users") },
+  args: {
+    userId: v.id("users"),
+    keyword: v.optional(v.string()),
+    startTime: v.optional(v.number()),
+    endTime: v.optional(v.number()),
+  },
   handler: async (ctx, args) => {
-    return await getBookingsByUserModel(ctx, args.userId);
+    return await getBookingsByUserModel(
+      ctx,
+      args.userId,
+      args.keyword,
+      args.startTime,
+      args.endTime);
   },
 });
 

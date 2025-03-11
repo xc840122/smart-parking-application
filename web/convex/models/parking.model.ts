@@ -12,11 +12,12 @@ export const createParkingModel = async (
   street: string,
   unit: string,
   totalSlots: number,
-  pricePerHour: number
+  pricePerHour: number,
+  isActive: boolean,
 ): Promise<Id<"parking_spaces">> => {
   try {
     // Validate required fields
-    if (!name || !location || !city || !area || !street || !unit || !totalSlots || !pricePerHour) {
+    if (!name || !location || !city || !area || !street || !unit || !totalSlots || !pricePerHour || !isActive) {
       throw new Error("Invalid input: Missing required fields");
     }
 
@@ -31,7 +32,7 @@ export const createParkingModel = async (
       totalSlots,
       availableSlots: totalSlots,
       pricePerHour,
-      isActive: true,
+      isActive,
     });
   } catch (error) {
     console.error("Failed to create parking space:", error);

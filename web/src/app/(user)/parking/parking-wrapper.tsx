@@ -1,17 +1,17 @@
 "use client";
 
 import { useQuery } from "convex/react";
-import { useMetadata } from "@/hooks/use-metadata";
-import { useURLParams } from "@/hooks/use-params";
 import { api } from "../../../../convex/_generated/api";
 import ParkingListContent from "./parking-list";
-import Loading from "@/components/Loading";
+import { useURLParams } from "@/hooks/use-params";
 
-const ParkingWrapper = () => {
-  // Get search value, start date, end date, page number from URL
-  const { pageNum, mode, city, area, street, searchValue } = useURLParams();
-  // Get role and session status from metadata
-  const { status, role } = useMetadata();
+const ParkingWrapper = ({
+  role,
+}: {
+  role: string,
+}) => {
+
+  const { page, mode, city, area, street, searchValue } = useURLParams();
 
   const parkings = useQuery(
     api.parking.getParkingData,
@@ -24,14 +24,10 @@ const ParkingWrapper = () => {
     }
   ) ?? [];
 
-  if (status === "loading") {
-    return <Loading />;
-  }
-
   return (
     <ParkingListContent
       mode={mode}
-      pageNum={pageNum}
+      page={page}
       parkings={parkings}
       role={role}
     />
