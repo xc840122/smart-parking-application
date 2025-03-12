@@ -17,7 +17,7 @@ struct MainTabView: View {
             }
             
             Tab("Bookings", systemImage: "calendar") {
-                BookingView()
+                BookingListView()
             }
             
             Tab("Billing", systemImage: "creditcard.fill") {

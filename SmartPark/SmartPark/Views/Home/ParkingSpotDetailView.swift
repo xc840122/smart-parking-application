@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ParkingSpotDetailView: View {
     let parkingSpot: ParkingSpot
+    @State private var navigateToBooking = false
 
     var body: some View {
         VStack {
@@ -69,10 +70,14 @@ struct ParkingSpotDetailView: View {
                 .padding(.horizontal)
                 .padding(.bottom, 10)
             }
-            .background(Color(UIColor.systemBackground)) // ✅ Ensure button has background
+            .background(Color(UIColor.systemBackground))
         }
         .navigationTitle("Parking Details")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar(.hidden, for: .tabBar)
+        .navigationDestination(isPresented: $navigateToBooking) {
+            BookingView(parkingSpot: parkingSpot)
+        }
     }
 
     private func infoBox(title: String, value: String) -> some View {
@@ -93,7 +98,7 @@ struct ParkingSpotDetailView: View {
     // **Booking action (Navigate to booking view)**
     private func bookParkingSpot() {
         print("Booking: \(parkingSpot.name)")
-        // Implement navigation to booking screen, e.g.,
+        navigateToBooking = true
     }
 }
 
