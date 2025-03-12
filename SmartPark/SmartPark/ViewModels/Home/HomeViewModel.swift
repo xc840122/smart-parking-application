@@ -11,5 +11,4 @@ import Foundation
 class HomeViewModel {
     var searchText = ""
     var isMapView = false
-    var selectedFilter: SortOption = .distance
 }

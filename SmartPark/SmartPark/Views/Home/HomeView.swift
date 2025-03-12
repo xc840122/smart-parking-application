@@ -15,8 +15,8 @@ struct HomeView: View {
         GeometryReader { outerGeometry in
             ScrollView {
                 VStack {
-                    SearchBar(searchText: $homeViewModel.searchText)
-                    SortingBar(selectedFilter: $homeViewModel.selectedFilter, isMapView: $homeViewModel.isMapView)
+//                    SearchBar(searchText: $homeViewModel.searchText)
+                    SortingBar(viewModel: parkingSpotViewModel)
                     
                     if homeViewModel.isMapView {
                         MapView(parkingSpots: parkingSpotViewModel.parkingLots)
@@ -39,14 +39,31 @@ struct HomeView: View {
                     await parkingSpotViewModel.loadParkingLots()
                 }
             }
-            
+            .alert(parkingSpotViewModel.errorMessage ?? "", isPresented: Binding(
+                get: { parkingSpotViewModel.errorMessage != nil },
+                set: { _ in parkingSpotViewModel.errorMessage = nil }
+            )) {
+                Button("OK", role: .cancel) {}
+            }
         }
         .task {
             // Initial data loading
             await parkingSpotViewModel.loadParkingLots()
+            await parkingSpotViewModel.fetchCities()
         }
         .navigationTitle("Find Parking")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
+                    homeViewModel.isMapView.toggle()
+                } label: {
+                    Image(systemName: homeViewModel.isMapView ? "list.bullet" : "map")
+                        .font(.title2)
+                        .foregroundColor(.black)
+                }
+            }
+        }
     }
 }
 

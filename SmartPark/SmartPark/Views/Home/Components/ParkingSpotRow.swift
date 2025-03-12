@@ -16,7 +16,7 @@ struct ParkingSpotRow: View {
                 .font(.largeTitle)
                 .foregroundStyle(.primary)
                 .padding(8)
-                .background(Color(uiColor: .tertiarySystemBackground)) // ✅ 更好的适配深色模式
+                .background(Color(uiColor: .tertiarySystemBackground))
                 .clipShape(Circle())
 
             VStack(alignment: .leading, spacing: 4) {
@@ -29,9 +29,9 @@ struct ParkingSpotRow: View {
                     .foregroundStyle(.secondary)
 
                 HStack(spacing: 8) {
-                    Text("$\(parkingSpot.pricePerHour)/hr")
+                    Text("$\(String(format: "%.2f", parkingSpot.pricePerHour))/hr")
                         .foregroundStyle(.blue)
-                        .bold() // ✅ 让价格更醒目
+                        .bold()
 
                     Spacer()
 
@@ -44,7 +44,7 @@ struct ParkingSpotRow: View {
                         .foregroundStyle(.secondary)
                 }
                 .font(.subheadline)
-                .frame(maxWidth: .infinity) // ✅ 保证 `Spacer()` 均匀分布
+                .frame(maxWidth: .infinity)
             }
 
             Spacer()
@@ -54,8 +54,8 @@ struct ParkingSpotRow: View {
         }
         .padding(.vertical, 8)
         .padding(.horizontal, 16)
-        .background(Color(uiColor: .systemBackground)) // ✅ 适配暗黑模式
-        .clipShape(RoundedRectangle(cornerRadius: 8)) // ✅ 兼容性更强
+        .background(Color(uiColor: .systemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 8))
         .shadow(color: .black.opacity(0.05), radius: 3, x: 0, y: 2)
         .contentShape(Rectangle())
     }

@@ -10,6 +10,10 @@ import Moya
 
 enum ParkingSpotAPI {
     case getParkingLots
+    case getCities
+    case getAreas(city: String)
+    case getStreets(area: String)
+    case getParkingLotsFiltered(city: String?, area: String?, street: String?)
 }
 
 extension ParkingSpotAPI: TargetType {
@@ -19,8 +23,14 @@ extension ParkingSpotAPI: TargetType {
 
     var path: String {
         switch self {
-        case .getParkingLots:
+        case .getParkingLots, .getParkingLotsFiltered:
             return "/parking"
+        case .getCities:
+            return "/city"
+        case .getAreas:
+            return "/area"
+        case .getStreets:
+            return "/street"
         }
     }
 
@@ -32,18 +42,22 @@ extension ParkingSpotAPI: TargetType {
         switch self {
         case .getParkingLots:
             return .requestParameters(parameters: ["isActive": "true"], encoding: URLEncoding.queryString)
+        case .getCities:
+            return .requestPlain
+        case .getAreas(let city):
+            return .requestParameters(parameters: ["city": city], encoding: URLEncoding.queryString)
+        case .getStreets(let area):
+            return .requestParameters(parameters: ["area": area], encoding: URLEncoding.queryString)
+        case .getParkingLotsFiltered(let city, let area, let street):
+            var parameters: [String: String] = ["isActive": "true"]
+            if let city = city { parameters["city"] = city }
+            if let area = area { parameters["area"] = area }
+            if let street = street { parameters["street"] = street }
+            return .requestParameters(parameters: parameters, encoding: URLEncoding.queryString)
         }
     }
 
     var headers: [String : String]? {
         nil
-    }
-    
-    var sampleData: Data {
-        guard let url = Bundle.main.url(forResource: "parkingLots", withExtension: "json"), let data = try? Data(contentsOf: url) else {
-            print("⚠️ no parkingLots.json file")
-            return Data()
-        }
-        return data
     }
 }

@@ -22,7 +22,7 @@ struct ParkingSpot: Identifiable, Codable {
     let unit: String
     let availableSlots: Int
     let totalSlots: Int
-    let pricePerHour: Int
+    let pricePerHour: Double
     let location: PLocation
     let isActive: Bool
     
@@ -31,10 +31,4 @@ struct ParkingSpot: Identifiable, Codable {
         case creationTime = "_creationTime"
         case name, area, city, street, unit, availableSlots, totalSlots, pricePerHour, location, isActive
     }
-}
-
-struct ParkingSpotResponse: Decodable {
-    let result: Bool
-    let message: String
-    let data: [ParkingSpot]
 }
