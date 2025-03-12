@@ -7,12 +7,16 @@
 
 import Foundation
 
-struct PLocation: Codable {
+struct PLocation: Codable, Hashable {
     let lat: Double
     let lng: Double
 }
 
-struct ParkingSpot: Identifiable, Codable {
+struct ParkingSpot: Identifiable, Codable, Hashable {
+    static func == (lhs: ParkingSpot, rhs: ParkingSpot) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
     let id: String
     let creationTime: Double
     let name: String

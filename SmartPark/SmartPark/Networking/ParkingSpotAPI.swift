@@ -14,6 +14,7 @@ enum ParkingSpotAPI {
     case getAreas(city: String)
     case getStreets(area: String)
     case getParkingLotsFiltered(city: String?, area: String?, street: String?)
+    case getParkingSpotDetail(id: String)
 }
 
 extension ParkingSpotAPI: TargetType {
@@ -31,6 +32,8 @@ extension ParkingSpotAPI: TargetType {
             return "/area"
         case .getStreets:
             return "/street"
+        case .getParkingSpotDetail(let id):
+            return "/parking/\(id)"
         }
     }
 
@@ -54,6 +57,8 @@ extension ParkingSpotAPI: TargetType {
             if let area = area { parameters["area"] = area }
             if let street = street { parameters["street"] = street }
             return .requestParameters(parameters: parameters, encoding: URLEncoding.queryString)
+        case .getParkingSpotDetail:
+            return .requestPlain
         }
     }
 

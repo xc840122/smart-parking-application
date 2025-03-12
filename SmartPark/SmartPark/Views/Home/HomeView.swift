@@ -27,7 +27,9 @@ struct HomeView: View {
                                 ContentUnavailableView("No parking spots available", systemImage: "car.slash")
                             } else {
                                 ForEach(parkingSpotViewModel.parkingLots) { spot in
-                                    ParkingSpotRow(parkingSpot: spot)
+                                    NavigationLink(value: spot) {
+                                        ParkingSpotRow(parkingSpot: spot)
+                                    }
                                 }
                             }
                         }
@@ -50,6 +52,9 @@ struct HomeView: View {
             // Initial data loading
             await parkingSpotViewModel.loadParkingLots()
             await parkingSpotViewModel.fetchCities()
+        }
+        .navigationDestination(for: ParkingSpot.self) { spot in
+            ParkingSpotDetailView(parkingSpot: spot)
         }
         .navigationTitle("Find Parking")
         .navigationBarTitleDisplayMode(.inline)
