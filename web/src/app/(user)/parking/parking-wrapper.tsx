@@ -4,11 +4,15 @@ import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import ParkingListContent from "./parking-list";
 import { useURLParams } from "@/hooks/use-params";
+import { Suspense } from "react";
+import Loading from "@/components/Loading";
 
 const ParkingWrapper = ({
   role,
+  cities,
 }: {
   role: string,
+  cities: string[],
 }) => {
 
   const { page, mode, city, area, street, searchValue } = useURLParams();
@@ -25,12 +29,15 @@ const ParkingWrapper = ({
   ) ?? [];
 
   return (
-    <ParkingListContent
-      mode={mode}
-      page={page}
-      parkings={parkings}
-      role={role}
-    />
+    <Suspense fallback={<Loading />}>
+      <ParkingListContent
+        cities={cities}
+        mode={mode}
+        page={page}
+        parkings={parkings}
+        role={role}
+      />
+    </Suspense>
   );
 };
 

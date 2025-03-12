@@ -1,4 +1,3 @@
-import { DatePickerWithRange } from "@/components/DatePickerWithRange";
 import DialogModal from "@/components/DialogModal";
 import Pagination from "@/components/Pagination";
 import SearchBar from "@/components/forms/SearchBarForm";
@@ -12,21 +11,21 @@ import { addressGenerator } from "@/helper/parking.helper";
 import DeleteForm from "@/components/forms/DeleteForm";
 import ParkingForm from "@/components/forms/ParkingForm";
 import { ParkingSpaceDataModel } from "@/types/convex.type";
+import AddressFilter from "../booking/address-filter";
 
 export const ParkingListContent = ({
   mode,
   page,
   role = "user",
   parkings,
+  cities,
 }: {
   mode?: string;
   page: number;
   role: string;
   parkings: ParkingSpaceDataModel[];
+  cities: string[];
 }) => {
-  console.log("page", page);
-  console.log("parkings", parkings.length);
-
   // Total pages
   const totalPages = Math.max(1, Math.ceil(parkings.length / ITEM_PER_PAGE));
   // Slice parkings per page
@@ -76,7 +75,7 @@ export const ParkingListContent = ({
   return (
     <div className="flex flex-col container mx-auto max-w-5xl items-center gap-4 p-2">
       <div className="flex flex-col md:flex-row md:justify-between items-end gap-4 w-full">
-        <DatePickerWithRange className="w-full md:w-auto" />
+        <AddressFilter cities={cities} />
         <SearchBar />
         {role === "admin" && (
           <DialogModal triggerButtonText="New notice" triggerButtonStyles="w-full md:w-auto">
