@@ -14,6 +14,8 @@ struct BookingView: View {
     @State private var estimatedPrice: Double = 0
     @State private var showConfirmationAlert = false
     @State private var isBookingConfirmed = false
+    @State private var showErrorAlert = false
+    @State private var errorMessage = ""
 
     var body: some View {
         VStack(spacing: 24) {
@@ -95,6 +97,11 @@ struct BookingView: View {
         .alert("Booking Confirmed", isPresented: $isBookingConfirmed) {
             Button("OK", role: .cancel) {}
         }
+        .alert("Booking Failed", isPresented: $showErrorAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text(errorMessage)
+        }
         .onAppear { calculatePrice() }
     }
 
@@ -124,8 +131,26 @@ struct BookingView: View {
 
     /// Booking confirmation logic
     private func confirmBooking() {
-        print("Booking confirmed from \(startTime) to \(endTime) for \(estimatedPrice)")
-        isBookingConfirmed = true
+        Task {
+            do {
+                let bookingService = BookingService()
+                let success = try await bookingService.createBooking(parkingSpotId: parkingSpot.id, startTime: startTime, endTime: endTime)
+
+                DispatchQueue.main.async {
+                    if success {
+                        isBookingConfirmed = true 
+                    } else {
+                        errorMessage = "Booking failed. Please try again."
+                        showErrorAlert = true
+                    }
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    errorMessage = "Error: \(error.localizedDescription)"
+                    showErrorAlert = true
+                }
+            }
+        }
     }
 }
 
