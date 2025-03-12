@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { internalMutation } from "./_generated/server";
 import { Id } from "./_generated/dataModel";
-import { BookingType } from '@/types/convex.type';
+import { BookingState } from '@/validators/booking.validator';
 
 // Helper to get a random item from an array
 const getRandomItem = <T>(array: T[]): T => {
@@ -135,7 +135,7 @@ export const seed = internalMutation({
 
     // Create bookings
     const bookingIds: Id<"bookings">[] = [];
-    const bookingStatuses = ["pending", "confirmed", "completed", "cancelled", "expired"];
+    const bookingStatees = ["pending", "confirmed", "completed", "cancelled", "expired"];
     console.log("Creating bookings...");
     for (let i = 0; i < 30; i++) {
       const startTime = getRandomFutureTimestamp();
@@ -158,7 +158,7 @@ export const seed = internalMutation({
         startTime,
         endTime,
         totalCost,
-        status: getRandomItem(bookingStatuses) as BookingType,
+        state: getRandomItem(bookingStatees) as BookingState,
         updatedAt: Date.now(),
       });
       bookingIds.push(bookingId);
@@ -170,7 +170,7 @@ export const seed = internalMutation({
       await ctx.db.insert("iot_data", {
         parkingSpaceId: getRandomItem(parkingSpaceIds),
         sensorId: `sensor-${faker.string.alphanumeric(6)}`,
-        occupancyStatus: faker.datatype.boolean(),
+        occupancyState: faker.datatype.boolean(),
         updatedAt: getRandomPastTimestamp(),
       });
     }
@@ -190,7 +190,7 @@ export const seed = internalMutation({
     // Create payments
     console.log("Creating payments...");
     const paymentMethods = ["credit_card", "debit_card", "paypal", "apple_pay", "google_pay"];
-    const paymentStatuses = ["completed", "pending", "failed", "refunded"];
+    const paymentStatees = ["completed", "pending", "failed", "refunded"];
 
     for (let i = 0; i < bookingIds.length; i++) {
       const booking = await ctx.db.get(bookingIds[i]);
@@ -200,7 +200,7 @@ export const seed = internalMutation({
           userId: booking.userId,
           amount: booking.totalCost,
           paymentMethod: getRandomItem(paymentMethods),
-          status: getRandomItem(paymentStatuses),
+          state: getRandomItem(paymentStatees),
           createdAt: getRandomPastTimestamp(),
         });
       }

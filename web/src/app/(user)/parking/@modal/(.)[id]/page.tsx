@@ -4,6 +4,7 @@ import { ConvexTimeToDisplayFormat } from '@/utils/date.util';
 import { toast } from 'sonner';
 import { getParkingByIdService } from '@/services/parking.service';
 import Modal from './modal';
+import BookingForm from '@/components/forms/BookingForm';
 
 const ParkingPopup = async ({
   params
@@ -43,8 +44,10 @@ const ParkingPopup = async ({
             <div className='border-t my-4'></div>
 
             {/* Description Section */}
-            <p className='text-gray-800'>{'pending'}</p>
+            <p className='text-gray-800'>{'Not done yet'}</p>
 
+            {/* Pending for booking form */}
+            <BookingForm operationType='create' defaultData={ } onClose={ } />
             {/* Booking Button */}
             <div className='mt-6 gap-2'>
               <Button variant='outline' className='w-full'>

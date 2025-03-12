@@ -3,46 +3,53 @@ import { v } from "convex/values";
 import {
   createBookingModel,
   getBookingsByUserModel,
-  updateBookingStatusModel,
+  updateBookingStateModel,
   deleteBookingModel,
   checkBookingConflictModel,
+  getBookingByIdModel,
 } from "./models/booking.model";
+import { Id } from "./_generated/dataModel";
 import { bookingStateDataSchema } from "./schema";
 
 export const checkBookingConflict = query({
   args: {
-    userId: v.id("users"),
+    userId: v.string(),
     startTime: v.number(),
     endTime: v.number(),
   },
   handler: async (ctx, args) => {
-    return await checkBookingConflictModel(ctx, args.userId, args.startTime, args.endTime);
+    return await checkBookingConflictModel(
+      ctx,
+      args.userId as Id<"users">,
+      args.startTime,
+      args.endTime);
   },
 });
 
 export const createBooking = mutation({
   args: {
     bookingData: v.object({
-      userId: v.id("users"),
-      parkingSpaceId: v.optional(v.id("parking_spaces")),
+      userId: v.string(),
+      parkingSpaceId: v.string(),
       parkingName: v.string(),
       startTime: v.number(),
       endTime: v.number(),
       totalCost: v.number(),
-      status: bookingStateDataSchema,
+      state: bookingStateDataSchema,
+      updateAt: v.optional(v.number()),
     })
   },
   handler: async (ctx, args) => {
     return await createBookingModel(
       ctx,
-      args.bookingData
+      args.bookingData,
     );
   },
 });
 
 export const getBookingsByUser = query({
   args: {
-    userId: v.id("users"),
+    userId: v.string(),
     keyword: v.optional(v.string()),
     startTime: v.optional(v.number()),
     endTime: v.optional(v.number()),
@@ -50,24 +57,46 @@ export const getBookingsByUser = query({
   handler: async (ctx, args) => {
     return await getBookingsByUserModel(
       ctx,
-      args.userId,
+      args.userId as Id<"users">,
       args.keyword,
       args.startTime,
       args.endTime);
   },
 });
 
-
-export const updateBookingStatus = mutation({
-  args: { bookingId: v.id("bookings"), status: bookingStateDataSchema },
+export const getBookingByIdData = query({
+  args: {
+    id: v.string(),
+  },
   handler: async (ctx, args) => {
-    await updateBookingStatusModel(ctx, args.bookingId, args.status);
+    const booking = await getBookingByIdModel(ctx, args.id as Id<"bookings">);
+    return booking;
+  },
+});
+
+export const updateBookingState = mutation({
+  args: {
+    bookingId: v.string(),
+    update: v.object({
+      startTime: v.optional(v.number()),
+      endTime: v.optional(v.number()),
+      totalCost: v.optional(v.number()),
+      updateAt: v.optional(v.number()),
+      state: v.optional(bookingStateDataSchema),
+    }),
+  },
+  handler: async (ctx, args) => {
+    await updateBookingStateModel(
+      ctx,
+      args.bookingId as Id<"bookings">,
+      args.update,
+    );
   },
 });
 
 export const deleteBooking = mutation({
-  args: { bookingId: v.id("bookings") },
+  args: { bookingId: v.string() },
   handler: async (ctx, args) => {
-    await deleteBookingModel(ctx, args.bookingId);
+    await deleteBookingModel(ctx, args.bookingId as Id<"bookings">);
   },
 });

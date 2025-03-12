@@ -57,15 +57,17 @@ const ParkingForm = ({
     switch (operationType) {
       case 'create':
         const response = await createParkingService(
-          values.name,
-          values.location,
-          values.city,
-          values.area,
-          values.street,
-          values.unit,
-          values.totalSlots,
-          values.pricePerHour,
-          values.isActive
+          {
+            name: values.name,
+            location: values.location,
+            city: values.city,
+            area: values.area,
+            street: values.street,
+            unit: values.unit,
+            totalSlots: values.totalSlots,
+            pricePerHour: values.pricePerHour,
+            isActive: values.isActive,
+          }
         );
         // Show toast message
         if (response.result) {

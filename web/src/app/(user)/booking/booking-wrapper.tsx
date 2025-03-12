@@ -40,8 +40,6 @@ const BookingWrapper = ({
     getUser();
   }, [clerkUserId]);
 
-  console.log("appUserId", appUserId);
-
   // Use useQuery but allow it to wait until userId is available
   const bookings = useQuery(
     api.booking.getBookingsByUser,

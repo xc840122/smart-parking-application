@@ -20,15 +20,15 @@ export async function DELETE(
 
     // Return the response
     if (response.result) {
-      return NextResponse.json(response, { status: 200 }); // 200 OK
+      return NextResponse.json(response, { state: 200 }); // 200 OK
     } else {
-      return NextResponse.json(response, { status: 400 }); // 400 Bad Request
+      return NextResponse.json(response, { state: 400 }); // 400 Bad Request
     }
   } catch (error) {
     console.error("Failed to delete booking:", error);
     return NextResponse.json(
       { result: false, message: "Failed to delete booking" },
-      { status: 500 } // 500 Internal Server Error
+      { state: 500 } // 500 Internal Server Error
     );
   }
 }

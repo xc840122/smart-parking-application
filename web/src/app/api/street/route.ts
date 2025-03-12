@@ -11,21 +11,21 @@ export const GET = async (request: Request) => {
     if (!area) {
       return NextResponse.json(
         { result: false, message: "Area name is required" },
-        { status: 400 } // 400 Bad Request
+        { state: 400 } // 400 Bad Request
       );
     }
 
     const response = await getStreetsByAreaService(area);
 
     if (response.result) {
-      return NextResponse.json(response, { status: 200 });
+      return NextResponse.json(response, { state: 200 });
     }
-    return NextResponse.json(response, { status: 404 });
+    return NextResponse.json(response, { state: 404 });
   } catch (error) {
     console.error("Failed to get streets:", error);
     return NextResponse.json(
       { result: false, message: "Failed to get streets" },
-      { status: 500 }
+      { state: 500 }
     );
   }
 }

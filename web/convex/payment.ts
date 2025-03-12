@@ -12,7 +12,7 @@ import {
  * @param {Id<"users">} args.userId - The ID of the user making the payment.
  * @param {number} args.amount - The amount paid.
  * @param {string} args.paymentMethod - The payment method used (e.g., "credit card", "PayPal").
- * @param {string} args.status - The status of the payment (e.g., "success", "failed").
+ * @param {string} args.state - The state of the payment (e.g., "success", "failed").
  * @returns {Promise<Id<"payments">>} The ID of the newly created payment.
  */
 export const createPayment = mutation({
@@ -21,7 +21,7 @@ export const createPayment = mutation({
     userId: v.id("users"),
     amount: v.number(),
     paymentMethod: v.string(),
-    status: v.string(),
+    state: v.string(),
   },
   handler: async (ctx, args) => {
     return await createPaymentModel(
@@ -30,7 +30,7 @@ export const createPayment = mutation({
       args.userId,
       args.amount,
       args.paymentMethod,
-      args.status
+      args.state
     );
   },
 });

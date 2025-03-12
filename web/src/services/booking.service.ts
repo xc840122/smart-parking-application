@@ -1,4 +1,3 @@
-// services/booking.service.ts
 import { ApiResponse } from "@/types/api.type";
 import { BookingDataModel } from "@/types/convex.type";
 import { BOOKING_MESSAGES } from "@/constants/messages/booking.message";
@@ -7,8 +6,10 @@ import {
   createBookingRepo,
   deleteBookingRepo,
   checkBookingConflictRepo,
+  updateBookingStateRepo,
+  getBookingByIdRepo,
 } from "@/repositories/booking.repo";
-import { bookingCreationSchema } from "@/validators/booking.validator";
+import { BookingType, bookingFormSchema } from "@/validators/booking.validator";
 
 export const checkBookingConflictService = async (
   userId: string,
@@ -37,11 +38,11 @@ export const checkBookingConflictService = async (
 };
 
 export const createBookingService = async (
-  bookingData: BookingDataModel
+  bookingData: BookingType
 ): Promise<ApiResponse<string>> => {
   try {
     // Validate the booking data using Zod
-    const validationResult = bookingCreationSchema.safeParse(bookingData);
+    const validationResult = bookingFormSchema.safeParse(bookingData);
 
     // Return error if validation fails
     if (!validationResult.success) {
@@ -60,8 +61,8 @@ export const createBookingService = async (
       return { result: false, message: BOOKING_MESSAGES.ERROR.CONFLICTING_BOOKING };
     }
 
-    // Create the booking,default status is pending
-    const bookingId = await createBookingRepo({ ...bookingData, status: "pending" });
+    // Create the booking,default state is pending
+    const bookingId = await createBookingRepo(bookingData);
 
     return {
       result: true,
@@ -98,6 +99,20 @@ export const getBookingsByUserService = async (
   }
 };
 
+export const getBookingByIdService = async (id: string): Promise<ApiResponse<BookingDataModel>> => {
+  try {
+    const booking = await getBookingByIdRepo(id);
+    if (!booking) {
+      return { result: false, message: BOOKING_MESSAGES.ERROR.NOT_FOUND };
+    } else {
+      return { result: true, message: BOOKING_MESSAGES.SUCCESS.GET_SUCCESSFUL, data: booking };
+    }
+  } catch (error) {
+    console.error(`Failed to get booking by ID: ${error}`);
+    return { result: false, message: BOOKING_MESSAGES.ERROR.GET_FAILED };
+  }
+}
+
 export const deleteBookingService = async (
   bookingId: string
 ): Promise<ApiResponse> => {
@@ -112,17 +127,17 @@ export const deleteBookingService = async (
   }
 };
 
-// export const updateBookingStatusService = async (
-//   bookingId: string,
-//   status: BookingType
-// ): Promise<ApiResponse> => {
-//   try {
-//     // Update the booking status
-//     await updateBookingStatusRepo(bookingId, status);
+export const updateBookingService = async (
+  bookingId: string,
+  update: Partial<BookingType>
+): Promise<ApiResponse> => {
+  try {
+    // Update the booking state
+    await updateBookingStateRepo(bookingId, update);
 
-//     return { result: true, message: BOOKING_MESSAGES.SUCCESS.UPDATE_SUCCESSFUL };
-//   } catch (error) {
-//     console.error("Failed to update booking status:", error);
-//     throw new Error(BOOKING_MESSAGES.ERROR.UPDATE_FAILED);
-//   }
-// };
+    return { result: true, message: BOOKING_MESSAGES.SUCCESS.UPDATE_SUCCESSFUL };
+  } catch (error) {
+    console.error("Failed to update booking:", error);
+    throw new Error(BOOKING_MESSAGES.ERROR.UPDATE_FAILED);
+  }
+};

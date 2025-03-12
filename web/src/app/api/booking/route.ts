@@ -18,15 +18,15 @@ export async function POST(request: Request) {
 
     // Return the response
     if (response.result) {
-      return NextResponse.json(response, { status: 201 }); // 201 Created
+      return NextResponse.json(response, { state: 201 }); // 201 Created
     } else {
-      return NextResponse.json(response, { status: 400 }); // 400 Bad Request
+      return NextResponse.json(response, { state: 400 }); // 400 Bad Request
     }
   } catch (error) {
     console.error("Failed to create booking:", error);
     return NextResponse.json(
       { result: false, message: "Failed to create booking" },
-      { status: 500 } // 500 Internal Server Error
+      { state: 500 } // 500 Internal Server Error
     );
   }
 }
@@ -46,7 +46,7 @@ export async function GET(request: Request) {
     if (!userId) {
       return NextResponse.json(
         { result: false, message: "User ID is required" },
-        { status: 400 } // 400 Bad Request
+        { state: 400 } // 400 Bad Request
       );
     }
 
@@ -55,15 +55,15 @@ export async function GET(request: Request) {
 
     // Return the response
     if (response.result) {
-      return NextResponse.json(response, { status: 200 }); // 200 OK
+      return NextResponse.json(response, { state: 200 }); // 200 OK
     } else {
-      return NextResponse.json(response, { status: 404 }); // 404 Not Found
+      return NextResponse.json(response, { state: 404 }); // 404 Not Found
     }
   } catch (error) {
     console.error("Failed to fetch bookings by user:", error);
     return NextResponse.json(
       { result: false, message: "Failed to fetch bookings by user" },
-      { status: 500 } // 500 Internal Server Error
+      { state: 500 } // 500 Internal Server Error
     );
   }
 }
