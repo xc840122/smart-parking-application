@@ -77,18 +77,25 @@ export async function GET(request: Request) {
   try {
     // Extract query parameters
     const { searchParams } = new URL(request.url);
-    const userId = searchParams.get("userId");
-
+    const clerkUserId = searchParams.get("clerkUserId");
     // Validate the userId
-    if (!userId) {
+    if (!clerkUserId) {
       return NextResponse.json(
-        { result: false, message: "User ID is required" },
+        { result: false, message: "clerkUserId is required" },
         { status: 400 } // 400 Bad Request
+      );
+    }
+    // Get the user ID
+    const user = await getUserByClerkIdService(clerkUserId);
+    if (!user || !user.data?._id) {
+      return NextResponse.json(
+        { result: false, message: "User not found" },
+        { status: 404 } // 404 Not Found
       );
     }
 
     // Call the getBookingsByUserService
-    const response = await getBookingsByUserService(userId);
+    const response = await getBookingsByUserService(user.data._id);
 
     // Return the response
     if (response.result) {

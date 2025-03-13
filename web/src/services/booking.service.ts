@@ -186,7 +186,7 @@ export const getBookingsByUserService = async (
       data: bookings,
     };
   } catch (error) {
-    console.error("Failed to fetch bookings by user:", error);
+    console.error("Service Failed to fetch bookings by user:", error);
     throw new Error(BOOKING_MESSAGES.ERROR.GET_FAILED);
   }
 };
