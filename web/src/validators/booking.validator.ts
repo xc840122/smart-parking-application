@@ -20,6 +20,7 @@ export const bookingSchema = z.object({
   parkingSpaceId: z.string().min(1, "Parking space ID is required"),
   parkingName: z.string().min(1, "Parking name is required"),
   totalCost: z.number().nonnegative("Total cost must be zero or positive"),
+  discountRate: z.number().nonnegative().max(1, "Discount rate must be between 0 and 1").default(0),
   updatedAt: z.number().optional(),
   state: bookingStateSchema,
 });

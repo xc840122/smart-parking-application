@@ -53,6 +53,7 @@ export default defineSchema({
     startTime: v.number(),
     endTime: v.number(),
     totalCost: v.number(),
+    discountRate: v.number(),
     state: bookingStateDataSchema, // Use string literals for enum-like behavior
     updatedAt: v.number(),
   })

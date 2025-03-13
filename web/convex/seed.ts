@@ -85,7 +85,7 @@ export const seed = internalMutation({
     console.log("Creating users...");
     for (let i = 0; i < 20; i++) {
       const userId = await ctx.db.insert("users", {
-        clerkUserId: faker.string.uuid(),
+        clerkUserId: Math.random() > 0.5 ? "user_2uFiLfAbW7el9kQGvvPcom8JmLk" : "user_2u4lltrXXAkVTG1UzeJoCWjsI4Q",
         firstName: faker.person.firstName(),
         lastName: faker.person.lastName(),
         email: faker.internet.email(),
@@ -107,7 +107,7 @@ export const seed = internalMutation({
       const city = getRandomItem(cityNames);
       const area = getRandomItem(areaNames);
       const street = getRandomItem(streetNames);
-      const totalSlots = faker.number.int({ min: 5, max: 50 });
+      const totalSlots = faker.number.int({ min: 30, max: 300 });
       const parkingName = `${area} ${street} Parking`;
 
       const parkingSpaceId = await ctx.db.insert("parking_spaces", {
@@ -122,7 +122,7 @@ export const seed = internalMutation({
         unit: faker.location.buildingNumber(),
         totalSlots,
         availableSlots: faker.number.int({ min: 0, max: totalSlots }),
-        pricePerHour: faker.number.float({ min: 2, max: 15, fractionDigits: 1 }),
+        pricePerHour: faker.number.float({ min: 2, max: 15, fractionDigits: 0 }),
         isActive: faker.datatype.boolean(0.9), // 90% chance of being active
       });
 
@@ -158,6 +158,7 @@ export const seed = internalMutation({
         startTime,
         endTime,
         totalCost,
+        discountRate: 0,
         state: getRandomItem(bookingStatees) as BookingState,
         updatedAt: Date.now(),
       });

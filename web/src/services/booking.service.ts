@@ -42,7 +42,7 @@ export const checkBookingConflictService = async (
 
 export const createBookingService = async (
   bookingData: BookingCreationType
-): Promise<ApiResponse<{ bookingId: string, totalCost: number }>> => {
+): Promise<ApiResponse<{ bookingId: string, dicountRate: number, totalCost: number }>> => {
   try {
     // Extract the booking data
     const { parkingSpaceId, startTime, endTime } = bookingData;
@@ -64,8 +64,14 @@ export const createBookingService = async (
       return { result: false, message: PARKING_SPACE_MESSAGES.ERROR.NOT_FOUND };
     }
 
-    // Calculate total cost
-    const totalCost = await costCalculation(parkingSpace.data.pricePerHour, startTime, endTime);
+    // Get current parking loading(0-1)
+    const usageString =
+      ((parkingSpace.data.totalSlots - parkingSpace.data.availableSlots) / parkingSpace.data.totalSlots).toFixed(1);
+
+    const usage = parseFloat(usageString);
+
+    // Calculate total cost (with AI prediction)
+    const { totalCost, discountRate } = await costCalculation(usage, parkingSpace.data.pricePerHour, startTime, endTime);
 
     // Conflict check
     const conflictCheck = await checkBookingConflictService(
@@ -115,6 +121,7 @@ export const createBookingService = async (
       ...bookingData,
       parkingName: parkingSpace.data.name,
       totalCost: totalCost,
+      discountRate: discountRate,
       state: "pending",
       updatedAt: new Date().getTime(),
     };
@@ -128,7 +135,7 @@ export const createBookingService = async (
     return {
       result: true,
       message: BOOKING_MESSAGES.SUCCESS.CREATE_SUCCESSFUL,
-      data: { bookingId: bookingId, totalCost: totalCost },
+      data: { bookingId: bookingId, dicountRate: discountRate, totalCost: totalCost },
     };
   } catch (error) {
     console.error("Failed to create booking:", error);

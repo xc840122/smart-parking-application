@@ -35,6 +35,7 @@ export const createBooking = mutation({
       startTime: v.number(),
       endTime: v.number(),
       totalCost: v.number(),
+      discountRate: v.number(),
       state: bookingStateDataSchema,
       updatedAt: v.optional(v.number()),
     })

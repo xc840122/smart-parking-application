@@ -22,7 +22,7 @@ const TableView = <T,>({
   }) => {
 
   return (
-    <Table className="table-fixed">
+    <Table>
       <TableCaption>Welcome to parking save!</TableCaption>
       <TableHeader>
         <TableRow>

@@ -41,11 +41,12 @@ export const ParkingListContent = ({
       key={item._id}
     >
       <TableCell className="font-medium w-3/12 truncate">{item.name}</TableCell>
-      <TableCell className="w-6/12 truncate">
+      <TableCell className="w-5/12 truncate">
         {addressGenerator(item.city, item.area, item.street, item.unit)}
       </TableCell>
-      <TableCell className="w-2/12">{item.availableSlots}</TableCell>
-      <TableCell className="w-1/12">
+      <TableCell className="w-1/12">{item.availableSlots}/{item.totalSlots}</TableCell>
+      <TableCell className="w-1/12">{item.pricePerHour}$/h</TableCell>
+      <TableCell className="w-2/12">
         <div className="flex justify-center gap-2">
           <Link href={`/parking/${item._id}`}>
             <Rows3 color="#7b39ed" />
@@ -69,6 +70,7 @@ export const ParkingListContent = ({
     { header: "Name", accessor: "name" },
     { header: "Address", accessor: "address" },
     { header: "Slot", accessor: "slot" },
+    { header: "Rate", accessor: "rate" },
     { header: "Actions", accessor: "action" },
   ];
 
