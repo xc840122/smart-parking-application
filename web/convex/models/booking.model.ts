@@ -1,7 +1,7 @@
 import { BookingDataModel } from "@/types/convex.type";
 import { Id } from "../_generated/dataModel";
 import { MutationCtx, QueryCtx } from "../_generated/server";
-import { BookingType } from "@/validators/booking.validator";
+import { BookingState, BookingType } from "@/validators/booking.validator";
 
 // models/booking.model.ts
 export const createBookingModel = async (
@@ -35,6 +35,27 @@ export const createBookingModel = async (
   } catch (error) {
     console.error("Failed to create booking:", error);
     throw new Error("Booking creation failed");
+  }
+};
+
+export const confirmBookingModel = async (
+  ctx: MutationCtx,
+  bookingId: Id<"bookings">,
+  update: { userId: string, state: string },
+): Promise<void> => {
+  try {
+    if (!bookingId || !update.userId || !update.state) {
+      throw new Error("Invalid input: Booking ID are required");
+    }
+    // Update the booking state
+    await ctx.db.patch(bookingId, {
+      ...update,
+      userId: update.userId as Id<"users">,
+      state: update.state as BookingState,
+    });
+  } catch (error) {
+    console.error("Failed to update booking state:", error);
+    throw new Error("Update failed");
   }
 };
 
@@ -177,35 +198,23 @@ export const getBookingByIdModel = async (
   }
 }
 
-/**
- * Updates a booking's state by its ID.
- * @param {MutationCtx} ctx - The Convex mutation context.
- * @param {Id<"bookings">} bookingId - The ID of the booking to update.
- * @param {BookingState} state - The new state of the booking.
- * @throws {Error} If the booking ID is invalid, state is invalid, or update fails.
- */
-export const updateBookingStateModel = async (
-  ctx: MutationCtx,
-  bookingId: Id<"bookings">,
-  update: Partial<BookingType>,
-): Promise<void> => {
-
-  try {
-    if (!bookingId) {
-      throw new Error("Invalid input: Booking ID are required");
-    }
-    // Update the booking state
-    await ctx.db.patch(bookingId, {
-      ...update,
-      userId: update.userId as Id<"users">,
-      parkingSpaceId: update.parkingSpaceId as Id<"parking_spaces">,
-      updatedAt: update.updatedAt || Date.now(),
-    });
-  } catch (error) {
-    console.error("Failed to update booking state:", error);
-    throw new Error("Update failed");
-  }
-};
+// export const updateBookingStateModel = async (
+//   ctx: MutationCtx,
+//   bookingId: Id<"bookings">,
+//   update: Partial<BookingType>,
+// ): Promise<void> => {
+//   try {
+//     console.log("update", bookingId, update);
+//     if (!bookingId) {
+//       throw new Error("Invalid input: Booking ID are required");
+//     }
+//     // Update the booking state
+//     await ctx.db.patch(bookingId, { update });
+//   } catch (error) {
+//     console.error("Failed to update booking state:", error);
+//     throw new Error("Update failed");
+//   }
+// };
 
 /**
  * Deletes a booking by its ID.

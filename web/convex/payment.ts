@@ -5,16 +5,6 @@ import {
   getPaymentsByBookingModel,
 } from "./models/payment.model";
 
-/**
- * Creates a new payment.
- * @param {object} args - The arguments for creating a payment.
- * @param {Id<"bookings">} args.bookingId - The ID of the booking associated with the payment.
- * @param {Id<"users">} args.userId - The ID of the user making the payment.
- * @param {number} args.amount - The amount paid.
- * @param {string} args.paymentMethod - The payment method used (e.g., "credit card", "PayPal").
- * @param {string} args.state - The state of the payment (e.g., "success", "failed").
- * @returns {Promise<Id<"payments">>} The ID of the newly created payment.
- */
 export const createPayment = mutation({
   args: {
     bookingId: v.id("bookings"),

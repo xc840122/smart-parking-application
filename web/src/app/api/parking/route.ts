@@ -3,7 +3,6 @@ import { getParkingService } from "@/services/parking.service";
 import { ApiResponse } from "@/types/api.type";
 import { ParkingSpaceDataModel } from "@/types/convex.type";
 
-
 // GET: Fetch parking spaces by filters
 export const GET = async (request: Request) => {
   try {
@@ -27,16 +26,16 @@ export const GET = async (request: Request) => {
 
     // Handle no data found
     if (!response.result) {
-      return NextResponse.json({ error: response.message }, { state: 404 });
+      return NextResponse.json({ error: response.message }, { status: 404 });
     }
 
     // Return success response
-    return NextResponse.json(response, { state: 200 });
+    return NextResponse.json(response, { status: 200 });
   } catch (error) {
     console.error("Failed to fetch parking data:", error);
     return NextResponse.json(
       { error: "An unexpected error occurred" },
-      { state: 500 }
+      { status: 500 }
     );
   }
 }

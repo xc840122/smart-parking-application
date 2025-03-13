@@ -1,6 +1,5 @@
 import { fetchMutation, fetchQuery } from "convex/nextjs";
 import { api } from "../../convex/_generated/api";
-import { Id } from "../../convex/_generated/dataModel";
 import { BookingDataModel } from "@/types/convex.type";
 import { BookingType } from "@/validators/booking.validator";
 
@@ -11,7 +10,7 @@ export const checkBookingConflictRepo = async (
 ): Promise<BookingDataModel[]> => {
   try {
     const conflictExists = await fetchQuery(api.booking.checkBookingConflict, {
-      userId: userId as Id<"users">,
+      userId,
       startTime,
       endTime,
     });
@@ -30,12 +29,12 @@ export const getBookingsByUserRepo = async (
   });
 };
 
-export const getBookingByIdRepo = async (id: string): Promise<BookingDataModel | null> => {
+export const getBookingByIdRepo = async (bookingId: string): Promise<BookingDataModel | null> => {
   try {
-    const booking = await fetchQuery(api.booking.getBookingByIdData, { id });
+    const booking = await fetchQuery(api.booking.getBookingByIdData, { id: bookingId });
     return !booking ? null : booking;
   } catch (error) {
-    console.error(`Failed to get booking by ID: ${error}`);
+    console.error(`Failed to get booking by ID from database: ${error}`);
     throw new Error("Get booking by ID failed");
   }
 }
@@ -51,16 +50,16 @@ export const createBookingRepo = async (
 
 export const deleteBookingRepo = async (bookingId: string) => {
   await fetchMutation(api.booking.deleteBooking, {
-    bookingId: bookingId as Id<"bookings">,
+    bookingId: bookingId,
   });
 };
 
 
-export const updateBookingStateRepo = async (
+export const confirmBookingRepo = async (
   bookingId: string,
-  update: Partial<BookingType>,
+  update: { userId: string, state: string },
 ) => {
-  await fetchMutation(api.booking.updateBookingState, {
+  await fetchMutation(api.booking.confirmBookingData, {
     bookingId: bookingId,
     update,
   });

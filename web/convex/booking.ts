@@ -3,10 +3,10 @@ import { v } from "convex/values";
 import {
   createBookingModel,
   getBookingsByUserModel,
-  updateBookingStateModel,
   deleteBookingModel,
   checkBookingConflictModel,
   getBookingByIdModel,
+  confirmBookingModel,
 } from "./models/booking.model";
 import { Id } from "./_generated/dataModel";
 import { bookingStateDataSchema } from "./schema";
@@ -36,7 +36,7 @@ export const createBooking = mutation({
       endTime: v.number(),
       totalCost: v.number(),
       state: bookingStateDataSchema,
-      updateAt: v.optional(v.number()),
+      updatedAt: v.optional(v.number()),
     })
   },
   handler: async (ctx, args) => {
@@ -74,25 +74,45 @@ export const getBookingByIdData = query({
   },
 });
 
-export const updateBookingState = mutation({
+export const confirmBookingData = mutation({
   args: {
     bookingId: v.string(),
     update: v.object({
-      startTime: v.optional(v.number()),
-      endTime: v.optional(v.number()),
-      totalCost: v.optional(v.number()),
-      updateAt: v.optional(v.number()),
-      state: v.optional(bookingStateDataSchema),
+      userId: v.string(),
+      state: v.string(),
     }),
   },
   handler: async (ctx, args) => {
-    await updateBookingStateModel(
+    await confirmBookingModel(
       ctx,
       args.bookingId as Id<"bookings">,
       args.update,
     );
   },
 });
+
+// export const updateBookingState = mutation({
+//   args: {
+//     bookingId: v.string(),
+//     update: v.object({
+//       startTime: v.optional(v.number()),
+//       endTime: v.optional(v.number()),
+//       totalCost: v.optional(v.number()),
+//       updatedAt: v.optional(v.number()),
+//       state: v.optional(bookingStateDataSchema),
+//       userId: v.string(),
+//       parkingSpaceId: v.optional(v.string()),
+//       parkingName: v.optional(v.string()),
+//     }),
+//   },
+//   handler: async (ctx, args) => {
+//     await updateBookingStateModel(
+//       ctx,
+//       args.bookingId as Id<"bookings">,
+//       { ...args.update, userId: args.update.userId as Id<"users"> },
+//     );
+//   },
+// });
 
 export const deleteBooking = mutation({
   args: { bookingId: v.string() },

@@ -67,7 +67,7 @@ export const getParkingByIdData = query({
 
 export const updateParkingData = mutation({
   args: {
-    id: v.string(),
+    bookingId: v.string(),
     update: v.object({
       name: v.optional(v.string()),
       location: v.optional(v.object({ lat: v.number(), lng: v.number() })),
@@ -83,7 +83,7 @@ export const updateParkingData = mutation({
   handler: async (ctx, args) => {
     await updateParkingModel(
       ctx,
-      args.id as Id<"parking_spaces">,
+      args.bookingId as Id<"parking_spaces">,
       args.update,
     );
   },

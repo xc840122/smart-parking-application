@@ -46,7 +46,7 @@ export default function SignInPage() {
       });
 
       // Check if sign-in is complete
-      if (signInResponse.state !== 'complete') {
+      if (signInResponse.status !== 'complete') {
         setServerError('Sign-in failed. Please try again.');
         return;
       }

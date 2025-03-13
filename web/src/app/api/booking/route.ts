@@ -1,32 +1,69 @@
 import { NextResponse } from "next/server";
-import { createBookingService } from "@/services/booking.service";
-import { BookingDataModel } from "@/types/convex.type";
-import { getBookingsByUserService } from "@/services/booking.service";
+import { createBookingService, getBookingsByUserService } from "@/services/booking.service";
+import { BookingCreationType } from "@/validators/booking.validator";
+import { getUserByClerkIdService } from "@/services/user.service";
+import { USER_MESSAGES } from "@/constants/messages/user.message";
 
+type BookingRequestBody = {
+  clerkUserId: string;
+  startTime: number;
+  endTime: number;
+  parkingSpaceId: string;
+};
 /**
- * Handles POST requests to create a new booking.
- * @param {Request} request - The incoming HTTP request.
- * @returns {Promise<NextResponse>} The HTTP response.
+ * Reserved booking{POST} - Create a new booking.start time, end time, parking space ID are required.
+ * @param request 
+ * @param params 
+ * @returns 
  */
-export async function POST(request: Request) {
+export const POST = async (request: Request) => {
   try {
-    // Parse the request body
-    const bookingData: BookingDataModel = await request.json();
+    // Parse request body
+    const body: BookingRequestBody = await request.json();
+    const { clerkUserId, startTime, endTime, parkingSpaceId } = body;
 
-    // Call the createBookingService
+    // Validate required fields
+    if (!startTime || !endTime || !parkingSpaceId || !clerkUserId) {
+      return NextResponse.json(
+        { result: false, message: "Missing required fields" },
+        { status: 400 }
+      );
+    }
+
+    // Get the user ID from heaeders
+    const user = await getUserByClerkIdService(clerkUserId);
+
+    if (!user) {
+      return NextResponse.json(
+        { result: false, message: USER_MESSAGES.ERROR.GET_USER_FAILED },
+        { status: 404 }
+      );
+    }
+
+    // Prepare booking data
+    const bookingData: BookingCreationType = {
+      userId: user.data?._id as string,
+      parkingSpaceId: parkingSpaceId,
+      startTime: startTime,
+      endTime: endTime,
+    };
+
+    // Create booking
     const response = await createBookingService(bookingData);
 
-    // Return the response
     if (response.result) {
-      return NextResponse.json(response, { state: 201 }); // 201 Created
+      return NextResponse.json(
+        { result: true, message: "Booking created successfully", data: response.data },
+        { status: 201 }
+      );
     } else {
-      return NextResponse.json(response, { state: 400 }); // 400 Bad Request
+      return NextResponse.json(response, { status: 400 });
     }
   } catch (error) {
-    console.error("Failed to create booking:", error);
+    console.error("Failed to reserve booking:", error);
     return NextResponse.json(
-      { result: false, message: "Failed to create booking" },
-      { state: 500 } // 500 Internal Server Error
+      { result: false, message: "Internal server error" },
+      { status: 500 }
     );
   }
 }
@@ -46,7 +83,7 @@ export async function GET(request: Request) {
     if (!userId) {
       return NextResponse.json(
         { result: false, message: "User ID is required" },
-        { state: 400 } // 400 Bad Request
+        { status: 400 } // 400 Bad Request
       );
     }
 
@@ -55,15 +92,15 @@ export async function GET(request: Request) {
 
     // Return the response
     if (response.result) {
-      return NextResponse.json(response, { state: 200 }); // 200 OK
+      return NextResponse.json(response, { status: 200 }); // 200 OK
     } else {
-      return NextResponse.json(response, { state: 404 }); // 404 Not Found
+      return NextResponse.json(response, { status: 404 }); // 404 Not Found
     }
   } catch (error) {
     console.error("Failed to fetch bookings by user:", error);
     return NextResponse.json(
       { result: false, message: "Failed to fetch bookings by user" },
-      { state: 500 } // 500 Internal Server Error
+      { status: 500 } // 500 Internal Server Error
     );
   }
 }
