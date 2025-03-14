@@ -7,10 +7,8 @@
 
 import Foundation
 
-import Foundation
-
 struct APIResponse<T: Decodable>: Decodable {
     let result: Bool
     let message: String
-    let data: T
+    let data: T?
 }

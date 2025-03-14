@@ -15,7 +15,6 @@ struct HomeView: View {
         GeometryReader { outerGeometry in
             ScrollView {
                 VStack {
-//                    SearchBar(searchText: $homeViewModel.searchText)
                     SortingBar(viewModel: parkingSpotViewModel)
                     
                     if homeViewModel.isMapView {
@@ -39,6 +38,7 @@ struct HomeView: View {
             .conditionalModifier(!homeViewModel.isMapView) { view in
                 view.refreshable {
                     await parkingSpotViewModel.loadParkingLots()
+                    await parkingSpotViewModel.fetchCities()
                 }
             }
             .alert(parkingSpotViewModel.errorMessage ?? "", isPresented: Binding(

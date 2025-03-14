@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Clerk
 
 struct BookingView: View {
     let parkingSpot: ParkingSpot
@@ -16,6 +17,8 @@ struct BookingView: View {
     @State private var isBookingConfirmed = false
     @State private var showErrorAlert = false
     @State private var errorMessage = ""
+    @State private var calculation: Calculation?
+    private let bookingService = BookingService()
 
     var body: some View {
         VStack(spacing: 24) {
@@ -126,15 +129,32 @@ struct BookingView: View {
 
     /// Calculate estimated price
     private func calculatePrice() {
-        estimatedPrice = Double(calculateDuration()) * parkingSpot.pricePerHour
+        Task {
+            do {
+                let userId = Clerk.shared.user?.id ?? ""
+                let calculation = try await bookingService.priceCalculation(userId: userId, parkingSpotId: parkingSpot.id, startTime: startTime, endTime: endTime)
+                let price = calculation.dicountRate * calculation.totalCost
+                self.calculation = calculation
+                
+                DispatchQueue.main.async {
+                    estimatedPrice = price
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    errorMessage = "Error: \(error.localizedDescription)"
+                    showErrorAlert = true
+                }
+            }
+        }
     }
 
     /// Booking confirmation logic
     private func confirmBooking() {
         Task {
             do {
-                let bookingService = BookingService()
-                let success = try await bookingService.createBooking(parkingSpotId: parkingSpot.id, startTime: startTime, endTime: endTime)
+                let bookid = calculation?.bookingId ?? ""
+                let userId = Clerk.shared.user?.id ?? ""
+                let success = try await bookingService.confirmBooking(bookingId: bookid, userId: userId)
 
                 DispatchQueue.main.async {
                     if success {

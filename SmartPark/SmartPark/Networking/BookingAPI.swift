@@ -10,7 +10,8 @@ import Moya
 
 /// API Endpoints for Booking
 enum BookingAPI {
-    case createBooking(parkingSpotId: String, startTime: Int64, endTime: Int64)
+    case priceCalculation(clerkUserId: String ,parkingSpotId: String, startTime: Int64, endTime: Int64)
+    case createBooking(bookingId: String, clerkUserId: String)
 }
 
 extension BookingAPI: TargetType {
@@ -20,8 +21,10 @@ extension BookingAPI: TargetType {
 
     var path: String {
         switch self {
-        case .createBooking:
+        case .priceCalculation:
             return "/booking"
+        case .createBooking:
+            return "/booking/confirm"
         }
     }
 
@@ -31,11 +34,18 @@ extension BookingAPI: TargetType {
 
     var task: Task {
         switch self {
-        case .createBooking(let parkingSpotId, let startTime, let endTime):
+        case .priceCalculation(let clerkUserId, let parkingSpotId, let startTime, let endTime):
             let params: [String: Any] = [
-                "id": parkingSpotId,
+                "clerkUserId": clerkUserId,
+                "parkingSpaceId": parkingSpotId,
                 "startTime": startTime,
                 "endTime": endTime
+            ]
+            return .requestParameters(parameters: params, encoding: JSONEncoding.default)
+        case .createBooking(let bookingId, let clerkUserId):
+            let params: [String: Any] = [
+                "bookingId": bookingId,
+                "clerkUserId": clerkUserId,
             ]
             return .requestParameters(parameters: params, encoding: JSONEncoding.default)
         }
