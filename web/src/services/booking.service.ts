@@ -65,13 +65,14 @@ export const createBookingService = async (
     }
 
     // Get current parking loading(0-1)
-    const usageString =
-      ((parkingSpace.data.totalSlots - parkingSpace.data.availableSlots) / parkingSpace.data.totalSlots).toFixed(1);
+    const occupancyRateString =
+      ((parkingSpace.data.totalSlots - parkingSpace.data.availableSlots) / parkingSpace.data.totalSlots).toFixed(2);
 
-    const usage = parseFloat(usageString);
+    const occupancyRate = parseFloat(occupancyRateString);
 
     // Calculate total cost (with AI prediction)
-    const { totalCost, discountRate } = await costCalculation(usage, parkingSpace.data.pricePerHour, startTime, endTime);
+    const { totalCost, discountRate } =
+      await costCalculation(occupancyRate, parkingSpace.data.pricePerHour, startTime, endTime)
 
     // Conflict check
     const conflictCheck = await checkBookingConflictService(

@@ -1,23 +1,43 @@
-import { predictRate } from "@/helper/booking.helper";
+import { predictDiscount } from "@/helper/booking.helper";
 
 // Calculate the parking cost
 export const costCalculation = async (
-  usage: number,
+  occupancyRate: number,
   parkingRate: number,
   startTime: number,
   endTime: number
 ) => {
-  // Calculate total cost
-  const ratePerHour = parkingRate; // Hour rate
-  const durationHours = Math.ceil((endTime - startTime) / 3600000); // Convert ms to hours, round up
-  const baseTotalCostString = (durationHours * ratePerHour).toFixed(2); // Round to 2 decimal places
+  try {
+    // Calculate total cost
+    const duration = Math.ceil((endTime - startTime) / 3600000); // Convert ms to hours, round up
+    const baseTotalCostString = (duration * parkingRate).toFixed(2); // Round to 2 decimal places
 
-  // Request discountRate from AI model
-  const discountRate = parseFloat((await predictRate(durationHours, usage)).toFixed(2));
+    // Calculate timeOfDay, dayOfWeek, and isWeekend from startTime
+    const startDate = new Date(startTime);
+    const timeOfDay = startDate.getHours(); // Get hour of the day (0-23)
+    const dayOfWeek = startDate.getDay(); // Get day of the week (0=Sunday, 6=Saturday)
+    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6; // Check if it's weekend
 
-  // Calculate total cost
-  const totalCost = parseFloat(baseTotalCostString);
-  return { totalCost, discountRate };
+    // Request discountRate from AI model
+    const discountRate = parseFloat(
+      (
+        await predictDiscount(
+          duration,
+          parseFloat(baseTotalCostString),
+          occupancyRate,
+          timeOfDay,
+          dayOfWeek,
+          isWeekend,
+        )
+      ).toFixed(2)) ?? 0;
+
+    // Calculate total cost
+    const totalCost = parseFloat(baseTotalCostString);
+    return { totalCost, discountRate };
+  } catch (error) {
+    console.error('Cost calculation failed:', error);
+    throw new Error('Cost calculation failed');
+  }
 }
 
 export default costCalculation
