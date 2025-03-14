@@ -1,15 +1,24 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { convexTimeToDisplayFormat } from '@/utils/date.util';
 import { toast } from 'sonner';
-import Link from 'next/link';
 import { getParkingByIdService } from '@/services/parking.service';
+import BookingForm from '@/components/forms/BookingForm';
+import { userHelper } from '@/helper/user.helper';
+import { getUserByClerkIdService } from '@/services/user.service';
 
 const ParkingDetailPage = async ({
   params
 }: {
   params: Promise<{ id: string }>
 }) => {
+  // Get userId
+  const { clerkUserId } = await userHelper()
+  // Query userId by clerkUserId
+  if (!clerkUserId) {
+    toast.error('Failed to get user information');
+    return;
+  }
+  const userId = (await getUserByClerkIdService(clerkUserId)).data?._id as string;
   const { id } = await params;
 
   // Get parking lot details by id
@@ -24,7 +33,7 @@ const ParkingDetailPage = async ({
   const { name, city, area, street, unit, _creationTime } = response.data;
 
   return (
-    <div className='max-w-2xl mx-auto p-4'>
+    <div className='max-w-xl mx-auto p-4 h-screen'>
       <Card className='shadow-lg'>
         <CardHeader>
           <CardTitle className='text-xl'>{name}</CardTitle>
@@ -38,29 +47,14 @@ const ParkingDetailPage = async ({
             <p className='text-sm font-medium text-gray-700'>Street: {street}</p>
             <p className='text-sm font-medium text-gray-700'>Unit: {unit}</p>
           </div>
-
           <div className='border-t my-4'></div>
-
           {/* Description Section */}
-          <p className='text-gray-800'>{'pending'}</p>
-
+          {/* <p className='text-gray-800'>{'pending'}</p> */}
+          {/* Booking form */}
+          <BookingForm defaultData={{ userId: userId, parkingSpaceId: id }} />
           {/* Booking/Cancel Button */}
-          <div className='mt-6 gap-2'>
-            <Button variant='outline' className='w-full'>
-              Book Now
-            </Button>
-          </div>
         </CardContent>
       </Card>
-
-      {/* Back Button */}
-      <div className='mt-6 flex justify-center'>
-        <Link href='/parking' passHref>
-          <Button variant='outline'>
-            ← Back to Parking List
-          </Button>
-        </Link>
-      </div>
     </div>
   );
 };

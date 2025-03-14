@@ -42,13 +42,7 @@ const BookingForm = ({
 
   // Handle time change and trigger get price and discount
   const handleTimeChange = async (fieldName: string, value: number) => {
-    // // Convert the local time to a Date object
-    // const localDate = new Date(value);
-    // // Convert the local time to UTC
-    // const utcTime = localDate.getTime() - localDate.getTimezoneOffset() * 60000;
-    // // Update the form value with the UTC time
-    // form.setValue(fieldName as keyof BookingCreationType, utcTime);
-
+    // Set form value
     form.setValue(fieldName as keyof BookingCreationType, value);
 
     // Prepare booking object to get discount and base cost
