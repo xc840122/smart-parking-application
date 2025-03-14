@@ -12,7 +12,6 @@ import DeleteForm from "@/components/forms/DeleteForm";
 import ParkingForm from "@/components/forms/ParkingForm";
 import { BookingDataModel } from "@/types/convex.type";
 import { convexTimeToDisplayFormat, convexTimeToParkingTime } from "@/utils/date.util";
-import BookingForm from "@/components/forms/BookingForm";
 
 export const BookingListContent = ({
   mode,
@@ -56,9 +55,9 @@ export const BookingListContent = ({
               <DialogModal triggerButtonText="Delete">
                 <DeleteForm id={item._id} />
               </DialogModal>
-              <DialogModal triggerButtonText="Edit">
+              {/* <DialogModal triggerButtonText="Edit">
                 <BookingForm operationType="edit" defaultData={item} />
-              </DialogModal>
+              </DialogModal> */}
             </>
           )}
         </div>
