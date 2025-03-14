@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ConvexTimeToDisplayFormat } from '@/utils/date.util';
+import { convexTimeToDisplayFormat } from '@/utils/date.util';
 import { toast } from 'sonner';
 import Link from 'next/link';
 import { getBookingByIdService } from '@/services/booking.service';
@@ -28,16 +28,16 @@ const BookingDetailPage = async ({
       <Card className='shadow-lg'>
         <CardHeader>
           <CardTitle className='text-xl'>{parkingName}</CardTitle>
-          <p className='text-sm text-gray-500'>Last Updated: {ConvexTimeToDisplayFormat(updatedAt)}</p>
+          <p className='text-sm text-gray-500'>Last Updated: {convexTimeToDisplayFormat(updatedAt)}</p>
         </CardHeader>
         <CardContent>
           {/* Booking Details Section */}
           <div className='space-y-2'>
             <p className='text-sm font-medium text-gray-700'>
-              Start Time: {ConvexTimeToDisplayFormat(startTime)}
+              Start Time: {convexTimeToDisplayFormat(startTime)}
             </p>
             <p className='text-sm font-medium text-gray-700'>
-              End Time: {ConvexTimeToDisplayFormat(endTime)}
+              End Time: {convexTimeToDisplayFormat(endTime)}
             </p>
             <p className='text-sm font-medium text-gray-700'>
               Total Cost: ${totalCost.toFixed(2)}

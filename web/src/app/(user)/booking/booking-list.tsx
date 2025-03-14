@@ -11,7 +11,7 @@ import { arrayConverter } from "@/utils/array.util";
 import DeleteForm from "@/components/forms/DeleteForm";
 import ParkingForm from "@/components/forms/ParkingForm";
 import { BookingDataModel } from "@/types/convex.type";
-import { ConvexTimeToDisplayFormat, ConvexTimeToParkingTime } from "@/utils/date.util";
+import { convexTimeToDisplayFormat, convexTimeToParkingTime } from "@/utils/date.util";
 import BookingForm from "@/components/forms/BookingForm";
 
 export const BookingListContent = ({
@@ -41,9 +41,9 @@ export const BookingListContent = ({
     >
       <TableCell className="font-medium w-3/12 truncate">{item.parkingName}</TableCell>
       <TableCell className="w-3/12 truncate">
-        {ConvexTimeToParkingTime(item.startTime)} - {ConvexTimeToParkingTime(item.endTime)}
+        {convexTimeToParkingTime(item.startTime)} - {convexTimeToParkingTime(item.endTime)}
       </TableCell>
-      <TableCell className="w-2/12">{ConvexTimeToDisplayFormat(item.startTime)}</TableCell>
+      <TableCell className="w-2/12">{convexTimeToDisplayFormat(item.startTime)}</TableCell>
       <TableCell className="w-1/12">{item.totalCost.toFixed(2)}</TableCell>
       <TableCell className="w-1/12">{item.state}</TableCell>
       <TableCell className="w-2/12">

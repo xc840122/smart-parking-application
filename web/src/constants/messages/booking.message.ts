@@ -5,6 +5,7 @@ export const BOOKING_MESSAGES = {
     UPDATE_SUCCESSFUL: "Booking updated successfully",
     DELETE_SUCCESSFUL: "Booking deleted successfully",
     GET_SUCCESSFUL: "Bookings retrieved successfully",
+    COST_CALCULATION_SUCCESSFUL: "Cost calculated successfully",
     NO_CONFLICT: "No conflicting booking found",
   },
   ERROR: {
@@ -25,5 +26,6 @@ export const BOOKING_MESSAGES = {
     HOURS_LIMIT: "Invalid time range,24-hour booking only",
     DAYS_LIMIT: "Invalid time range,7-day booking only",
     RESERVED_BOOKING_STATE_ERROR: "Reserved booking state is not corrent",
+    COST_HANDELING_ERROR: "Failed to handle cost calculation",
   },
 };

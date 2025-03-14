@@ -9,7 +9,7 @@ export const createBookingModel = async (
   bookingData: BookingType,
 ): Promise<Id<"bookings">> => {
   try {
-    const { userId, parkingSpaceId, parkingName, discountRate, startTime, endTime, totalCost, state } = bookingData;
+    const { userId, parkingSpaceId, parkingName, startTime, endTime, totalCost, state } = bookingData;
     // Basic validation (required fields)
     if (
       !userId ||
@@ -18,12 +18,10 @@ export const createBookingModel = async (
       !startTime ||
       !endTime ||
       !totalCost ||
-      !discountRate ||
       !state
     ) {
       throw new Error("Invalid input: Missing required fields");
     }
-
     // Insert the booking into the database
     return await ctx.db.insert("bookings",
       {
