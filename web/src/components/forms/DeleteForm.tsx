@@ -28,7 +28,7 @@ const DeleteForm = ({
    * and updates the state accordingly.It doesn't wait for the user to confirm.
    */
   useEffect(() => {
-    // useActionState trace the status
+    // useActionState trace the state
     // Avoid empty toast coz the default message is empty, 
     // it generates toast before conforming
     if (state.feedback.message) {

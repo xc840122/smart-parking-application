@@ -1,7 +1,7 @@
 'use client';
 
 import { SignUpButton, useClerk, useSignIn, useUser } from '@clerk/nextjs';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -15,6 +15,7 @@ import { Form, FormField, FormItem, FormMessage } from '@/components/ui/form';
 export default function SignInPage() {
   const { isLoaded, signIn, setActive } = useSignIn();
   const router = useRouter();
+  const path = usePathname();
   const [serverError, setServerError] = useState<string | null>(null);
   const { session } = useClerk();
   const { isSignedIn } = useUser();
@@ -55,8 +56,10 @@ export default function SignInPage() {
         await setActive({ session: signInResponse.createdSessionId });
       }
 
-      // Redirect to home page after successful sign-in
-      router.replace('/');
+      // Redirect to home page or stay on the same page
+      if (path === '/sign-in') router.replace('/');
+      else router.refresh();
+      // router.replace('/');
     } catch (error) {
       setServerError(error instanceof Error ? error.message : 'Sign-in failed.');
     }

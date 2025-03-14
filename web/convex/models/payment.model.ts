@@ -8,7 +8,7 @@ import { MutationCtx, QueryCtx } from "../_generated/server";
  * @param {Id<"users">} userId - The ID of the user making the payment.
  * @param {number} amount - The amount paid.
  * @param {string} paymentMethod - The payment method used (e.g., "credit card", "PayPal").
- * @param {string} status - The status of the payment (e.g., "success", "failed").
+ * @param {string} state - The state of the payment (e.g., "success", "failed").
  * @returns {Promise<Id<"payments">>} The ID of the newly created payment.
  * @throws {Error} If required fields are missing or creation fails.
  */
@@ -18,11 +18,11 @@ export const createPaymentModel = async (
   userId: Id<"users">,
   amount: number,
   paymentMethod: string,
-  status: string
+  state: string
 ): Promise<Id<"payments">> => {
   try {
     // Validate required fields
-    if (!bookingId || !userId || !amount || !paymentMethod || !status) {
+    if (!bookingId || !userId || !amount || !paymentMethod || !state) {
       throw new Error("Invalid input: Missing required fields");
     }
 
@@ -32,7 +32,7 @@ export const createPaymentModel = async (
       userId,
       amount,
       paymentMethod,
-      status,
+      state,
       createdAt: Date.now(),
     });
   } catch (error) {

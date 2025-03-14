@@ -53,11 +53,12 @@ export default defineSchema({
     startTime: v.number(),
     endTime: v.number(),
     totalCost: v.number(),
-    status: bookingStateDataSchema, // Use string literals for enum-like behavior
+    discountRate: v.number(),
+    state: bookingStateDataSchema, // Use string literals for enum-like behavior
     updatedAt: v.number(),
   })
     .index("by_userId", ["userId"]) // Index for user bookings
-    .index("by_userId_status", ["userId", "status"]) // Index for user bookings by status
+    .index("by_userId_state", ["userId", "state"]) // Index for user bookings by state
     .index("by_userId_startTime", ["userId", "startTime"])
     .index("by_userId_endTime", ["userId", "endTime"])// Index for user bookings by time range
     .index("by_userId_startTime_endTime", ["userId", "startTime", "endTime"])// Index for user bookings by time range
@@ -69,7 +70,7 @@ export default defineSchema({
   iot_data: defineTable({
     parkingSpaceId: v.id("parking_spaces"),
     sensorId: v.string(),
-    occupancyStatus: v.boolean(),
+    occupancyState: v.boolean(),
     updatedAt: v.number(), //For exact time of sensor data
   })
     .index("by_parkingSpaceId_updatedAt", ["parkingSpaceId", "updatedAt"]), // Index for IoT data
@@ -88,7 +89,7 @@ export default defineSchema({
     userId: v.id("users"),
     amount: v.number(),
     paymentMethod: v.string(),
-    status: v.string(),
+    state: v.string(),
     createdAt: v.number(),
   })
     .index("by_bookingId", ["bookingId"]), // Index for payments by booking

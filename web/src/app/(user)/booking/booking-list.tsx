@@ -5,14 +5,13 @@ import SearchBar from "@/components/forms/SearchBarForm";
 import Table from "@/components/Table";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { ITEM_PER_PAGE } from "@/lib/settings";
-import { Rows3 } from "lucide-react";
+import { Pencil, Rows3 } from "lucide-react";
 import Link from "next/link";
 import { arrayConverter } from "@/utils/array.util";
 import DeleteForm from "@/components/forms/DeleteForm";
-import ParkingForm from "@/components/forms/ParkingForm";
+// import ParkingForm from "@/components/forms/ParkingForm";
 import { BookingDataModel } from "@/types/convex.type";
-import { ConvexTimeToDisplayFormat, ConvexTimeToParkingTime } from "@/utils/date.util";
-import BookingForm from "@/components/forms/BookingForm";
+import { convexTimeToDisplayFormat, convexTimeToParkingTime } from "@/utils/date.util";
 
 export const BookingListContent = ({
   mode,
@@ -41,11 +40,11 @@ export const BookingListContent = ({
     >
       <TableCell className="font-medium w-3/12 truncate">{item.parkingName}</TableCell>
       <TableCell className="w-3/12 truncate">
-        {ConvexTimeToParkingTime(item.startTime)} - {ConvexTimeToParkingTime(item.endTime)}
+        {convexTimeToParkingTime(item.startTime)} - {convexTimeToParkingTime(item.endTime)}
       </TableCell>
-      <TableCell className="w-2/12">{ConvexTimeToDisplayFormat(item.startTime)}</TableCell>
+      <TableCell className="w-2/12">{convexTimeToDisplayFormat(item.startTime)}</TableCell>
       <TableCell className="w-1/12">{item.totalCost.toFixed(2)}</TableCell>
-      <TableCell className="w-1/12">{item.status}</TableCell>
+      <TableCell className="w-1/12">{item.state}</TableCell>
       <TableCell className="w-2/12">
         <div className="flex justify-center gap-2">
           <Link href={`/booking/${item._id}`}>
@@ -56,9 +55,11 @@ export const BookingListContent = ({
               <DialogModal triggerButtonText="Delete">
                 <DeleteForm id={item._id} />
               </DialogModal>
-              <DialogModal triggerButtonText="Edit">
+              {/* todo: temporary capture position */}
+              <Pencil color="#7b39ed" />
+              {/* <DialogModal triggerButtonText="Edit">
                 <BookingForm operationType="edit" defaultData={item} />
-              </DialogModal>
+              </DialogModal> */}
             </>
           )}
         </div>
@@ -71,7 +72,7 @@ export const BookingListContent = ({
     { header: "Duration", accessor: "duration" },
     { header: "Date", accessor: "date" },
     { header: "Estimated Cost", accessor: "payment" },
-    { header: "Status", accessor: "status" },
+    { header: "State", accessor: "state" },
     { header: "Actions", accessor: "action" },
   ];
 
@@ -80,11 +81,11 @@ export const BookingListContent = ({
       <div className="flex flex-col md:flex-row md:justify-between items-end gap-4 w-full">
         <DatePickerWithRange className="w-full md:w-auto" />
         <SearchBar />
-        {role === "admin" && (
+        {/* {role === "admin" && (
           <DialogModal triggerButtonText="New notice" triggerButtonStyles="w-full md:w-auto">
             <ParkingForm operationType="create" />
           </DialogModal>
-        )}
+        )} */}
       </div>
       <div className="w-full bg-gray-50 p-4 rounded-lg">
         <Table columns={columns} renderRow={renderRow} data={bookingsPerPage ?? []} />

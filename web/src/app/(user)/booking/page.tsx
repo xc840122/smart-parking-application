@@ -2,19 +2,19 @@ import { Suspense } from "react";
 import Loading from "@/components/Loading";
 import BookingWrapper from "./booking-wrapper";
 import { userHelper } from "@/helper/user.helper";
+import SignInPage from "@/app/sign-in/[[...sign-in]]/page";
 
 const BookingPage = async () => {
   // Get clerk user ID
-  const { userId, role } = await userHelper()
+  const { clerkUserId, role } = await userHelper();
 
-  // Return loading if no user ID
-  if (!userId) {
-    return <Loading />;
+  if (!clerkUserId) {
+    return <SignInPage />;
   }
 
   return (
     <Suspense fallback={<Loading />}>
-      <BookingWrapper clerkUserId={userId} role={role} />
+      <BookingWrapper clerkUserId={clerkUserId} role={role} />
     </Suspense>
   );
 };

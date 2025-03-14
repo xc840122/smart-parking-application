@@ -25,19 +25,18 @@ const BookingWrapper = ({
   useEffect(() => {
     const getUser = async () => {
       try {
-        console.log("Fetching user by Clerk ID:", clerkUserId);
-        const appUser = await getUserByClerkIdService(clerkUserId);
-        console.log("User fetched:", appUser);
-        if (appUser.result && appUser.data) {
-          setUserId(appUser.data._id);
-        } else {
-          console.error("Failed to fetch user:", appUser.message);
+        if (clerkUserId) {
+          const appUser = await getUserByClerkIdService(clerkUserId);
+          if (appUser.result && appUser.data) {
+            setUserId(appUser.data._id);
+          } else {
+            console.error("Failed to fetch user:", appUser.message);
+          }
         }
       } catch (error) {
         console.error("Error fetching user:", error);
       }
     };
-
     getUser();
   }, [clerkUserId]);
 

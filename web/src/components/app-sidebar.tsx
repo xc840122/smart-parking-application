@@ -14,7 +14,8 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
-import { useUser } from "@clerk/nextjs"
+import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs"
+import { Button } from "./ui/button"
 
 // This is sample data.
 const data = {
@@ -76,10 +77,7 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { user, isLoaded, isSignedIn } = useUser();
-  if (!isLoaded || !isSignedIn) {
-    return null;
-  }
+  const { user } = useUser();
 
   return (
     <Sidebar collapsible="icon" {...props}>
@@ -89,12 +87,36 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavMain items={data.navMain} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser
-          user={{
-            name: user.username ?? 'username',
-            level: user.unsafeMetadata.level as string,
-            avatar: user.imageUrl ?? 'avatar',
-          }} />
+        {!user
+          ? (
+            <div className="flex gap-2 justify-center bg-gray-200 
+            shadow-sm p-4 rounded-md w-full">
+              <SignedOut>
+                <SignInButton>
+                  <Button variant='outline'>
+                    Sign In
+                  </Button>
+                </SignInButton>
+                <SignUpButton>
+                  <Button variant='default' className="bg-gray-400 hover:bg-gray-500">
+                    Sign Up
+                  </Button>
+                </SignUpButton>
+              </SignedOut>
+              <SignedIn>
+                <UserButton />
+              </SignedIn>
+            </div>
+          )
+          : (
+            <NavUser
+              user={{
+                name: user.username ?? '',
+                level: user.unsafeMetadata.level as string,
+                avatar: user.imageUrl ?? '',
+              }} />
+          )
+        }
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
