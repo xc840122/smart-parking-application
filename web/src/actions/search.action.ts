@@ -1,6 +1,6 @@
 import { GENERIC_MESSAGES } from "@/constants/messages/generic.message";
 import type { FormState, Feedback } from "@/types/action.type";
-import { searchInputSchema } from "@/validators/parking-space.validator";
+import { searchInputSchema } from "@/validators/common.validator";
 import { redirect } from "next/navigation";
 
 const searchAction = (prevSate: FormState, formData: FormData) => {

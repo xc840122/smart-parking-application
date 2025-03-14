@@ -2,37 +2,19 @@
 import { ParkingSpaceDataModel } from "@/types/convex.type";
 import { Id } from "../_generated/dataModel";
 import { MutationCtx, QueryCtx } from "../_generated/server";
+import { ParkingSpaceType } from "@/validators/parking-space.validator";
 
 export const createParkingModel = async (
   ctx: MutationCtx,
-  name: string,
-  location: { lat: number; lng: number },
-  city: string,
-  area: string,
-  street: string,
-  unit: string,
-  totalSlots: number,
-  pricePerHour: number,
-  isActive: boolean,
+  parkingData: ParkingSpaceType,
+
 ): Promise<Id<"parking_spaces">> => {
   try {
-    // Validate required fields
-    if (!name || !location || !city || !area || !street || !unit || !totalSlots || !pricePerHour || !isActive) {
-      throw new Error("Invalid input: Missing required fields");
-    }
-
+    const { location } = parkingData;
     // Create the parking space
     return await ctx.db.insert("parking_spaces", {
-      name,
-      location,
-      city,
-      area,
-      street,
-      unit,
-      totalSlots,
-      availableSlots: totalSlots,
-      pricePerHour,
-      isActive,
+      ...parkingData,
+      location: location || { lat: 0, lng: 0 },
     });
   } catch (error) {
     console.error("Failed to create parking space:", error);
@@ -130,17 +112,8 @@ export const getParkingByIdModel = async (
 export const updateParkingModel = async (
   ctx: MutationCtx,
   _id: Id<"parking_spaces">,
-  updates: {
-    name?: string;
-    location?: { lat: number; lng: number };
-    city?: string;
-    area?: string;
-    street?: string;
-    unit?: string;
-    totalSlots?: number;
-    pricePerHour?: number;
-    isActive?: boolean;
-  }
+  parkingData: Partial<ParkingSpaceType>,
+
 ): Promise<void> => {
   try {
     if (!_id) {
@@ -148,7 +121,10 @@ export const updateParkingModel = async (
     }
 
     // Update the parking space
-    await ctx.db.patch(_id, updates);
+    await ctx.db.patch(
+      _id,
+      { ...parkingData, }
+    );
   } catch (error) {
     console.error("Failed to update parking space:", error);
     throw new Error("Update failed");

@@ -2,21 +2,27 @@ import { Suspense } from "react";
 import ParkingSpaceWrapper from "./parking-wrapper";
 import Loading from "@/components/Loading";
 import { userHelper } from "@/helper/user.helper";
-import { SignIn } from "@clerk/nextjs";
+import { getCitiesService } from "@/services/address.service";
+import { toast } from "sonner";
 
 
 const ParkingSpacePage = async () => {
   // Get clerk user ID
-  const { role, userId } = await userHelper()
-  // If user is not signed in, return SignIn component
-  if (!role || !userId) {
-    return <SignIn />;
+  const { role } = await userHelper()
+  // Get cities
+  const cities = await getCitiesService();
+  // If role is not found, return loading
+  if (!role) return <Loading />;
+  if (!cities.result) {
+    toast.message(cities.message);
+    return <Loading />;
   }
 
   return (
     <Suspense fallback={<Loading />}>
       <ParkingSpaceWrapper
         role={role}
+        cities={cities.data || []}
       />
     </Suspense>
   );

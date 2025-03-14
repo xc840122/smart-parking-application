@@ -2,14 +2,14 @@ import { Suspense } from "react";
 import Loading from "@/components/Loading";
 import BookingWrapper from "./booking-wrapper";
 import { userHelper } from "@/helper/user.helper";
+import SignInPage from "@/app/sign-in/[[...sign-in]]/page";
 
 const BookingPage = async () => {
   // Get clerk user ID
-  const { userId, role } = await userHelper()
+  const { userId, role } = await userHelper();
 
-  // Return loading if no user ID
   if (!userId) {
-    return <Loading />;
+    return <SignInPage />;
   }
 
   return (

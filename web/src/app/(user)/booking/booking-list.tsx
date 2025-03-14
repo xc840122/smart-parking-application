@@ -45,7 +45,7 @@ export const BookingListContent = ({
       </TableCell>
       <TableCell className="w-2/12">{ConvexTimeToDisplayFormat(item.startTime)}</TableCell>
       <TableCell className="w-1/12">{item.totalCost.toFixed(2)}</TableCell>
-      <TableCell className="w-1/12">{item.status}</TableCell>
+      <TableCell className="w-1/12">{item.state}</TableCell>
       <TableCell className="w-2/12">
         <div className="flex justify-center gap-2">
           <Link href={`/booking/${item._id}`}>
@@ -71,7 +71,7 @@ export const BookingListContent = ({
     { header: "Duration", accessor: "duration" },
     { header: "Date", accessor: "date" },
     { header: "Estimated Cost", accessor: "payment" },
-    { header: "Status", accessor: "status" },
+    { header: "State", accessor: "state" },
     { header: "Actions", accessor: "action" },
   ];
 

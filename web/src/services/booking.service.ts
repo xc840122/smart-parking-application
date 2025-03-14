@@ -1,4 +1,3 @@
-// services/booking.service.ts
 import { ApiResponse } from "@/types/api.type";
 import { BookingDataModel } from "@/types/convex.type";
 import { BOOKING_MESSAGES } from "@/constants/messages/booking.message";
@@ -7,8 +6,13 @@ import {
   createBookingRepo,
   deleteBookingRepo,
   checkBookingConflictRepo,
+  getBookingByIdRepo,
+  confirmBookingRepo,
 } from "@/repositories/booking.repo";
-import { bookingCreationSchema } from "@/validators/booking.validator";
+import { bookingCreationSchema, BookingCreationType, BookingType } from "@/validators/booking.validator";
+import { getParkingByIdService } from "./parking.service";
+import { PARKING_SPACE_MESSAGES } from "@/constants/messages/parking-space.message";
+import costCalculation from "@/utils/cost.util";
 
 export const checkBookingConflictService = async (
   userId: string,
@@ -20,7 +24,7 @@ export const checkBookingConflictService = async (
     if (!userId || !startTime || !endTime) {
       return {
         result: false,
-        message: BOOKING_MESSAGES.ERROR.INVALID_INPUT,
+        message: BOOKING_MESSAGES.ERROR.INVALID_INPUT_FOR_CONFLICT_CHECK,
       };
     }
 
@@ -37,9 +41,12 @@ export const checkBookingConflictService = async (
 };
 
 export const createBookingService = async (
-  bookingData: BookingDataModel
-): Promise<ApiResponse<string>> => {
+  bookingData: BookingCreationType
+): Promise<ApiResponse<{ bookingId: string, dicountRate: number, totalCost: number }>> => {
   try {
+    // Extract the booking data
+    const { parkingSpaceId, startTime, endTime } = bookingData;
+
     // Validate the booking data using Zod
     const validationResult = bookingCreationSchema.safeParse(bookingData);
 
@@ -47,26 +54,88 @@ export const createBookingService = async (
     if (!validationResult.success) {
       return {
         result: false,
-        message: BOOKING_MESSAGES.ERROR.INVALID_INPUT,
+        message: BOOKING_MESSAGES.ERROR.INVALID_INPUT_FOR_CREATE,
       };
     }
+
+    // Query parking space details
+    const parkingSpace = await getParkingByIdService(parkingSpaceId);
+    if (!parkingSpace.data) {
+      return { result: false, message: PARKING_SPACE_MESSAGES.ERROR.NOT_FOUND };
+    }
+
+    // Get current parking loading(0-1)
+    const usageString =
+      ((parkingSpace.data.totalSlots - parkingSpace.data.availableSlots) / parkingSpace.data.totalSlots).toFixed(1);
+
+    const usage = parseFloat(usageString);
+
+    // Calculate total cost (with AI prediction)
+    const { totalCost, discountRate } = await costCalculation(usage, parkingSpace.data.pricePerHour, startTime, endTime);
+
     // Conflict check
     const conflictCheck = await checkBookingConflictService(
       bookingData.userId,
       bookingData.startTime,
       bookingData.endTime
     );
+
     if (conflictCheck.result === false) {
       return { result: false, message: BOOKING_MESSAGES.ERROR.CONFLICTING_BOOKING };
     }
 
-    // Create the booking,default status is pending
-    const bookingId = await createBookingRepo({ ...bookingData, status: "pending" });
+    // Start time must be before end time
+    if (bookingData.startTime >= bookingData.endTime) {
+      return {
+        result: false,
+        message: BOOKING_MESSAGES.ERROR.ENDTIME_BEFORE_STARTTIME,
+      };
+    }
+
+    // Start time must be after current time
+    if (bookingData.startTime <= Date.now()) {
+      return {
+        result: false,
+        message: BOOKING_MESSAGES.ERROR.STARTTIME_BEFORE_NOW,
+      };
+    }
+
+    // Create booking for 24 hours only
+    if (bookingData.endTime - bookingData.startTime > 86400000) {
+      return {
+        result: false,
+        message: BOOKING_MESSAGES.ERROR.HOURS_LIMIT,
+      };
+    }
+
+    // Booking next 7 days only
+    if (bookingData.startTime > Date.now() + 604800000) {
+      return {
+        result: false,
+        message: BOOKING_MESSAGES.ERROR.DAYS_LIMIT,
+      };
+    }
+
+    // Prepare booking data
+    const newBookingData: BookingType = {
+      ...bookingData,
+      parkingName: parkingSpace.data.name,
+      totalCost: totalCost,
+      discountRate: discountRate,
+      state: "pending",
+      updatedAt: new Date().getTime(),
+    };
+
+    // Create the booking,default state is pending
+    const bookingId = await createBookingRepo(newBookingData);
+    if (!bookingId) {
+      return { result: false, message: BOOKING_MESSAGES.ERROR.CREATE_FAILED };
+    }
 
     return {
       result: true,
       message: BOOKING_MESSAGES.SUCCESS.CREATE_SUCCESSFUL,
-      data: bookingId,
+      data: { bookingId: bookingId, dicountRate: discountRate, totalCost: totalCost },
     };
   } catch (error) {
     console.error("Failed to create booking:", error);
@@ -74,6 +143,37 @@ export const createBookingService = async (
   }
 };
 
+// Confirm booking service
+export const confirmBookingService = async (
+  bookingId: string,
+  update: { userId: string, state: string }
+): Promise<ApiResponse> => {
+  try {
+    // Get booking by ID
+    const booking = await getBookingByIdRepo(bookingId);
+    // Check reserved booking state
+    if (!booking || !booking.state) {
+      throw new Error(BOOKING_MESSAGES.ERROR.NOT_FOUND);
+    } else if (booking.state !== "pending") {
+      throw new Error(BOOKING_MESSAGES.ERROR.INVALID_BOOKING_STATUS);
+    }
+
+    // Check if user is same as user in booking
+    if (update.userId !== booking.userId) {
+      throw new Error(BOOKING_MESSAGES.ERROR.USER_NOT_SAME);
+    }
+
+    // Update the booking state
+    await confirmBookingRepo(bookingId, update);
+
+    return { result: true, message: BOOKING_MESSAGES.SUCCESS.UPDATE_SUCCESSFUL };
+  } catch (error) {
+    console.error("Failed to confirm booking:", error);
+    throw new Error(BOOKING_MESSAGES.ERROR.UPDATE_FAILED);
+  }
+}
+
+// Get bookings by user ID
 export const getBookingsByUserService = async (
   userId: string
 ): Promise<ApiResponse<BookingDataModel[]>> => {
@@ -93,10 +193,24 @@ export const getBookingsByUserService = async (
       data: bookings,
     };
   } catch (error) {
-    console.error("Failed to fetch bookings by user:", error);
+    console.error("Service Failed to fetch bookings by user:", error);
     throw new Error(BOOKING_MESSAGES.ERROR.GET_FAILED);
   }
 };
+
+export const getBookingByIdService = async (id: string): Promise<ApiResponse<BookingDataModel>> => {
+  try {
+    const booking = await getBookingByIdRepo(id);
+    if (!booking) {
+      return { result: false, message: BOOKING_MESSAGES.ERROR.NOT_FOUND };
+    } else {
+      return { result: true, message: BOOKING_MESSAGES.SUCCESS.GET_SUCCESSFUL, data: booking };
+    }
+  } catch (error) {
+    console.error(`Failed to get booking by ID: ${error}`);
+    return { result: false, message: BOOKING_MESSAGES.ERROR.GET_FAILED };
+  }
+}
 
 export const deleteBookingService = async (
   bookingId: string
@@ -112,17 +226,17 @@ export const deleteBookingService = async (
   }
 };
 
-// export const updateBookingStatusService = async (
+// export const updateBookingService = async (
 //   bookingId: string,
-//   status: BookingType
+//   update: Partial<BookingType>
 // ): Promise<ApiResponse> => {
 //   try {
-//     // Update the booking status
-//     await updateBookingStatusRepo(bookingId, status);
+//     // Update the booking state
+//     await updateBookingStateRepo(bookingId, update);
 
 //     return { result: true, message: BOOKING_MESSAGES.SUCCESS.UPDATE_SUCCESSFUL };
 //   } catch (error) {
-//     console.error("Failed to update booking status:", error);
+//     console.error("Failed to update booking:", error);
 //     throw new Error(BOOKING_MESSAGES.ERROR.UPDATE_FAILED);
 //   }
 // };

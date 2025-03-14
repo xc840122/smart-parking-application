@@ -1,41 +1,62 @@
-import { BookingDataModel, BookingType } from "@/types/convex.type";
+import { BookingDataModel } from "@/types/convex.type";
 import { Id } from "../_generated/dataModel";
 import { MutationCtx, QueryCtx } from "../_generated/server";
+import { BookingState, BookingType } from "@/validators/booking.validator";
 
 // models/booking.model.ts
 export const createBookingModel = async (
   ctx: MutationCtx,
-  bookingData: {
-    userId: Id<"users">,
-    parkingSpaceId?: Id<"parking_spaces">,
-    parkingName: string,
-    startTime: number,
-    endTime: number,
-    totalCost: number,
-    status: BookingType
-  }
+  bookingData: BookingType,
 ): Promise<Id<"bookings">> => {
   try {
+    const { userId, parkingSpaceId, parkingName, discountRate, startTime, endTime, totalCost, state } = bookingData;
     // Basic validation (required fields)
     if (
-      !bookingData.userId ||
-      !bookingData.parkingName ||
-      !bookingData.startTime ||
-      !bookingData.endTime ||
-      !bookingData.totalCost ||
-      !bookingData.status
+      !userId ||
+      !parkingSpaceId ||
+      !parkingName ||
+      !startTime ||
+      !endTime ||
+      !totalCost ||
+      !discountRate ||
+      !state
     ) {
       throw new Error("Invalid input: Missing required fields");
     }
 
     // Insert the booking into the database
-    return await ctx.db.insert("bookings", {
-      ...bookingData,
-      updatedAt: Date.now(),
-    });
+    return await ctx.db.insert("bookings",
+      {
+        ...bookingData,
+        userId: bookingData.userId as Id<"users">,
+        parkingSpaceId: bookingData.parkingSpaceId as Id<"parking_spaces">,
+        updatedAt: bookingData.updatedAt || Date.now(),
+      },
+    );
   } catch (error) {
     console.error("Failed to create booking:", error);
     throw new Error("Booking creation failed");
+  }
+};
+
+export const confirmBookingModel = async (
+  ctx: MutationCtx,
+  bookingId: Id<"bookings">,
+  update: { userId: string, state: string },
+): Promise<void> => {
+  try {
+    if (!bookingId || !update.userId || !update.state) {
+      throw new Error("Invalid input: Booking ID are required");
+    }
+    // Update the booking state
+    await ctx.db.patch(bookingId, {
+      ...update,
+      userId: update.userId as Id<"users">,
+      state: update.state as BookingState,
+    });
+  } catch (error) {
+    console.error("Failed to update booking state:", error);
+    throw new Error("Update failed");
   }
 };
 
@@ -100,7 +121,7 @@ export const checkBookingConflictModel = async (
 ): Promise<BookingDataModel[]> => {
   try {
     if (!userId || !startTime || !endTime) {
-      throw new Error("Invalid input: User ID, start time, end time, and status are required");
+      throw new Error("Invalid input: User ID, start time, end time, and state are required");
     }
     // Find bookings that start during the proposed time
     const conflictsStartDuring = await ctx.db
@@ -112,8 +133,8 @@ export const checkBookingConflictModel = async (
       )
       .filter((q) =>
         q.or(
-          q.eq(q.field("status"), "pending"),
-          q.eq(q.field("status"), "confirmed")
+          q.eq(q.field("state"), "pending"),
+          q.eq(q.field("state"), "confirmed")
         )
       )
       .collect();
@@ -128,8 +149,8 @@ export const checkBookingConflictModel = async (
       )
       .filter((q) =>
         q.or(
-          q.eq(q.field("status"), "pending"),
-          q.eq(q.field("status"), "confirmed")
+          q.eq(q.field("state"), "pending"),
+          q.eq(q.field("state"), "confirmed")
         )
       )
       .collect();
@@ -137,7 +158,7 @@ export const checkBookingConflictModel = async (
     // Find bookings that completely encompass the proposed time
     const conflictsEncompass = await ctx.db
       .query("bookings")
-      .withIndex("by_userId_status", (q) =>
+      .withIndex("by_userId_state", (q) =>
         q.eq("userId", userId)
       )
       .filter((q) =>
@@ -145,8 +166,8 @@ export const checkBookingConflictModel = async (
           q.gte(q.field("endTime"), endTime),
           q.lte(q.field("startTime"), startTime),
           q.or(
-            q.eq(q.field("status"), "pending"),
-            q.eq(q.field("status"), "confirmed"),
+            q.eq(q.field("state"), "pending"),
+            q.eq(q.field("state"), "confirmed"),
           )
         )
       )
@@ -162,30 +183,39 @@ export const checkBookingConflictModel = async (
   }
 };
 
-/**
- * Updates a booking's status by its ID.
- * @param {MutationCtx} ctx - The Convex mutation context.
- * @param {Id<"bookings">} bookingId - The ID of the booking to update.
- * @param {BookingType} status - The new status of the booking.
- * @throws {Error} If the booking ID is invalid, status is invalid, or update fails.
- */
-export const updateBookingStatusModel = async (
-  ctx: MutationCtx,
-  bookingId: Id<"bookings">,
-  status: BookingType
-): Promise<void> => {
+export const getBookingByIdModel = async (
+  ctx: QueryCtx,
+  _id: Id<"bookings">
+): Promise<BookingDataModel | null> => {
   try {
-    if (!bookingId || !status) {
-      throw new Error("Invalid input: Booking ID and status are required");
-    }
-
-    // Update the booking status
-    await ctx.db.patch(bookingId, { status });
+    // Get the parking space
+    return await ctx.db
+      .query("bookings")
+      .withIndex("by_id", (q) => q.eq("_id", _id))
+      .first();
   } catch (error) {
-    console.error("Failed to update booking status:", error);
-    throw new Error("Update failed");
+    console.error("Failed to get booking:", error);
+    throw new Error("Query failed");
   }
-};
+}
+
+// export const updateBookingStateModel = async (
+//   ctx: MutationCtx,
+//   bookingId: Id<"bookings">,
+//   update: Partial<BookingType>,
+// ): Promise<void> => {
+//   try {
+//     console.log("update", bookingId, update);
+//     if (!bookingId) {
+//       throw new Error("Invalid input: Booking ID are required");
+//     }
+//     // Update the booking state
+//     await ctx.db.patch(bookingId, { update });
+//   } catch (error) {
+//     console.error("Failed to update booking state:", error);
+//     throw new Error("Update failed");
+//   }
+// };
 
 /**
  * Deletes a booking by its ID.
