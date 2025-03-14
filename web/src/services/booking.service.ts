@@ -9,10 +9,8 @@ import {
   getBookingByIdRepo,
   confirmBookingRepo,
 } from "@/repositories/booking.repo";
-import { bookingCreationSchema, BookingCreationType, BookingType } from "@/validators/booking.validator";
-import { getParkingByIdService } from "./parking.service";
-import { PARKING_SPACE_MESSAGES } from "@/constants/messages/parking-space.message";
-import costCalculation from "@/utils/cost.util";
+import { BookingCreationType, BookingType } from "@/validators/booking.validator";
+import { bookingCostHelper } from "@/helper/booking.helper";
 
 export const checkBookingConflictService = async (
   userId: string,
@@ -44,83 +42,24 @@ export const createBookingService = async (
   bookingData: BookingCreationType
 ): Promise<ApiResponse<{ bookingId: string, dicountRate: number, totalCost: number }>> => {
   try {
-    // Extract the booking data
-    const { parkingSpaceId, startTime, endTime } = bookingData;
+    // Get the total cost and discount rate
+    const result = await bookingCostHelper(bookingData);
 
-    // Validate the booking data using Zod
-    const validationResult = bookingCreationSchema.safeParse(bookingData);
+    if (!result || !result.data) {
+      return { result: false, message: BOOKING_MESSAGES.ERROR.COST_HANDELING_ERROR };
+    }
+    const { parkingName, totalCost, discountRate } = result.data;
 
-    // Return error if validation fails
-    if (!validationResult.success) {
+    if (!parkingName || !totalCost || !discountRate) {
       return {
         result: false,
-        message: BOOKING_MESSAGES.ERROR.INVALID_INPUT_FOR_CREATE,
+        message: BOOKING_MESSAGES.ERROR.COST_HANDELING_ERROR,
       };
     }
-
-    // Query parking space details
-    const parkingSpace = await getParkingByIdService(parkingSpaceId);
-    if (!parkingSpace.data) {
-      return { result: false, message: PARKING_SPACE_MESSAGES.ERROR.NOT_FOUND };
-    }
-
-    // Get current parking loading(0-1)
-    const occupancyRateString =
-      ((parkingSpace.data.totalSlots - parkingSpace.data.availableSlots) / parkingSpace.data.totalSlots).toFixed(2);
-
-    const occupancyRate = parseFloat(occupancyRateString);
-
-    // Calculate total cost (with AI prediction)
-    const { totalCost, discountRate } =
-      await costCalculation(occupancyRate, parkingSpace.data.pricePerHour, startTime, endTime)
-
-    // Conflict check
-    const conflictCheck = await checkBookingConflictService(
-      bookingData.userId,
-      bookingData.startTime,
-      bookingData.endTime
-    );
-
-    if (conflictCheck.result === false) {
-      return { result: false, message: BOOKING_MESSAGES.ERROR.CONFLICTING_BOOKING };
-    }
-
-    // Start time must be before end time
-    if (bookingData.startTime >= bookingData.endTime) {
-      return {
-        result: false,
-        message: BOOKING_MESSAGES.ERROR.ENDTIME_BEFORE_STARTTIME,
-      };
-    }
-
-    // Start time must be after current time
-    if (bookingData.startTime <= Date.now()) {
-      return {
-        result: false,
-        message: BOOKING_MESSAGES.ERROR.STARTTIME_BEFORE_NOW,
-      };
-    }
-
-    // Create booking for 24 hours only
-    if (bookingData.endTime - bookingData.startTime > 86400000) {
-      return {
-        result: false,
-        message: BOOKING_MESSAGES.ERROR.HOURS_LIMIT,
-      };
-    }
-
-    // Booking next 7 days only
-    if (bookingData.startTime > Date.now() + 604800000) {
-      return {
-        result: false,
-        message: BOOKING_MESSAGES.ERROR.DAYS_LIMIT,
-      };
-    }
-
     // Prepare booking data
     const newBookingData: BookingType = {
       ...bookingData,
-      parkingName: parkingSpace.data.name,
+      parkingName: parkingName,
       totalCost: totalCost,
       discountRate: discountRate,
       state: "pending",

@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ConvexTimeToDisplayFormat } from '@/utils/date.util';
+import { convexTimeToDisplayFormat } from '@/utils/date.util';
 import { toast } from 'sonner';
 import Link from 'next/link';
 import { getParkingByIdService } from '@/services/parking.service';
@@ -28,7 +28,7 @@ const ParkingDetailPage = async ({
       <Card className='shadow-lg'>
         <CardHeader>
           <CardTitle className='text-xl'>{name}</CardTitle>
-          <p className='text-sm text-gray-500'>Added on: {ConvexTimeToDisplayFormat(_creationTime)}</p>
+          <p className='text-sm text-gray-500'>Added on: {convexTimeToDisplayFormat(_creationTime)}</p>
         </CardHeader>
         <CardContent>
           {/* Address Section */}
