@@ -5,14 +5,13 @@ import SearchBar from "@/components/forms/SearchBarForm";
 import Table from "@/components/Table";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { ITEM_PER_PAGE } from "@/lib/settings";
-import { Rows3 } from "lucide-react";
+import { Pencil, Rows3 } from "lucide-react";
 import Link from "next/link";
 import { arrayConverter } from "@/utils/array.util";
 import DeleteForm from "@/components/forms/DeleteForm";
-import ParkingForm from "@/components/forms/ParkingForm";
+// import ParkingForm from "@/components/forms/ParkingForm";
 import { BookingDataModel } from "@/types/convex.type";
 import { convexTimeToDisplayFormat, convexTimeToParkingTime } from "@/utils/date.util";
-import BookingForm from "@/components/forms/BookingForm";
 
 export const BookingListContent = ({
   mode,
@@ -56,9 +55,11 @@ export const BookingListContent = ({
               <DialogModal triggerButtonText="Delete">
                 <DeleteForm id={item._id} />
               </DialogModal>
-              <DialogModal triggerButtonText="Edit">
+              {/* todo: temporary capture position */}
+              <Pencil color="#7b39ed" />
+              {/* <DialogModal triggerButtonText="Edit">
                 <BookingForm operationType="edit" defaultData={item} />
-              </DialogModal>
+              </DialogModal> */}
             </>
           )}
         </div>
@@ -80,11 +81,11 @@ export const BookingListContent = ({
       <div className="flex flex-col md:flex-row md:justify-between items-end gap-4 w-full">
         <DatePickerWithRange className="w-full md:w-auto" />
         <SearchBar />
-        {role === "admin" && (
+        {/* {role === "admin" && (
           <DialogModal triggerButtonText="New notice" triggerButtonStyles="w-full md:w-auto">
             <ParkingForm operationType="create" />
           </DialogModal>
-        )}
+        )} */}
       </div>
       <div className="w-full bg-gray-50 p-4 rounded-lg">
         <Table columns={columns} renderRow={renderRow} data={bookingsPerPage ?? []} />

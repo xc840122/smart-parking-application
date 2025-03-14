@@ -4,14 +4,15 @@ import SearchBar from "@/components/forms/SearchBarForm";
 import Table from "@/components/Table";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { ITEM_PER_PAGE } from "@/lib/settings";
-import { Rows3 } from "lucide-react";
+import { Pencil, Rows3 } from "lucide-react";
 import Link from "next/link";
 import { arrayConverter } from "@/utils/array.util";
 import { addressGenerator } from "@/helper/parking.helper";
 import DeleteForm from "@/components/forms/DeleteForm";
-import ParkingForm from "@/components/forms/ParkingForm";
+// import ParkingForm from "@/components/forms/ParkingForm";
 import { ParkingSpaceDataModel } from "@/types/convex.type";
 import AddressFilter from "../booking/address-filter";
+import { Button } from "@/components/ui/button";
 
 export const ParkingListContent = ({
   mode,
@@ -56,9 +57,11 @@ export const ParkingListContent = ({
               <DialogModal triggerButtonText="Delete">
                 <DeleteForm id={item._id} />
               </DialogModal>
-              <DialogModal triggerButtonText="Edit">
+              {/* todo: temporary capture position */}
+              <Pencil color="#7b39ed" />
+              {/* <DialogModal triggerButtonText="Edit">
                 <ParkingForm operationType="edit" defaultData={item} />
-              </DialogModal>
+              </DialogModal> */}
             </>
           )}
         </div>
@@ -79,11 +82,12 @@ export const ParkingListContent = ({
       <div className="flex flex-col md:flex-row md:justify-between items-end gap-4 w-full">
         <AddressFilter cities={cities} />
         <SearchBar />
-        {role === "admin" && (
+        <Button className="w-full md:w-auto">New notice</Button>
+        {/* {role === "admin" && (
           <DialogModal triggerButtonText="New notice" triggerButtonStyles="w-full md:w-auto">
             <ParkingForm operationType="create" />
           </DialogModal>
-        )}
+        )} */}
       </div>
       <div className="w-full bg-gray-50 p-4 rounded-lg">
         <Table columns={columns} renderRow={renderRow} data={parkingsPerPage} />

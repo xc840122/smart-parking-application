@@ -103,6 +103,8 @@ export const confirmBookingService = async (
       throw new Error(BOOKING_MESSAGES.ERROR.USER_NOT_SAME);
     }
 
+    // Todo: update available parking space
+
     // Update the booking state
     await confirmBookingRepo(bookingId, update);
 

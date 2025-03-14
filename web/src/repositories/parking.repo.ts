@@ -54,7 +54,7 @@ export const updateParkingRepo = async (
 ) => {
   try {
     await fetchMutation(api.parking.updateParkingData, {
-      id,
+      bookingId: id,
       update,
     });
   } catch (error) {
