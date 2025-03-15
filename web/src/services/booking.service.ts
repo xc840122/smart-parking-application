@@ -71,9 +71,8 @@ export const createBookingService = async (
     const bookingId = await createBookingRepo(newBookingData);
     if (!bookingId) {
       return { result: false, message: BOOKING_MESSAGES.ERROR.CREATE_FAILED };
-    } else {
-      toast.success(BOOKING_MESSAGES.SUCCESS.CREATE_SUCCESSFUL);
     }
+
     return {
       result: true,
       message: BOOKING_MESSAGES.SUCCESS.CREATE_SUCCESSFUL,
@@ -103,6 +102,8 @@ export const confirmBookingService = async (
     // Check if user is same as user in booking
     if (update.userId !== booking.userId) {
       throw new Error(BOOKING_MESSAGES.ERROR.USER_NOT_SAME);
+    } else {
+      toastMessage(BOOKING_MESSAGES.SUCCESS.UPDATE_SUCCESSFUL);
     }
 
     // Todo: update available parking space
@@ -168,6 +169,11 @@ export const deleteBookingService = async (
     console.error("Failed to delete booking:", error);
     throw new Error(BOOKING_MESSAGES.ERROR.DELETE_FAILED);
   }
+};
+
+const toastMessage = (message: string) => {
+  'use client';
+  toast(message);
 };
 
 // export const updateBookingService = async (
