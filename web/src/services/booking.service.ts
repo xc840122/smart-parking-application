@@ -46,14 +46,14 @@ export const createBookingService = async (
     const result = await bookingCostHelper(bookingData);
 
     if (!result || !result.data) {
-      return { result: false, message: BOOKING_MESSAGES.ERROR.COST_HANDELING_ERROR };
+      return { result: false, message: result.message };
     }
     const { parkingName, totalCost, discountRate } = result.data;
 
     if (!parkingName || !totalCost || !discountRate) {
       return {
         result: false,
-        message: BOOKING_MESSAGES.ERROR.COST_HANDELING_ERROR,
+        message: result.message,
       };
     }
     // Prepare booking data
