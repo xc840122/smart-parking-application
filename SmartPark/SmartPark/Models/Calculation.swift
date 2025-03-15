@@ -8,7 +8,7 @@
 import Foundation
 
 struct Calculation: Codable, Hashable {
-    let bookingId: String
-    let dicountRate: Double
+    let parkingName: String
+    let discountRate: Double
     let totalCost: Double
 }

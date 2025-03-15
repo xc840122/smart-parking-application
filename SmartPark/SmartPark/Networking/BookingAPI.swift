@@ -22,7 +22,7 @@ extension BookingAPI: TargetType {
     var path: String {
         switch self {
         case .priceCalculation:
-            return "/booking"
+            return "/booking/cost"
         case .createBooking:
             return "/booking/confirm"
         }

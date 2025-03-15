@@ -10,8 +10,8 @@ import Clerk
 
 struct BookingView: View {
     let parkingSpot: ParkingSpot
-    @State private var startTime = Date() // Default to now
-    @State private var endTime = Date().addingTimeInterval(3600) // Default +1 hour
+    @State private var startTime = Date().addingTimeInterval(3600) // Default to now
+    @State private var endTime = Date().addingTimeInterval(7200) // Default +1 hour
     @State private var estimatedPrice: Double = 0
     @State private var showConfirmationAlert = false
     @State private var isBookingConfirmed = false
@@ -112,7 +112,7 @@ struct BookingView: View {
             do {
                 let userId = Clerk.shared.user?.id ?? ""
                 let calculation = try await bookingService.priceCalculation(userId: userId, parkingSpotId: parkingSpot.id, startTime: startTime, endTime: endTime)
-                let price = calculation.dicountRate * calculation.totalCost
+                let price = (1 - calculation.discountRate) * calculation.totalCost
                 self.calculation = calculation
                 
                 DispatchQueue.main.async {
@@ -131,7 +131,7 @@ struct BookingView: View {
     private func confirmBooking() {
         Task {
             do {
-                let bookid = calculation?.bookingId ?? ""
+                let bookid = calculation?.parkingName ?? ""
                 let userId = Clerk.shared.user?.id ?? ""
                 let success = try await bookingService.confirmBooking(bookingId: bookid, userId: userId)
 
