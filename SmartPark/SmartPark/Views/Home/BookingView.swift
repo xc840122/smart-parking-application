@@ -12,13 +12,19 @@ struct BookingView: View {
     let parkingSpot: ParkingSpot
     @State private var startTime = Date().addingTimeInterval(3600) // Default to now
     @State private var endTime = Date().addingTimeInterval(7200) // Default +1 hour
-    @State private var estimatedPrice: Double = 0
     @State private var showConfirmationAlert = false
     @State private var isBookingConfirmed = false
     @State private var showErrorAlert = false
     @State private var errorMessage = ""
     @State private var calculation: Calculation?
     private let bookingService = BookingService()
+    
+    private var estimatedPrice: Double {
+        if let calculation = calculation {
+            return (1 - calculation.discountRate) * calculation.totalCost
+        }
+        return 0.0
+    }
 
     var body: some View {
         VStack(spacing: 24) {
@@ -32,19 +38,45 @@ struct BookingView: View {
             // Duration & Estimated Price
             VStack(spacing: 12) {
                 HStack {
-                    Text("Duration")
+                    Text("Original Price")
                         .font(.system(size: 16, weight: .medium))
                     Spacer()
-                    Text("\(calculateDuration()) hours")
-                        .font(.system(size: 16, weight: .bold))
+                    if let calculation = calculation {
+                        Text("$\(calculation.totalCost, specifier: "%.2f")")
+                            .font(.system(size: 16, weight: .bold))
+                            .foregroundColor(.gray)
+                            .strikethrough()
+                    } else {
+                        Text("Calculating...")
+                            .font(.system(size: 16, weight: .bold))
+                            .foregroundColor(.gray)
+                    }
+                }
+                
+                HStack {
+                    Text("Discount")
+                        .font(.system(size: 16, weight: .medium))
+                    Spacer()
+                    if let calculation = calculation {
+                        Text("\(Int(calculation.discountRate * 100))% Off")
+                            .font(.system(size: 16, weight: .bold))
+                            .foregroundColor(.green)
+                    }
                 }
 
                 HStack {
-                    Text("Estimated Price")
+                    Text("Final Price")
                         .font(.system(size: 16, weight: .medium))
                     Spacer()
-                    Text("$\(estimatedPrice, specifier: "%.2f")")
-                        .font(.system(size: 16, weight: .bold))
+                    if calculation != nil {
+                        Text("$\(estimatedPrice, specifier: "%.2f")")
+                            .font(.system(size: 16, weight: .bold))
+                            .foregroundColor(.black)
+                    } else {
+                        Text("Calculating...")
+                            .font(.system(size: 16, weight: .bold))
+                            .foregroundColor(.gray)
+                    }
                 }
             }
             .padding()
@@ -102,8 +134,26 @@ struct BookingView: View {
     }
 
     /// Calculate parking duration in hours
-    private func calculateDuration() -> Int {
-        return max(1, Int(endTime.timeIntervalSince(startTime) / 3600)) // At least 1 hour
+    private func calculateDuration() -> String {
+        let startComponents = Calendar.current.dateComponents([.hour, .minute], from: startTime)
+        let endComponents = Calendar.current.dateComponents([.hour, .minute], from: endTime)
+        
+        guard let startHour = startComponents.hour, let startMinute = startComponents.minute,
+              let endHour = endComponents.hour, let endMinute = endComponents.minute else {
+            return "Invalid Time"
+        }
+        
+        let totalMinutes = (endHour * 60 + endMinute) - (startHour * 60 + startMinute)
+        let hours = totalMinutes / 60
+        let minutes = totalMinutes % 60
+        
+        if hours > 0 && minutes > 0 {
+            return "\(hours) hours \(minutes) minutes"
+        } else if hours > 0 {
+            return "\(hours) hours"
+        } else {
+            return "\(minutes) minutes"
+        }
     }
 
     /// Calculate estimated price
@@ -112,12 +162,7 @@ struct BookingView: View {
             do {
                 let userId = Clerk.shared.user?.id ?? ""
                 let calculation = try await bookingService.priceCalculation(userId: userId, parkingSpotId: parkingSpot.id, startTime: startTime, endTime: endTime)
-                let price = (1 - calculation.discountRate) * calculation.totalCost
                 self.calculation = calculation
-                
-                DispatchQueue.main.async {
-                    estimatedPrice = price
-                }
             } catch {
                 DispatchQueue.main.async {
                     errorMessage = "Error: \(error.localizedDescription)"
