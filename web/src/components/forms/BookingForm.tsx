@@ -20,6 +20,7 @@ import { bookingCostHelper } from "@/helper/booking.helper";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { BOOKING_MESSAGES } from "@/constants/messages/booking.message";
+import { toast } from "sonner";
 
 const BookingForm = ({
   defaultData,
@@ -88,6 +89,10 @@ const BookingForm = ({
       setError(createResponse.message);
       return;
     }
+
+    // Todo, check confirm status
+    toast.success(BOOKING_MESSAGES.SUCCESS.CREATE_SUCCESSFUL);
+
     // Confirm booking
     confirmBookingService(
       createResponse.data.bookingId,
