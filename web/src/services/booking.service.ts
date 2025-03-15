@@ -12,7 +12,6 @@ import {
 import { BookingCreationType, BookingType } from "@/validators/booking.validator";
 import { bookingCostHelper } from "@/helper/booking.helper";
 import { toastMessage } from "@/utils/toast.util";
-import { ToastType } from "@/constants/enum/toast";
 
 export const checkBookingConflictService = async (
   userId: string,
@@ -52,12 +51,12 @@ export const createBookingService = async (
     }
     const { parkingName, totalCost, discountRate } = result.data;
 
-    if (!parkingName || !totalCost || !discountRate) {
-      return {
-        result: false,
-        message: result.message,
-      };
-    }
+    // if (!parkingName || !totalCost || discountRate === null || discountRate === undefined) {
+    //   return {
+    //     result: false,
+    //     message: BOOKING_MESSAGES.ERROR.COST_HANDELING_ERROR,
+    //   };
+    // }
     // Prepare booking data
     const newBookingData: BookingType = {
       ...bookingData,
@@ -103,8 +102,6 @@ export const confirmBookingService = async (
     // Check if user is same as user in booking
     if (update.userId !== booking.userId) {
       throw new Error(BOOKING_MESSAGES.ERROR.USER_NOT_SAME);
-    } else {
-      toastMessage(BOOKING_MESSAGES.SUCCESS.UPDATE_SUCCESSFUL, ToastType.SUCCESS);
     }
 
     // Todo: update available parking space
