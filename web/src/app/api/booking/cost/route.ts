@@ -42,11 +42,14 @@ export const POST = async (request: Request) => {
 
     if (response.result) {
       return NextResponse.json(
-        { result: true, message: "Cost query successfully", data: response.data },
+        { result: true, message: response.message, data: response.data },
         { status: 201 }
       );
     } else {
-      return NextResponse.json(response, { status: 400 });
+      return NextResponse.json(
+        { result: false, message: response.message },
+        { status: 400 }
+      );
     }
   } catch (error) {
     console.error("Failed to query estimated cost:", error);

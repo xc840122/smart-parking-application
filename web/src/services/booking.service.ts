@@ -11,7 +11,6 @@ import {
 } from "@/repositories/booking.repo";
 import { BookingCreationType, BookingType } from "@/validators/booking.validator";
 import { bookingCostHelper } from "@/helper/booking.helper";
-import { toast } from "sonner";
 
 export const checkBookingConflictService = async (
   userId: string,
@@ -51,12 +50,12 @@ export const createBookingService = async (
     }
     const { parkingName, totalCost, discountRate } = result.data;
 
-    if (!parkingName || !totalCost || !discountRate) {
-      return {
-        result: false,
-        message: result.message,
-      };
-    }
+    // if (!parkingName || !totalCost || discountRate === null || discountRate === undefined) {
+    //   return {
+    //     result: false,
+    //     message: BOOKING_MESSAGES.ERROR.COST_HANDELING_ERROR,
+    //   };
+    // }
     // Prepare booking data
     const newBookingData: BookingType = {
       ...bookingData,
@@ -102,8 +101,6 @@ export const confirmBookingService = async (
     // Check if user is same as user in booking
     if (update.userId !== booking.userId) {
       throw new Error(BOOKING_MESSAGES.ERROR.USER_NOT_SAME);
-    } else {
-      toastMessage(BOOKING_MESSAGES.SUCCESS.UPDATE_SUCCESSFUL);
     }
 
     // Todo: update available parking space
@@ -169,11 +166,6 @@ export const deleteBookingService = async (
     console.error("Failed to delete booking:", error);
     throw new Error(BOOKING_MESSAGES.ERROR.DELETE_FAILED);
   }
-};
-
-const toastMessage = (message: string) => {
-  'use client';
-  toast(message);
 };
 
 // export const updateBookingService = async (
