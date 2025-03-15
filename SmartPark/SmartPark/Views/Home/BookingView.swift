@@ -22,33 +22,10 @@ struct BookingView: View {
 
     var body: some View {
         VStack(spacing: 24) {
-            // Page Title
-            Text("Book Parking")
-                .font(.system(size: 22, weight: .bold))
-                .frame(maxWidth: .infinity, alignment: .leading)
-
             // Time Selection Area
             VStack(spacing: 16) {
-                VStack(alignment: .leading, spacing: 6) {
-                    Text("Start Time")
-                        .font(.system(size: 16, weight: .medium))
-                        .foregroundColor(.black)
-                    DatePicker("Select Start Time", selection: $startTime, in: Date()..., displayedComponents: .hourAndMinute)
-                        .labelsHidden()
-                        .datePickerStyle(.wheel)
-                        .frame(height: 100)
-                        .onChange(of: startTime) { adjustEndTime() }
-                }
-
-                VStack(alignment: .leading, spacing: 6) {
-                    Text("End Time")
-                        .font(.system(size: 16, weight: .medium))
-                        .foregroundColor(.black)
-                    DatePicker("Select End Time", selection: $endTime, in: startTime.addingTimeInterval(3600)..., displayedComponents: .hourAndMinute)
-                        .labelsHidden()
-                        .datePickerStyle(.wheel)
-                        .frame(height: 100)
-                }
+                TimePickerView(title: "Start Time", selection: $startTime, range: Date()...)
+                TimePickerView(title: "End Time", selection: $endTime, range: startTime.addingTimeInterval(3600)...)
             }
             .padding(.vertical, 10)
 
@@ -77,7 +54,7 @@ struct BookingView: View {
 
             // Confirm Booking Button
             Button(action: {
-                showConfirmationAlert = true // Show confirmation alert
+                showConfirmationAlert = true
             }) {
                 Text("Confirm Booking")
                     .frame(maxWidth: .infinity)
@@ -86,14 +63,16 @@ struct BookingView: View {
                     .foregroundColor(.white)
                     .clipShape(RoundedRectangle(cornerRadius: 8))
             }
+            .padding(.bottom, 20)
         }
         .padding()
         .navigationTitle("Booking")
+        .navigationBarTitleDisplayMode(.inline)
         .onChange(of: startTime) { adjustEndTime(); calculatePrice() }
         .onChange(of: endTime) { calculatePrice() }
         .alert("Confirm Booking", isPresented: $showConfirmationAlert) {
             Button("Cancel", role: .cancel) { }
-            Button("Confirm") { confirmBooking() } // User must confirm
+            Button("Confirm") { confirmBooking() }
         } message: {
             Text("Are you sure you want to book from \(formattedTime(startTime)) to \(formattedTime(endTime))?")
         }
