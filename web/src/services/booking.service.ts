@@ -11,6 +11,7 @@ import {
 } from "@/repositories/booking.repo";
 import { BookingCreationType, BookingType } from "@/validators/booking.validator";
 import { bookingCostHelper } from "@/helper/booking.helper";
+import { toast } from "sonner";
 
 export const checkBookingConflictService = async (
   userId: string,
@@ -70,8 +71,9 @@ export const createBookingService = async (
     const bookingId = await createBookingRepo(newBookingData);
     if (!bookingId) {
       return { result: false, message: BOOKING_MESSAGES.ERROR.CREATE_FAILED };
+    } else {
+      toast.success(BOOKING_MESSAGES.SUCCESS.CREATE_SUCCESSFUL);
     }
-
     return {
       result: true,
       message: BOOKING_MESSAGES.SUCCESS.CREATE_SUCCESSFUL,
