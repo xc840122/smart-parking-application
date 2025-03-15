@@ -3,13 +3,8 @@ import { createBookingService, getBookingsByUserService } from "@/services/booki
 import { BookingCreationType } from "@/validators/booking.validator";
 import { getUserByClerkIdService } from "@/services/user.service";
 import { USER_MESSAGES } from "@/constants/messages/user.message";
+import { BookingRequestBody } from "@/types/booking.type";
 
-type BookingRequestBody = {
-  clerkUserId: string;
-  startTime: number;
-  endTime: number;
-  parkingSpaceId: string;
-};
 /**
  * Reserved booking{POST} - Create a new booking.start time, end time, parking space ID are required.
  * @param request 
