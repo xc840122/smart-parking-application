@@ -42,14 +42,14 @@ export const POST = async (request: Request) => {
 
     if (response.result) {
       return NextResponse.json(
-        { result: true, message: "Booking created successfully", data: response.data },
+        { result: true, message: "Cost query successfully", data: response.data },
         { status: 201 }
       );
     } else {
       return NextResponse.json(response, { status: 400 });
     }
   } catch (error) {
-    console.error("Failed to reserve booking:", error);
+    console.error("Failed to query estimated cost:", error);
     return NextResponse.json(
       { result: false, message: "Internal server error" },
       { status: 500 }
