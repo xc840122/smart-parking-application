@@ -11,7 +11,8 @@ import {
 } from "@/repositories/booking.repo";
 import { BookingCreationType, BookingType } from "@/validators/booking.validator";
 import { bookingCostHelper } from "@/helper/booking.helper";
-import { toast } from "sonner";
+import { toastMessage } from "@/utils/toast.util";
+import { ToastType } from "@/constants/enum/toast";
 
 export const checkBookingConflictService = async (
   userId: string,
@@ -103,7 +104,7 @@ export const confirmBookingService = async (
     if (update.userId !== booking.userId) {
       throw new Error(BOOKING_MESSAGES.ERROR.USER_NOT_SAME);
     } else {
-      toastMessage(BOOKING_MESSAGES.SUCCESS.UPDATE_SUCCESSFUL);
+      toastMessage(BOOKING_MESSAGES.SUCCESS.UPDATE_SUCCESSFUL, ToastType.SUCCESS);
     }
 
     // Todo: update available parking space
@@ -169,11 +170,6 @@ export const deleteBookingService = async (
     console.error("Failed to delete booking:", error);
     throw new Error(BOOKING_MESSAGES.ERROR.DELETE_FAILED);
   }
-};
-
-const toastMessage = (message: string) => {
-  'use client';
-  toast(message);
 };
 
 // export const updateBookingService = async (

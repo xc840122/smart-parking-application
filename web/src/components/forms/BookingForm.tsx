@@ -40,6 +40,9 @@ const BookingForm = ({
   const [discountRate, setDiscountRate] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
 
+  console.log("totalCost", totalCost);
+  console.log("discountRate", discountRate);
+
   // Handle time change and trigger get price and discount
   const handleTimeChange = async (fieldName: string, value: number) => {
     // Set form value
@@ -157,21 +160,23 @@ const BookingForm = ({
           )}
         />
         {/* Total Cost Field */}
-        <div className="flex flex-col space-y-2 p-4 bg-white rounded-lg shadow-md">
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-gray-500">Original Price:</span>
-            <span className="text-xs text-gray-500 line-through">${totalCost}</span>
+        {totalCost > 0 ? <div className="flex flex-col space-y-2 p-4 bg-white rounded-lg shadow-md">
+          <div>
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-gray-500">Original Price:</span>
+              <span className="text-xs text-gray-500 line-through">${totalCost}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-gray-500">Discount Rate:</span>
+              <span className="text-xs text-green-500">{(discountRate * 100).toFixed(1)}%</span>
+            </div>
+            <div className="flex items-center justify-between font-semibold text-lg text-black">
+              <span>Final Price:</span>
+              <span>${(totalCost * (1 - discountRate)).toFixed(1)}</span>
+            </div>
           </div>
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-gray-500">Discount Rate:</span>
-            <span className="text-xs text-green-500">{(discountRate * 100).toFixed(1)}%</span>
-          </div>
-          <div className="flex items-center justify-between font-semibold text-lg text-black">
-            <span>Final Price:</span>
-            <span>${(totalCost * (1 - discountRate)).toFixed(1)}</span>
-          </div>
-          {error && <FormMessage className="text-xs text-red-500">{error}</FormMessage>}
-        </div>
+        </div> : null}
+        {error && <FormMessage className="text-xs text-red-500">{error}</FormMessage>}
         {/* Cancel and Submit Buttons */}
         <div className="flex justify-center gap-4">
           <Button
@@ -190,7 +195,7 @@ const BookingForm = ({
           </Button>
         </div>
       </form>
-    </Form>
+    </Form >
   );
 };
 
