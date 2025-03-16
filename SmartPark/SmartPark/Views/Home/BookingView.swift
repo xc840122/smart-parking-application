@@ -9,6 +9,9 @@ import SwiftUI
 import Clerk
 
 struct BookingView: View {
+    @Environment(\.selectedTab) private var selectedTab
+    @EnvironmentObject var navigationManager: NavigationManager
+    
     let parkingSpot: ParkingSpot
     @State private var startTime = Date().addingTimeInterval(3600) // Default to now
     @State private var endTime = Date().addingTimeInterval(7200) // Default +1 hour
@@ -109,7 +112,15 @@ struct BookingView: View {
             Text("Are you sure you want to book from \(formattedTime(startTime)) to \(formattedTime(endTime))?")
         }
         .alert("Booking Confirmed", isPresented: $isBookingConfirmed) {
-            Button("OK", role: .cancel) {}
+            Button("View Bookings") {
+                navigationManager.resetToRoot(tab: "Home")
+                selectedTab.wrappedValue = "Bookings"
+            }
+            Button("Book Another", role: .cancel) {
+                navigationManager.resetToRoot(tab: "Home")
+            }
+        } message: {
+            Text("Your booking has been successfully confirmed. What would you like to do next?")
         }
         .alert("Booking Failed", isPresented: $showErrorAlert) {
             Button("OK", role: .cancel) { }
@@ -176,9 +187,19 @@ struct BookingView: View {
     private func confirmBooking() {
         Task {
             do {
-                let bookid = calculation?.parkingName ?? ""
                 let userId = Clerk.shared.user?.id ?? ""
-                let success = try await bookingService.confirmBooking(bookingId: bookid, userId: userId)
+                
+                let reservation = try await bookingService.reserve(userId: userId, parkingSpotId: parkingSpot.id, startTime: startTime, endTime: endTime)
+                
+                guard !reservation.bookingId.isEmpty else {
+                    DispatchQueue.main.async {
+                        errorMessage = "Reservation failed. No booking ID received."
+                        showErrorAlert = true
+                    }
+                    return
+                }
+                
+                let success = try await bookingService.confirmBooking(bookingId: reservation.bookingId, userId: userId)
 
                 DispatchQueue.main.async {
                     if success {
