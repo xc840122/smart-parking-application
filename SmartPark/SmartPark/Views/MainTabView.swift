@@ -29,14 +29,6 @@ struct MainTabView: View {
             }
             .tag("Bookings")
 
-            NavigationStack(path: $navigationManager.billingPath) {
-                BillingView()
-            }
-            .tabItem {
-                Label("Billing", systemImage: "creditcard.fill")
-            }
-            .tag("Billing")
-
             NavigationStack(path: $navigationManager.profilePath) {
                 ProfileView()
             }

@@ -11,7 +11,6 @@ import SwiftUI
 class NavigationManager: ObservableObject {
     var homePath = NavigationPath()
     var bookingsPath = NavigationPath()
-    var billingPath = NavigationPath()
     var profilePath = NavigationPath()
 
     func resetToRoot(tab: String) {
@@ -20,8 +19,6 @@ class NavigationManager: ObservableObject {
             homePath = NavigationPath()
         case "Bookings":
             bookingsPath = NavigationPath()
-        case "Billing":
-            billingPath = NavigationPath()
         case "Profile":
             profilePath = NavigationPath()
         default:

@@ -7,17 +7,91 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "C96595A5-0813-41E7-96B7-9CFAA2B91000"
+            uuid = "0981503B-FC79-47D8-9184-F4380293B2D6"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "SmartPark/Networking/Services/ParkingSpotService.swift"
+            filePath = "SmartPark/ViewModels/Home/ParkingSpotViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "36"
-            endingLineNumber = "36"
-            landmarkName = "fetchParkingLots(city:area:street:)"
+            startingLineNumber = "92"
+            endingLineNumber = "92"
+            landmarkName = "searchParkingLots()"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "3098B7FA-09F7-4285-A5E6-5F2FFDCF3247"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SmartPark/ViewModels/Home/ParkingSpotViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "81"
+            endingLineNumber = "81"
+            landmarkName = "searchParkingLots()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "3098B7FA-09F7-4285-A5E6-5F2FFDCF3247 - b8b2cdcddf2fa0c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for SmartPark.ParkingSpotViewModel.searchParkingLots() async -&gt; ()"
+                  moduleName = "SmartPark.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/afu/Documents/Yoobee/MSE%20806%20ITS/806%20Assessment%202/Project/smart-parking-application/SmartPark/SmartPark/ViewModels/Home/ParkingSpotViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "81"
+                  endingLineNumber = "81">
+               </Location>
+               <Location
+                  uuid = "3098B7FA-09F7-4285-A5E6-5F2FFDCF3247 - d266825339a81ee3"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(2) await resume partial function for SmartPark.ParkingSpotViewModel.searchParkingLots() async -&gt; ()"
+                  moduleName = "SmartPark.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/afu/Documents/Yoobee/MSE%20806%20ITS/806%20Assessment%202/Project/smart-parking-application/SmartPark/SmartPark/ViewModels/Home/ParkingSpotViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "81"
+                  endingLineNumber = "81">
+               </Location>
+               <Location
+                  uuid = "3098B7FA-09F7-4285-A5E6-5F2FFDCF3247 - d11311db30093f8e"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for SmartPark.ParkingSpotViewModel.searchParkingLots() async -&gt; ()"
+                  moduleName = "SmartPark.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/afu/Documents/Yoobee/MSE%20806%20ITS/806%20Assessment%202/Project/smart-parking-application/SmartPark/SmartPark/ViewModels/Home/ParkingSpotViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "81"
+                  endingLineNumber = "81">
+               </Location>
+               <Location
+                  uuid = "3098B7FA-09F7-4285-A5E6-5F2FFDCF3247 - f3d713a6063201cf"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(4) suspend resume partial function for SmartPark.ParkingSpotViewModel.searchParkingLots() async -&gt; ()"
+                  moduleName = "SmartPark.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/afu/Documents/Yoobee/MSE%20806%20ITS/806%20Assessment%202/Project/smart-parking-application/SmartPark/SmartPark/ViewModels/Home/ParkingSpotViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "81"
+                  endingLineNumber = "81">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
