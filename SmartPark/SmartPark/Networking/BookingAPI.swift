@@ -13,18 +13,19 @@ enum BookingAPI {
     case priceCalculation(clerkUserId: String ,parkingSpotId: String, startTime: Int64, endTime: Int64)
     case reserve(clerkUserId: String ,parkingSpotId: String, startTime: Int64, endTime: Int64)
     case createBooking(bookingId: String, clerkUserId: String)
+    case getBookings(clerkUserId: String)
 }
 
 extension BookingAPI: TargetType {
     var baseURL: URL {
-        return URL(string: "http://localhost:3000/api")!
+        APIConfig.baseURL
     }
 
     var path: String {
         switch self {
         case .priceCalculation:
             return "/booking/cost"
-        case .reserve:
+        case .reserve, .getBookings:
             return "/booking"
         case .createBooking:
             return "/booking/confirm"
@@ -32,7 +33,12 @@ extension BookingAPI: TargetType {
     }
 
     var method: Moya.Method {
-        return .post
+        switch self {
+        case .getBookings:
+            return .get
+        case .priceCalculation, .createBooking, .reserve:
+            return .post
+        }
     }
 
     var task: Task {
@@ -59,6 +65,8 @@ extension BookingAPI: TargetType {
                 "clerkUserId": clerkUserId,
             ]
             return .requestParameters(parameters: params, encoding: JSONEncoding.default)
+        case .getBookings(let clerkUserId):
+            return .requestParameters(parameters: ["clerkUserId": clerkUserId], encoding: URLEncoding.queryString)
         }
     }
 

@@ -38,4 +38,10 @@ class BookingService {
         let response = try await provider.requestAsync(.createBooking(bookingId: bookingId, clerkUserId: userId))
         return response.isSuccess()
     }
+    
+    /// Get Bookings List
+    func getBookings(userId: String) async throws -> [Booking] {
+        let response = try await provider.requestAsync(.getBookings(clerkUserId: userId))
+        return try response.decode()
+    }
 }
