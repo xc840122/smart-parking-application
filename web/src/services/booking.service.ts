@@ -50,6 +50,17 @@ export const createBookingService = async (
     }
     const { parkingName, totalCost, discountRate } = result.data;
 
+    // Conflict check
+    const conflictCheck = await checkBookingConflictService(
+      bookingData.userId,
+      bookingData.startTime,
+      bookingData.endTime
+    );
+
+    if (conflictCheck.result === false) {
+      return { result: false, message: BOOKING_MESSAGES.ERROR.CONFLICTING_BOOKING };
+    }
+
     // if (!parkingName || !totalCost || discountRate === null || discountRate === undefined) {
     //   return {
     //     result: false,
@@ -118,14 +129,14 @@ export const confirmBookingService = async (
 // Get bookings by user ID
 export const getBookingsByUserService = async (
   userId: string
-): Promise<ApiResponse<BookingDataModel[]>> => {
+): Promise<ApiResponse<BookingDataModel[] | []>> => {
   try {
     // Fetch bookings by user ID
     const bookings = await getBookingsByUserRepo(userId);
 
     // Return error if no bookings are found
     if (!bookings || bookings.length === 0) {
-      return { result: false, message: BOOKING_MESSAGES.ERROR.NOT_FOUND };
+      return { result: false, message: BOOKING_MESSAGES.ERROR.NOT_FOUND, data: [] };
     }
 
     // Return success response with bookings

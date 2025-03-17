@@ -10,14 +10,14 @@ export const getParkingService = async (
   area?: string,
   street?: string,
   keyword?: string
-): Promise<ApiResponse<ParkingSpaceDataModel[]>> => {
+): Promise<ApiResponse<ParkingSpaceDataModel[] | []>> => {
   try {
     // Fetch parking data from the repository
     const parkingData = await getParkingRepo(isActive, city, area, street, keyword);
 
     // Return error if no parking spaces are found
     if (!parkingData || parkingData.length === 0) {
-      return { result: false, message: PARKING_SPACE_MESSAGES.ERROR.NOT_FOUND };
+      return { result: false, message: PARKING_SPACE_MESSAGES.ERROR.NOT_FOUND, data: [] };
     }
 
     // Return success response with parking data
