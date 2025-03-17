@@ -1,6 +1,5 @@
 import { BOOKING_MESSAGES } from "@/constants/messages/booking.message";
 import { PARKING_SPACE_MESSAGES } from "@/constants/messages/parking-space.message"
-import { checkBookingConflictService } from "@/services/booking.service";
 import { getParkingByIdService } from "@/services/parking.service"
 import { ApiResponse } from "@/types/api.type";
 import costCalculation from "@/utils/cost.util";
@@ -44,17 +43,6 @@ export const bookingCostHelper = async (bookingData: BookingCreationType):
   // Calculate total cost (with AI prediction)
   const { totalCost, discountRate } =
     await costCalculation(occupancyRate, pricePerHour, startTime, endTime)
-
-  // Conflict check
-  const conflictCheck = await checkBookingConflictService(
-    bookingData.userId,
-    bookingData.startTime,
-    bookingData.endTime
-  );
-
-  if (conflictCheck.result === false) {
-    return { result: false, message: BOOKING_MESSAGES.ERROR.CONFLICTING_BOOKING };
-  }
 
   // Start time must be before end time
   if (bookingData.startTime >= bookingData.endTime) {
