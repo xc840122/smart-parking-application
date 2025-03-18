@@ -72,7 +72,6 @@ struct ProfileView: View {
         .padding()
         .background(Color.white)
         .cornerRadius(12)
-        .shadow(color: Color.black.opacity(0.1), radius: 6, x: 0, y: 4)
         .navigationBarTitle("Profile", displayMode: .inline)
     }
 }

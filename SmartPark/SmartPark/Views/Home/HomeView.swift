@@ -23,7 +23,7 @@ struct HomeView: View {
                     } else {
                         LazyVStack(spacing: 8) {
                             if parkingSpotViewModel.parkingLots.isEmpty {
-                                ContentUnavailableView("No parking spots available", systemImage: "car.slash")
+                                UnavailableView(title: "Sorry", subtitle: "No parking spots available", systemImage: "tray.fill")
                             } else {
                                 ForEach(parkingSpotViewModel.parkingLots) { spot in
                                     NavigationLink(value: spot) {

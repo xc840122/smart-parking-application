@@ -11,46 +11,51 @@ struct ParkingSpotRow: View {
     let parkingSpot: ParkingSpot
 
     var body: some View {
-        HStack {
-            Image(systemName: "car")
-                .font(.largeTitle)
-                .foregroundStyle(.primary)
-                .padding(8)
-                .background(Color(uiColor: .tertiarySystemBackground))
-                .clipShape(Circle())
-
-            VStack(alignment: .leading, spacing: 4) {
-                Text(parkingSpot.name)
-                    .font(.headline)
+        VStack {
+            HStack {
+                Image(systemName: "car")
+                    .font(.largeTitle)
                     .foregroundStyle(.primary)
+                    .padding(8)
+                    .background(Color(uiColor: .tertiarySystemBackground))
+                    .clipShape(Circle())
 
-                Text("\(parkingSpot.area), \(parkingSpot.city)")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-
-                HStack(spacing: 8) {
-                    Text("$\(String(format: "%.2f", parkingSpot.pricePerHour))/hr")
-                        .foregroundStyle(.blue)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(parkingSpot.name)
+                        .font(.subheadline)
                         .bold()
+                        .foregroundStyle(.primary)
 
-                    Spacer()
-
-                    Text("\(parkingSpot.availableSlots)/\(parkingSpot.totalSlots) spots")
-                        .foregroundStyle(parkingSpot.availableSlots > 5 ? .green : .red)
-
-                    Spacer()
-
-                    Text(parkingSpot.street)
+                    Text("📍\(parkingSpot.area), \(parkingSpot.city)")
+                        .font(.subheadline)
                         .foregroundStyle(.secondary)
+
                 }
-                .font(.subheadline)
-                .frame(maxWidth: .infinity)
+
+                Spacer()
+
+                Image(systemName: "chevron.right")
+                    .foregroundStyle(.gray)
             }
+            
+            HStack(spacing: 8) {
+                Text("$\(String(format: "%.2f", parkingSpot.pricePerHour))/hr")
+                    .foregroundStyle(.blue)
+                    .bold()
 
-            Spacer()
+                Spacer()
 
-            Image(systemName: "chevron.right")
-                .foregroundStyle(.gray)
+                Text("\(parkingSpot.availableSlots)/\(parkingSpot.totalSlots) spots")
+                    .foregroundStyle(parkingSpot.availableSlots > 5 ? .green : .red)
+
+                Spacer()
+
+                Text(parkingSpot.street)
+                    .foregroundStyle(.secondary)
+            }
+            .font(.subheadline)
+            .frame(maxWidth: .infinity)
+            .padding(.horizontal, 16)
         }
         .padding(.vertical, 8)
         .padding(.horizontal, 16)
