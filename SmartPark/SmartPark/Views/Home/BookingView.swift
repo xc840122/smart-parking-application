@@ -20,6 +20,7 @@ struct BookingView: View {
     @State private var showErrorAlert = false
     @State private var errorMessage = ""
     @State private var calculation: Calculation?
+    @State private var isLoading = false
     private let bookingService = BookingService()
     
     private var estimatedPrice: Double {
@@ -101,6 +102,10 @@ struct BookingView: View {
             .padding(.bottom, 20)
         }
         .padding()
+        .overlay(
+            isLoading ? AnyView(LoadingView(title: "Booking...").transition(.opacity)) : AnyView(EmptyView())
+        )
+        .animation(.easeInOut, value: isLoading) // 平滑过渡
         .navigationTitle("Booking")
         .navigationBarTitleDisplayMode(.inline)
         .onChange(of: startTime) { adjustEndTime(); calculatePrice() }
@@ -186,6 +191,10 @@ struct BookingView: View {
     /// Booking confirmation logic
     private func confirmBooking() {
         Task {
+            DispatchQueue.main.async {
+                isLoading = true
+            }
+            
             do {
                 let userId = Clerk.shared.user?.id ?? ""
                 
@@ -195,6 +204,7 @@ struct BookingView: View {
                     DispatchQueue.main.async {
                         errorMessage = "Reservation failed. No booking ID received."
                         showErrorAlert = true
+                        isLoading = false
                     }
                     return
                 }
@@ -203,16 +213,18 @@ struct BookingView: View {
 
                 DispatchQueue.main.async {
                     if success {
-                        isBookingConfirmed = true 
+                        isBookingConfirmed = true
                     } else {
                         errorMessage = "Booking failed. Please try again."
                         showErrorAlert = true
                     }
+                    isLoading = false
                 }
             } catch {
                 DispatchQueue.main.async {
                     errorMessage = "Error: \(error.localizedDescription)"
                     showErrorAlert = true
+                    isLoading = false
                 }
             }
         }
