@@ -39,25 +39,7 @@ struct BookingListView: View {
                     .background(Color.white)
                     .cornerRadius(10)
                 } else if viewModel.bookings.isEmpty {
-                    VStack {
-                        Image(systemName: "tray.fill")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 100, height: 100)
-                            .foregroundColor(.gray)
-                            .padding(.top, 50)
-                        Text("No bookings found")
-                            .font(.headline)
-                            .foregroundColor(.gray)
-                            .padding(.top, 20)
-                        Text("You don't have any bookings yet.")
-                            .font(.subheadline)
-                            .foregroundColor(.gray)
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(Color.white)
-                    .cornerRadius(10)
-                    .padding(.top, 50)
+                    UnavailableView(title: "No bookings found", subtitle: "You don't have any bookings yet.", systemImage: "tray.fill")
                 } else {
                     List(viewModel.bookings) { booking in
                         NavigationLink(destination: BookingDetailView(booking: booking)) {
