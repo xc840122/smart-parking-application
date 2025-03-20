@@ -42,7 +42,7 @@ export const ParkingListContent = ({
       key={item._id}
     >
       <TableCell className="font-medium w-3/12 truncate">{item.name}</TableCell>
-      <TableCell className="w-5/12 truncate">
+      <TableCell className="w-5/12 truncate hidden md:block">
         {addressGenerator(item.city, item.area, item.street, item.unit)}
       </TableCell>
       <TableCell className="w-1/12">{item.availableSlots}/{item.totalSlots}</TableCell>

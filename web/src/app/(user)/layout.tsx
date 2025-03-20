@@ -12,7 +12,7 @@ export default function UserLayout({
     <SidebarProvider >
       <AppSidebar />
       <SidebarInset>
-        <main>
+        <main className="flex flex-col w-screen h-full">
           <DashboardHeader />
           {children}
         </main>
