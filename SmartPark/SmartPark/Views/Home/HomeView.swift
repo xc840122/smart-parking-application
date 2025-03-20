@@ -69,6 +69,10 @@ struct HomeView: View {
                 }
             }
         }
+        .overlay(
+            parkingSpotViewModel.isLoading ? AnyView(LoadingView(title: "Loading...").transition(.opacity)) : AnyView(EmptyView())
+        )
+        .animation(.easeInOut, value: parkingSpotViewModel.isLoading)
     }
 }
 

@@ -20,7 +20,9 @@ class ParkingSpotViewModel {
     var selectedArea: String? = nil
     var selectedStreet: String? = nil
     
-    @MainActor var errorMessage: String? = nil
+    var isLoading = false
+    
+    var errorMessage: String? = nil
     
     private let localService = ParkingSpotService()
     
@@ -77,18 +79,20 @@ class ParkingSpotViewModel {
     }
     
     func searchParkingLots() async {
+        isLoading = true
         do {
             let response = try await localService.fetchParkingLots(
                 city: selectedCity,
                 area: selectedArea,
                 street: selectedStreet
             )
+            isLoading = false
             parkingLots = response
             print("Search result: \(parkingLots.count) spots for city: \(selectedCity ?? "N/A"), area: \(selectedArea ?? "N/A"), street: \(selectedStreet ?? "N/A")")
         } catch {
-            await MainActor.run {
-                self.errorMessage = "Failed to load parking spots. Please try again."
-            }
+//            self.errorMessage = "Failed to load parking spots. Please try again."
+            isLoading = false
+            parkingLots = []
             print("Error searching parking lots: \(error.localizedDescription)")
         }
     }
