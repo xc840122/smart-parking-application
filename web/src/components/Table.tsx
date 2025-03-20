@@ -28,7 +28,7 @@ const TableView = <T,>({
         <TableRow>
           {columns.map((column) => (
             <TableHead
-              className="text-center"
+              className={`text-center, ${column.accessor === 'address' ? 'hidden md:block' : ''}`}
               key={column.accessor}
             >{column.header}
             </TableHead>

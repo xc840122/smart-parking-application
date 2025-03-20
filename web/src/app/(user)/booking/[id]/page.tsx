@@ -1,7 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { convexTimeToDisplayFormat } from '@/utils/date.util';
-import { toast } from 'sonner';
 import Link from 'next/link';
 import { getBookingByIdService } from '@/services/booking.service';
 
@@ -17,8 +16,7 @@ const BookingDetailPage = async ({
 
   // Show error message if no booking is found
   if (!response.result || !response.data) {
-    toast.error(response.message);
-    return;
+    return response.message;
   };
 
   const { parkingName, startTime, endTime, totalCost, updatedAt, state } = response.data;

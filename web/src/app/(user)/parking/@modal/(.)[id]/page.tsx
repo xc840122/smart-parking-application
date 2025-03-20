@@ -1,6 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { convexTimeToDisplayFormat } from '@/utils/date.util';
-import { toast } from 'sonner';
 import { getParkingByIdService } from '@/services/parking.service';
 import Modal from './modal';
 import BookingForm from '@/components/forms/BookingForm';
@@ -14,12 +13,8 @@ const ParkingPopup = async ({
 }) => {
   // Get userId
   const { clerkUserId } = await userHelper()
-  // Query userId by clerkUserId
-  if (!clerkUserId) {
-    toast.error('Failed to get user information');
-    return;
-  }
-  const userId = (await getUserByClerkIdService(clerkUserId)).data?._id as string;
+
+  const userId = clerkUserId ? (await getUserByClerkIdService(clerkUserId)).data?._id as string : '';
 
   // Get parking lot id from params
   const { id } = await params;
@@ -29,7 +24,7 @@ const ParkingPopup = async ({
 
   // Show error message if no parking lot is found
   if (!response.result || !response.data) {
-    toast.error(response.message);
+    return response.message;
     return;
   };
 
@@ -37,7 +32,7 @@ const ParkingPopup = async ({
 
   return (
     <Modal>
-      <div className='max-w-2xl mx-auto p-4'>
+      {userId ? <div className='max-w-2xl mx-auto p-4'>
         <Card className='shadow-lg'>
           <CardHeader>
             <CardTitle className='text-xl'>{name}</CardTitle>
@@ -59,6 +54,11 @@ const ParkingPopup = async ({
           </CardContent>
         </Card>
       </div>
+        : (
+          <div className='flex justify-center items-center h-4'>
+            Please Login to book a parking space
+          </div>
+        )}
     </Modal>
   );
 };

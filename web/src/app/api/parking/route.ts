@@ -25,8 +25,8 @@ export const GET = async (request: Request) => {
     );
 
     // Handle no data found
-    if (!response.result) {
-      return NextResponse.json({ error: response.message }, { status: 404 });
+    if (!response.result || response.data?.length === 0) {
+      return NextResponse.json({ ...response, data: [] }, { status: 200 });
     }
 
     // Return success response
